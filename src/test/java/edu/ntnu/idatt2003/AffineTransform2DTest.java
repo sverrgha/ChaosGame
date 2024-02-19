@@ -15,7 +15,6 @@ public class AffineTransform2DTest {
   private static Matrix2x2 a1;
   private static Vector2d v1;
   private static Vector2d b1;
-  private
 
   @BeforeAll
   static void setUp() {
