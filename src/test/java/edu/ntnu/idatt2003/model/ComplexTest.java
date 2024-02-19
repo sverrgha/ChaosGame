@@ -1,5 +1,7 @@
-package edu.ntnu.idatt2003;
+package edu.ntnu.idatt2003.model;
 
+
+import edu.ntnu.idatt2003.model.Complex;
 import edu.ntnu.idatt2003.model.Vector2d;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -8,18 +10,18 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
-public class Vector2dTest {
-    private static Vector2d v1;
+class ComplexTest {
+  private static Complex v1;
 
   @BeforeAll
   static void setUp() {
-    v1 = new Vector2d(1, 2);
+    v1 = new Complex(1, 2);
   }
 
   @Nested
   @DisplayName("Positive tests")
-  class positiveTests {
+  class PositiveTests {
+
     @Test
     @DisplayName("Test getX0")
     void testGetX0() {
@@ -35,7 +37,7 @@ public class Vector2dTest {
     @Test
     @DisplayName("Test add")
     void testAdd() {
-      Vector2d v2 = new Vector2d(3, 4);
+      Complex v2 = new Complex(3, 4);
       Vector2d v3 = v1.add(v2);
       assertEquals(4, v3.getX0());
       assertEquals(6, v3.getX1());
@@ -44,11 +46,18 @@ public class Vector2dTest {
     @Test
     @DisplayName("Test subtract")
     void testSubtract() {
-      Vector2d v1 = new Vector2d(1, 2);
-      Vector2d v2 = new Vector2d(3, 4);
+      Complex v2 = new Complex(3, 4);
       Vector2d v3 = v1.subtract(v2);
       assertEquals(-2, v3.getX0());
       assertEquals(-2, v3.getX1());
+    }
+
+    @Test
+    @DisplayName("Test sqrt")
+    void testSqrt() {
+      Complex v2 = v1.sqrt();
+      assertEquals(1.272, v2.getX0(), 0.001);
+      assertEquals(0.786, v2.getX1(), 0.001);
     }
   }
 }
