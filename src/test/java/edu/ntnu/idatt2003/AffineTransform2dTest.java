@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-public class AffineTransform2DTest {
+public class AffineTransform2dTest {
 
   private static Matrix2x2 a1;
   private static Vector2d v1;
@@ -18,19 +18,19 @@ public class AffineTransform2DTest {
 
   @BeforeAll
   static void setUp() {
-    a1 = new Matrix2x2(2,2,4,5);
-    v1 = new Vector2d(1,2);
-    b1 = new Vector2d(3,4);
+    a1 = new Matrix2x2(2, 2, 4, 5);
+    v1 = new Vector2d(1, 2);
+    b1 = new Vector2d(3, 4);
   }
 
   @Nested
   @DisplayName("Positive tests")
-  public class positiveTests {
+  public class PositiveTests {
     @Test
     @DisplayName("transformTestAffine")
     void testTransform() {
-      AffineTransform2D aT1 = new AffineTransform2D(a1, b1);
-      Vector2d v3 = aT1.transform(v1);
+      AffineTransform2D at1 = new AffineTransform2D(a1, b1);
+      Vector2d v3 = at1.transform(v1);
 
       assertEquals(9, v3.getX0());
       assertEquals(18, v3.getX1());
