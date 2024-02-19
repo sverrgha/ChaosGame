@@ -13,12 +13,12 @@ public class AffineTransform2D implements Transform2D {
    * The 2x2 matrix of the affine transformation.
    */
 
-  private Matrix2x2 matrix;
+  private final Matrix2x2 matrix;
 
   /**
    * The 2-dimensional vector of the affine transformation.
    */
-  private Vector2d vector;
+  private final Vector2d vector;
 
   /**
    * Constructs a new AffineTransform2D with specified values for its matrix and vector.
