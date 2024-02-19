@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003.view;
+package edu.ntnu.idatt2003.model;
 
 public class Vector2d {
   double x0;
