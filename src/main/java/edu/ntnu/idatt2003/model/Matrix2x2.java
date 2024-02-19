@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003;
+package edu.ntnu.idatt2003.model;
 
 /**
  * A 2x2 matrix representation with basic operations.
@@ -8,10 +8,10 @@ package edu.ntnu.idatt2003;
  */
 public class Matrix2x2 {
 
-  private double a00;
-  private double a01;
-  private double a10;
-  private double a11;
+  private final double a00;
+  private final double a01;
+  private final double a10;
+  private final double a11;
 
   /**
    * Constructs a new Matrix2x2 with specified values for its elements.
@@ -21,7 +21,7 @@ public class Matrix2x2 {
    * @param a10 Element at the second row and first column.
    * @param a11 Element at the second row and second column.
    */
-  public matrix2x2(double a00, double a01, double a10, double a11){
+  public Matrix2x2(double a00, double a01, double a10, double a11) {
     this.a00 = a00;
     this.a01 = a01;
     this.a10 = a10;
@@ -35,11 +35,10 @@ public class Matrix2x2 {
    * @return A new Vector2D representing the result of the matrix-vector multiplication.
    */
 
-  public multiply(Vector2D vector){
-    double x = a00 * vector.getX0() + a01 * vector.getX1();
-    double y = a10 * vector.getX0() + a11 * vector.getX1();
-
-    return new Vector2D(x, y);
+  public Vector2d multiply(Vector2d vector) {
+    double x0 = a00 * vector.getX0() + a01 * vector.getX1();
+    double x1 = a10 * vector.getX0() + a11 * vector.getX1();
+    return new Vector2d(x0, x1);
   }
 
 }
