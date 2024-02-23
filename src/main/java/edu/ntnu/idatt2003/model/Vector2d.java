@@ -13,12 +13,12 @@ public class Vector2d {
   /**
    * The first coordinate of the vector.
    */
-  double x0;
+  private final double x0;
 
   /**
    * The second coordinate of the vector.
    */
-  double x1;
+  private final double x1;
 
   /**
    * Constructs a Vector2d object.

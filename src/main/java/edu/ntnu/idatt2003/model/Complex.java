@@ -25,9 +25,9 @@ public class Complex extends Vector2d {
    * @return the square root of the complex number.
    */
   public Complex sqrt() {
-    double length = Math.sqrt(this.x0 * this.x0 + this.x1 * this.x1);
-    double realPart = Math.sqrt((this.x0 + length) / 2);
-    double imaginaryPart = Math.signum(this.x1) * Math.sqrt((length - this.x0) / 2);
+    double length = Math.sqrt(getX0() * getX0() + getX1() * getX1());
+    double realPart = Math.sqrt((getX0() + length) / 2);
+    double imaginaryPart = Math.signum(getX1()) * Math.sqrt((length - getX0()) / 2);
     return new Complex(realPart, imaginaryPart);
   }
 }
