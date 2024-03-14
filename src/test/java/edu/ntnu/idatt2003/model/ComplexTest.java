@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ComplexTest {
+class gComplexTest {
   private static Complex v1;
 
   @BeforeAll
