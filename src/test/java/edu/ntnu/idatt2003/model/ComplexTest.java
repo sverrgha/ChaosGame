@@ -1,8 +1,6 @@
 package edu.ntnu.idatt2003.model;
 
 
-import edu.ntnu.idatt2003.model.Complex;
-import edu.ntnu.idatt2003.model.Vector2d;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
