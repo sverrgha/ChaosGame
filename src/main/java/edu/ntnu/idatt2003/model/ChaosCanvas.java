@@ -2,6 +2,9 @@ package edu.ntnu.idatt2003.model;
 
 /**
  * Class for creating a canvas for the chaos game.
+ * Contains methods for converting coordinates to indices on the canvas, and for displaying the canvas.
+ * Includes a method for clearing the canvas.
+ * Goal: act as a model for a canvas for the chaos game.
  */
 
 public class ChaosCanvas {
@@ -30,7 +33,7 @@ public class ChaosCanvas {
     this.minCoords = minCoords;
     this.maxCoords = maxCoords;
     canvas = new int[width][height];
-    transformCoordsToIndices = setTransformCoordsMatrix();
+    transformCoordsToIndices = setTransformCoordsToIndices();
   }
 
 
@@ -80,7 +83,14 @@ public class ChaosCanvas {
     }
   }
 
-  private AffineTransform2D setTransformCoordsMatrix() {
+  /**
+   * Sets the transformation matrix and vector to convert coordinates to indices on the canvas.
+   * Calculates the scaling factors and translation values based on canvas dimensions and coordinate bounds.
+   *
+   * @return AffineTransform2D object representing the transformation matrix and vector.
+   */
+
+  private AffineTransform2D setTransformCoordsToIndices() {
     double a01 = (height - 1) / (minCoords.getX1() - maxCoords.getX1());
     double a10 = (width - 1) / (maxCoords.getX0() - minCoords.getX0());
 
@@ -93,6 +103,10 @@ public class ChaosCanvas {
 
     return new AffineTransform2D(transformMatrix, transformVector);
   }
+
+  /**
+   * Displays the canvas in the console.
+   */
 
   public void showCanvas() {
     for (int i = 0; i < height; i++) {
