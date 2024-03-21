@@ -30,10 +30,7 @@ public class ChaosCanvas {
     this.minCoords = minCoords;
     this.maxCoords = maxCoords;
     canvas = new int[width][height];
-
-    Matrix2x2 A = new Matrix2x2(0, (height-1)/(minCoords.getX1() - this.maxCoords.getX1()), ((this.width-1)/(this.maxCoords.getX0() - this.minCoords.getX0())),0);
-    Vector2d b = new Vector2d(((this.height-1)*this.maxCoords.getX1())/this.maxCoords.getX1() - this.minCoords.getX1(), ((this.width-1)*this.minCoords.getX0())/(this.minCoords.getX0() - this.maxCoords.getX0()));
-    transformCoordsToIndices = new AffineTransform2D(A, b);
+    transformCoordsToIndices = setTransformCoordsMatrix();
   }
 
 
@@ -82,6 +79,37 @@ public class ChaosCanvas {
       }
     }
   }
+
+  private AffineTransform2D setTransformCoordsMatrix() {
+    double a01 = (height - 1) / (minCoords.getX1() - maxCoords.getX1());
+    double a10 = (width - 1) / (maxCoords.getX0() - minCoords.getX0());
+
+    Matrix2x2 transformMatrix = new Matrix2x2(0, a01, a10, 0);
+
+    double x0 = ((height - 1) * maxCoords.getX1()) / (maxCoords.getX1() - minCoords.getX1());
+    double x1 = ((width - 1) * minCoords.getX0()) / (minCoords.getX0() - maxCoords.getX0());
+
+    Vector2d transformVector = new Vector2d(x0, x1);
+
+    return new AffineTransform2D(transformMatrix, transformVector);
+  }
+
+  public void showCanvas() {
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        if (canvas[i][j] == 1) {
+          System.out.print("X");
+        } else {
+          System.out.print(" ");
+        }
+      }
+      System.out.println();
+    }
+  }
+
+
+
+
 
 
 }
