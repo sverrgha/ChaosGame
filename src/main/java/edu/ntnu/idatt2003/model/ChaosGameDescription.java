@@ -61,4 +61,21 @@ public class ChaosGameDescription {
   public List<Transform2D> getTransform() {
     return transform;
   }
+
+  @Override
+  public String toString() {
+    StringBuilder output = new StringBuilder();
+    if (transform.get(0) instanceof AffineTransform2D) {
+      output.append("Affine2D\n");
+    } else {
+      output.append("Julia\n");
+    }
+    output.append(minCoords.toString()).append("\n");
+    output.append(maxCoords.toString()).append("\n");
+    for (Transform2D t : transform) {
+      output.append(t.toString()).append("\n");
+    }
+    return output.toString();
+  }
+
 }
