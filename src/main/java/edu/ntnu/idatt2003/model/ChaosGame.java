@@ -54,6 +54,7 @@ public class ChaosGame {
       currentPoint = description.getTransform().get(randomIndex).transform(currentPoint);
 
       canvas.putPixel(currentPoint);
+
     }
   }
 
