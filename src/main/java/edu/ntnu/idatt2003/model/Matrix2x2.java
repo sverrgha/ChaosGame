@@ -1,10 +1,11 @@
 package edu.ntnu.idatt2003.model;
 
+import java.util.Locale;
+
 /**
  * A 2x2 matrix representation with basic operations.
  *
  * @author nicklapt
- *
  */
 public class Matrix2x2 {
 
@@ -41,4 +42,14 @@ public class Matrix2x2 {
     return new Vector2d(x0, x1);
   }
 
+  /**
+   * Returns a string representation of the Matrix2x2, that separates the
+   * coordinates by ', '.
+   *
+   * @return A string representation of the Matrix2x2.
+   */
+  @Override
+  public String toString() {
+    return String.format(Locale.ENGLISH, "%f, %f, %f, %f", a00, a01, a10, a11);
+  }
 }
