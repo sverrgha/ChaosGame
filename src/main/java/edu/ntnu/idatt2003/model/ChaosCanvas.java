@@ -2,6 +2,9 @@ package edu.ntnu.idatt2003.model;
 
 /**
  * Class for creating a canvas for the chaos game.
+ * Contains methods for converting coordinates to indices on the canvas, and for displaying the canvas.
+ * Includes a method for clearing the canvas.
+ * Goal: act as a model for a canvas for the chaos game.
  */
 
 public class ChaosCanvas {
@@ -30,10 +33,7 @@ public class ChaosCanvas {
     this.minCoords = minCoords;
     this.maxCoords = maxCoords;
     canvas = new int[width][height];
-
-    Matrix2x2 A = new Matrix2x2(0, (height-1)/(minCoords.getX1() - this.maxCoords.getX1()), ((this.width-1)/(this.maxCoords.getX0() - this.minCoords.getX0())),0);
-    Vector2d b = new Vector2d(((this.height-1)*this.maxCoords.getX1())/this.maxCoords.getX1() - this.minCoords.getX1(), ((this.width-1)*this.minCoords.getX0())/(this.minCoords.getX0() - this.maxCoords.getX0()));
-    transformCoordsToIndices = new AffineTransform2D(A, b);
+    transformCoordsToIndices = setTransformCoordsToIndices();
   }
 
 
@@ -82,6 +82,48 @@ public class ChaosCanvas {
       }
     }
   }
+
+  /**
+   * Sets the transformation matrix and vector to convert coordinates to indices on the canvas.
+   * Calculates the scaling factors and translation values based on canvas dimensions and coordinate bounds.
+   *
+   * @return AffineTransform2D object representing the transformation matrix and vector.
+   */
+
+  private AffineTransform2D setTransformCoordsToIndices() {
+    double a01 = (height - 1) / (minCoords.getX1() - maxCoords.getX1());
+    double a10 = (width - 1) / (maxCoords.getX0() - minCoords.getX0());
+
+    Matrix2x2 transformMatrix = new Matrix2x2(0, a01, a10, 0);
+
+    double x0 = ((height - 1) * maxCoords.getX1()) / (maxCoords.getX1() - minCoords.getX1());
+    double x1 = ((width - 1) * minCoords.getX0()) / (minCoords.getX0() - maxCoords.getX0());
+
+    Vector2d transformVector = new Vector2d(x0, x1);
+
+    return new AffineTransform2D(transformMatrix, transformVector);
+  }
+
+  /**
+   * Displays the canvas in the console.
+   */
+
+  public void showCanvas() {
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        if (canvas[i][j] == 1) {
+          System.out.print("X");
+        } else {
+          System.out.print(" ");
+        }
+      }
+      System.out.println();
+    }
+  }
+
+
+
+
 
 
 }
