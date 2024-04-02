@@ -113,7 +113,7 @@ public class UI {
 
   /**
    * Reads a description from a file.
-   * Asks the user for the path to the file, and reads the description from the file.
+   * Asks the user for the path to the file, and reads the already existing description from the file.
    * Sets the description and chaosGame to the new description.
    * If the file is not found, a message will be shown.
    */
