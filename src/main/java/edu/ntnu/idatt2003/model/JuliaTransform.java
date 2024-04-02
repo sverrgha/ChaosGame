@@ -6,7 +6,6 @@ package edu.ntnu.idatt2003.model;
  * Goal: act as a model for a Julia transformation.
  *
  * @author sverrgha
- *
  */
 public class JuliaTransform implements Transform2D {
 
@@ -24,7 +23,7 @@ public class JuliaTransform implements Transform2D {
    * Constructs a JuliaTransform object.
    *
    * @param point The point to transform the 2D vector by.
-   * @param sign The sign of the transformation (+/- 1).
+   * @param sign  The sign of the transformation (+/- 1).
    */
   public JuliaTransform(Complex point, int sign) {
     this.point = point;
@@ -42,5 +41,16 @@ public class JuliaTransform implements Transform2D {
     Vector2d subtracted = point.subtract(this.point);
     return new Complex(subtracted.getX0() * this.sign,
             subtracted.getX1() * this.sign).sqrt();
+  }
+
+  /**
+   * Returns a string representation of the JuliaTransform object, that is equal
+   * to the string representation for the transformation's point.
+   *
+   * @return A string representation of the JuliaTransform object.
+   */
+  @Override
+  public String toString() {
+    return point.toString();
   }
 }

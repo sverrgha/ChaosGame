@@ -68,4 +68,15 @@ public class Vector2d {
   public Vector2d subtract(Vector2d other) {
     return new Vector2d(x0 - other.x0, x1 - other.x1);
   }
+
+  /**
+   * Returns a string representation of the vector, that separates the coordinates
+   * with ', '.
+   *
+   * @return A string representation of the vector.
+   */
+  @Override
+  public String toString() {
+    return x0 + ", " + x1;
+  }
 }
