@@ -6,6 +6,7 @@ import edu.ntnu.idatt2003.model.ChaosGameDescription;
 import edu.ntnu.idatt2003.model.Matrix2x2;
 import edu.ntnu.idatt2003.model.Transform2D;
 import edu.ntnu.idatt2003.model.Vector2d;
+import edu.ntnu.idatt2003.view.UI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,9 @@ public class Main {
     ChaosGame game = new ChaosGame(description, 100, 100);
     game.runSteps(10000);
     game.getCanvas().showCanvas();
+
+    UI ui = new UI();
+    ui.start();
     }
 
   }
