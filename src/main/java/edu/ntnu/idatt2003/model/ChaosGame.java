@@ -1,12 +1,14 @@
 package edu.ntnu.idatt2003.model;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
- * Represents a chaosgame.
+ * Represents a chaos game.
  * Contains a canvas, current point and a description of the game conditions.
  * Includes the method runSteps to repeatedly apply random transformations to the current point.
  * Goal: act as a model for a chaos game.
- *
  */
 
 public class ChaosGame {
@@ -14,20 +16,22 @@ public class ChaosGame {
   private final ChaosCanvas canvas;
   private final ChaosGameDescription description;
   private Vector2d currentPoint;
+  private List<ChaosGameObserver> observers;
   Random random;
 
   /**
    * Constructs a new ChaosGame with specified description and dimensions of the canvas.
    *
    * @param description The description of the chaos game.
-   * @param width The width of the canvas.
-   * @param height The height of the canvas.
+   * @param width       The width of the canvas.
+   * @param height      The height of the canvas.
    */
 
-  public ChaosGame (ChaosGameDescription description, int width, int height) {
+  public ChaosGame(ChaosGameDescription description, int width, int height) {
     this.description = description;
     this.canvas = new ChaosCanvas(width, height, description.getMinCoords(), description.getMaxCoords());
     this.currentPoint = new Vector2d(0, 0);
+    this.observers = new ArrayList<>();
     random = new Random();
   }
 
@@ -47,7 +51,7 @@ public class ChaosGame {
    * The current point is replaced with the new, which gets transformed by a random transformation.
    *
    * @param steps The number of steps to run the simulation.
-    */
+   */
   public void runSteps(int steps) {
     for (int i = 0; i < steps; i++) {
       int randomIndex = random.nextInt(description.getTransform().size());
@@ -58,5 +62,30 @@ public class ChaosGame {
     }
   }
 
+  /**
+   * Registers an observer to the list of observers.
+   *
+   * @param observer The observer to be registered.
+   */
+  public void registerObserver(ChaosGameObserver observer) {
+    observers.add(observer);
+  }
 
+  /**
+   * Removes an observer from the list of observers.
+   *
+   * @param observer The observer to be removed.
+   */
+  public void removeObserver(ChaosGameObserver observer) {
+    observers.remove(observer);
+  }
+
+  /**
+   * Notifies all observers, and calls the update-method
+   */
+  public void notifyObservers() {
+    for (ChaosGameObserver observer : observers) {
+      observer.update();
+    }
+  }
 }
