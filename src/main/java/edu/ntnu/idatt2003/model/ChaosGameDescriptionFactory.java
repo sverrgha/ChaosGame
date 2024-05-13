@@ -5,6 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Represents a factory for handling descriptions.
+ * Contains a variety of descriptions, and the method to switch between descriptions.
+ * Includes an enum.
+ * Goal: switch between descriptions.
+ *
+ */
+
+
 public class ChaosGameDescriptionFactory {
 
   public static ChaosGameDescription get(descriptionTypeEnum descriptionType) {
@@ -13,6 +22,12 @@ public class ChaosGameDescriptionFactory {
       case BARNSLEY_FERN -> barnsleyFern();
     };
   }
+
+  /**
+   * A static method for the sierpinskiTriangle.
+   *
+   * @return a description for sierpinski triangle
+   */
 
   private static ChaosGameDescription sierpinskiTriangle() {
     Vector2d min = new Vector2d(0, 0);
@@ -30,6 +45,12 @@ public class ChaosGameDescriptionFactory {
     ChaosGameDescription description = new ChaosGameDescription(min, max, transform2DList);
     return description;
   }
+
+  /**
+   * A static method for barnsley fern transformations.
+   *
+   * @return a description of the barnsley fern transformation.
+   */
 
   private static ChaosGameDescription barnsleyFern() {
     Vector2d min = new Vector2d(-2.5, 0);
