@@ -83,6 +83,14 @@ public class ChaosCanvas {
     }
   }
 
+  public int getHeight() {
+    return height;
+  }
+
+  public int getWidth() {
+    return width;
+  }
+
   /**
    * Sets the transformation matrix and vector to convert coordinates to indices on the canvas.
    * Calculates the scaling factors and translation values based on canvas dimensions and coordinate bounds.
