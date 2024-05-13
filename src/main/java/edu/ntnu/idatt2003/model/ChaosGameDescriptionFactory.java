@@ -16,6 +16,16 @@ import java.util.List;
 
 public class ChaosGameDescriptionFactory {
 
+  /**
+   * Retrieves a ChaosGameDescription based on the specified type of fractal description.
+   * This method acts as a factory, selecting the appropriate method to generate the fractal
+   * description based on the enum value provided.
+   *
+   * @param descriptionType the type of fractal description to retrieve. This enum specifies which
+   *                        fractal pattern description is to be generated.
+   * @return a ChaosGameDescription object corresponding to the specified fractal type.
+   */
+
   public static ChaosGameDescription get(descriptionTypeEnum descriptionType) {
     return switch (descriptionType) {
       case SIERPINSKI_TRIANGLE -> sierpinskiTriangle();
@@ -23,6 +33,12 @@ public class ChaosGameDescriptionFactory {
       case JULIA -> juliaTransformation();
     };
   }
+
+  /**
+   * Enumerates the types of fractal descriptions that can be generated. Each enum constant
+   * corresponds to a specific fractal pattern, which the factory can produce.
+   */
+
   public enum descriptionTypeEnum {
     SIERPINSKI_TRIANGLE,
     BARNSLEY_FERN,
