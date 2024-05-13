@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 
 public class ChaosImage {
 
-  private WritableImage createImageFromCanvas(ChaosCanvas chaosCanvas){
+  public WritableImage createImageFromCanvas(ChaosCanvas chaosCanvas){
     int width = chaosCanvas.getWidth();
     int height = chaosCanvas.getHeight();
     WritableImage image = new WritableImage(width, height);
@@ -22,6 +22,19 @@ public class ChaosImage {
       }
     }
     return image;
+  }
+
+  public WritableImage scaleImage(WritableImage image, double scaleFactor) {
+    int newWidth = (int) (image.getWidth() * scaleFactor);
+    int newHeight = (int) (image.getHeight() * scaleFactor);
+    WritableImage scaledImage = new WritableImage(newWidth, newHeight);
+    for (int y = 0; y < newHeight; y++) {
+      for (int x = 0; x < newWidth; x++) {
+        Color originalColor = image.getPixelReader().getColor((int) (x / scaleFactor), (int) (y / scaleFactor));
+        scaledImage.getPixelWriter().setColor(x, y, originalColor);
+      }
+    }
+    return scaledImage;
   }
 
 }
