@@ -35,4 +35,12 @@ public class MainPageController {
     return view;
   }
 
+  public void runSteps(int steps) {
+    if (steps < 0) {
+      game.getCanvas().clear();
+    } else {
+      game.runSteps(steps);
+    }
+    view.render(game.getCanvas());
+  }
 }
