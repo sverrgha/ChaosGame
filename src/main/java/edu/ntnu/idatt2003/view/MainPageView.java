@@ -6,6 +6,7 @@ import edu.ntnu.idatt2003.utils.Sizes;
 import java.util.Objects;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -123,9 +124,7 @@ public class MainPageView extends Scene {
     }
     button.getStyleClass().add("button");
     button.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-    button.setOnAction(e -> {
-      // Handle button click
-    });
+    button.setOnAction(e -> controller.runSteps(steps));
     return button;
   }
 
@@ -140,6 +139,21 @@ public class MainPageView extends Scene {
     inputField.getStyleClass().add("input-field");
     inputField.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
     inputField.setPromptText("Steps");
+    inputField.setOnAction(e -> {
+      try {
+        controller.runSteps(Integer.parseInt(inputField.getText()));
+      } catch (Exception ex) {
+        showAlert("Invalid input. Please enter an integer.");
+        inputField.clear();
+      }
+    });
     return inputField;
+  }
+  private void showAlert(String message) {
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setTitle("Error");
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.showAndWait();
   }
 }
