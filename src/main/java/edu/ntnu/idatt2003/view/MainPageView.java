@@ -1,11 +1,9 @@
 package edu.ntnu.idatt2003.view;
 
-import edu.ntnu.idatt2003.model.ChaosGame;
-import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
+import edu.ntnu.idatt2003.controller.MainPageController;
+import edu.ntnu.idatt2003.model.ChaosCanvas;
 import edu.ntnu.idatt2003.utils.Sizes;
-
 import java.util.Objects;
-
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -26,7 +24,7 @@ import javafx.scene.layout.StackPane;
 public class MainPageView extends Scene {
   private final BorderPane root;
   private final StackPane pageContainer;
-
+  private final MainPageController controller;
   private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH - 50) / 6;
   private static final int BUTTON_HEIGHT = 40;
 
@@ -36,34 +34,32 @@ public class MainPageView extends Scene {
    * and a specified width and height.
    * The view is styled with a style sheet.
    */
-  public MainPageView() {
+  public MainPageView(MainPageController mainPageController) {
     super(new BorderPane(), Sizes.SCREEN_WIDTH, Sizes.SCREEN_HEIGHT);
     this.getStylesheets().add(Objects.requireNonNull(getClass()
             .getResource("/styles/mainPage.css")).toExternalForm());
 
     root = (BorderPane) this.getRoot();
     pageContainer = new StackPane();
-
-    render();
+    this.controller = mainPageController;
   }
 
   /**
    * Renders the main page of the application.
    * The main page contains a button container with 7 buttons.
    */
-  private void render() {
+  public void render(ChaosCanvas chaosCanvas) {
     root.getStyleClass().add("main-page");
-    ChaosGame game = new ChaosGame(ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.descriptionTypeEnum.SIERPINSKI_TRIANGLE), 600,600);
-    game.runSteps(1000);
-    pageContainer.getChildren().add(new ImageView(ChaosImage.createImageFromCanvas(game.getCanvas())));
-    createPageContainer();
+    createPageContainer(chaosCanvas);
   }
 
   /**
    * Creates the page container with a button container.
    * The button container contains 7 buttons.
    */
-  private void createPageContainer() {
+  private void createPageContainer(ChaosCanvas chaosCanvas) {
+    pageContainer.getChildren().add(new ImageView(
+            ChaosImage.createImageFromCanvas(chaosCanvas)));
     HBox buttonContainer = createButtonContainer();
     pageContainer.getChildren().add(buttonContainer);
     pageContainer.getStyleClass().add("page-container");
