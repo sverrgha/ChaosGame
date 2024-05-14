@@ -1,0 +1,51 @@
+.button {
+    -fx-background-color: #D9D9D9;
+    -fx-background-insets: 5px;
+    -fx-border-insets: 5px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-font-size: 16px;
+}
+
+.button:hover {
+    -fx-background-color: #C8C8C8;
+}
+
+.combo-box {
+    -fx-background-color: #D9D9D9;
+    -fx-background-insets: 5px;
+    -fx-border-insets: 5px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-font-size: 16px;
+}
+.combo-box:hover {
+    -fx-background-color: #C8C8C8;
+}
+
+.input-field {
+    -fx-background-color: #D9D9D9;
+    -fx-background-insets: 5px;
+    -fx-border-insets: 5px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-font-size: 16px;
+}
+
+.button-container {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px;
+}
+
+.page-container {
+    -fx-background-color: blue;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px;
+}
+
+.main-page {
+    -fx-background-color: #AFAFAF;
+    -fx-border-radius: 10px;
+    -fx-padding: 20px;
+}

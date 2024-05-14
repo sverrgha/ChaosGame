@@ -21,18 +21,18 @@ public class ChaosImage {
    * @return A WritableImage representing the canvas data.
    */
 
-  public WritableImage createImageFromCanvas(ChaosCanvas chaosCanvas) {
+  public static WritableImage createImageFromCanvas(ChaosCanvas chaosCanvas) {
     int width = chaosCanvas.getWidth();
     int height = chaosCanvas.getHeight();
     WritableImage image = new WritableImage(width, height);
     int[][] canvasData = chaosCanvas.getCanvasArray();
 
-    for (int x = 0; x < width; x++) {
-      for (int y = 0; y < height; y++) {
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
         if (canvasData[x][y] == 1) {
-          image.getPixelWriter().setColor(x, y, Color.BLACK);
+          image.getPixelWriter().setColor(y, x, Color.BLACK);
         } else {
-          image.getPixelWriter().setColor(x, y, Color.WHITE);
+          image.getPixelWriter().setColor(y, x, Color.WHITE);
         }
       }
     }
@@ -50,7 +50,7 @@ public class ChaosImage {
    * @return A new WritableImage that is scaled by the specified factor.
    */
 
-  public WritableImage scaleImage(WritableImage image, double scaleFactor) {
+  public static WritableImage scaleImage(WritableImage image, double scaleFactor) {
     int newWidth = (int) (image.getWidth() * scaleFactor);
     int newHeight = (int) (image.getHeight() * scaleFactor);
     WritableImage scaledImage = new WritableImage(newWidth, newHeight);
