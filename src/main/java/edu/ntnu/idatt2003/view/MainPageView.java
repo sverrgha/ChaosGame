@@ -1,10 +1,14 @@
 package edu.ntnu.idatt2003.view;
 
 import edu.ntnu.idatt2003.utils.Sizes;
+
 import java.util.Objects;
+
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -19,6 +23,10 @@ import javafx.scene.layout.StackPane;
 public class MainPageView extends Scene {
   private final BorderPane root;
   private final StackPane pageContainer;
+
+  private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH - 50) / 6;
+  private static final int BUTTON_HEIGHT = 40;
+
 
   /**
    * Constructs a MainPageView object with a BorderPane as the root node
@@ -69,26 +77,67 @@ public class MainPageView extends Scene {
     buttonContainer.setMaxHeight(Region.USE_PREF_SIZE);
     buttonContainer.setAlignment(Pos.CENTER);
     StackPane.setAlignment(buttonContainer, Pos.TOP_CENTER);
-    for (int i = 0; i < 7; i++) {
-      Button button = createButton("Button " + i);
-      buttonContainer.getChildren().add(button);
-    }
+    buttonContainer.getChildren().addAll(
+            createComboBox(),
+            createButton(10),
+            createButton(100),
+            createButton(1000),
+            createInputField(),
+            createButton(-1)
+    );
+
     return buttonContainer;
   }
 
+  private ComboBox<String> createComboBox() {
+    ComboBox<String> transformMenu = new ComboBox<>();
+    transformMenu.getStyleClass().add("combo-box");
+    transformMenu.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+    transformMenu.setPromptText("Transformation");
+    transformMenu.getItems().addAll(
+            "BarnsleyFern",
+            "Sierpinski",
+            "Julia"
+    );
+    transformMenu.setOnAction(e -> {
+      // Handle combo box selection
+    });
+    return transformMenu;
+  }
+
   /**
-   * Creates a button with the specified text.
+   * Creates a button with a specified number of steps. If -1 it's
+   * a reset button
    *
-   * @param text The text of the button.
+   * @param steps The number of steps for the button.
    * @return The button.
    */
-  private Button createButton(String text) {
-    Button button = new Button(text);
+  private Button createButton(int steps) {
+    Button button;
+    if (steps == -1) {
+      button = new Button("Reset");
+    } else {
+      button = new Button("Steps: " + steps);
+    }
     button.getStyleClass().add("button");
-    button.setPrefSize((Sizes.SCREEN_WIDTH - 50) / 7, 40);
+    button.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
     button.setOnAction(e -> {
       // Handle button click
     });
     return button;
+  }
+
+  /**
+   * Creates an input field for custom number of steps.
+   *
+   * @return The input field.
+   */
+  private TextField createInputField() {
+    TextField inputField = new TextField();
+    inputField.setPromptText("Steps");
+    inputField.getStyleClass().add("input-field");
+    inputField.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+    inputField.setPromptText("Steps");
+    return inputField;
   }
 }
