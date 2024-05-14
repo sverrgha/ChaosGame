@@ -43,4 +43,10 @@ public class MainPageController {
     }
     view.render(game.getCanvas());
   }
+
+  public void changeTransformation(ChaosGameDescriptionFactory.descriptionTypeEnum descriptionType) {
+    this.game = new ChaosGame(ChaosGameDescriptionFactory
+            .get(descriptionType), 600, 600);
+    view.render(game.getCanvas());
+  }
 }
