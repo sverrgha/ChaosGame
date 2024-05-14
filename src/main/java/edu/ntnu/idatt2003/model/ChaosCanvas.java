@@ -48,7 +48,7 @@ public class ChaosCanvas {
    */
   public int getPixel(Vector2d point) {
     Vector2d transformedPoint = transformCoordsToIndices.transform(point);
-    return canvas[(int) transformedPoint.getX1()][(int) transformedPoint.getX0()];
+    return canvas[(int) transformedPoint.getX0()][(int) transformedPoint.getX1()];
   }
   /**
    * Translates a vector with coordinates in the range of minCoords and maxCoords to the corresponding indices in the canvas.
@@ -58,7 +58,7 @@ public class ChaosCanvas {
    */
   public void putPixel(Vector2d point) {
     Vector2d transformedPoint = transformCoordsToIndices.transform(point);
-    canvas[(int) transformedPoint.getX1()][(int) transformedPoint.getX0()] = 1;
+    canvas[(int) transformedPoint.getX0()][(int) transformedPoint.getX1()] = 1;
   }
 
   /**
