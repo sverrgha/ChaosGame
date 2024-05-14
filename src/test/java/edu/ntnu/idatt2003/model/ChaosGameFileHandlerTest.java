@@ -30,8 +30,8 @@ class ChaosGameFileHandlerTest {
     juliaTextFilePath = "src/test/resources/JuliaExample.txt";
     juliaDescription = new ChaosGameDescription(
             new Vector2d(-1.6, -1), new Vector2d(1.6, 1),
-            List.of(new JuliaTransform(new Complex(-0.74543, 0.11301), 1))
-    );
+            List.of(new JuliaTransform(new Complex(-0.74543, 0.11301), 1)
+                ,(new JuliaTransform(new Complex(-0.74543, 0.11301), 1))));
   }
   @AfterEach
   void cleanUp() {

@@ -28,8 +28,8 @@ class JuliaTransformTest {
       JuliaTransform jt = new JuliaTransform(new Complex(1, 2), -1);
       Complex v2 = new Complex(3, 4);
       Vector2d v3 = jt.transform(v2);
-      assertEquals(0.644, v3.getX0(), 0.001);
-      assertEquals(-1.554, v3.getX1(), 0.001);
+      assertEquals(-1.554, v3.getX0(), 0.001);
+      assertEquals(-0.644, v3.getX1(), 0.001);
     }
   }
 }
