@@ -65,7 +65,8 @@ public class ChaosGameFileHandler {
   private List<Transform2D> parseJuliaTransformations(Scanner scanner) {
     List<Transform2D> transform = new ArrayList<>();
     Complex complex = new Complex(readDouble(scanner), readDouble(scanner));
-    transform.add(new JuliaTransform(complex, (int) Math.signum(complex.getX1())));
+    transform.add(new JuliaTransform(complex, -1));
+    transform.add(new JuliaTransform(complex, 1));
     return transform;
   }
 

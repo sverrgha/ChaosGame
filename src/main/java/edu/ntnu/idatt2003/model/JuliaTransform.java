@@ -39,8 +39,10 @@ public class JuliaTransform implements Transform2D {
    */
   public Vector2d transform(Vector2d point) {
     Vector2d subtracted = point.subtract(this.point);
-    return new Complex(subtracted.getX0() * this.sign,
-            subtracted.getX1() * this.sign).sqrt();
+    Complex z = new Complex(subtracted.getX0(), subtracted.getX1());
+    Complex complex = z.sqrt();
+    return new Complex(complex.getX0() * this.sign,
+            complex.getX1() * this.sign);
   }
 
   /**
