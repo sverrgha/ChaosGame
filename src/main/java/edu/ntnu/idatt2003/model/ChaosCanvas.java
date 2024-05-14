@@ -58,7 +58,7 @@ public class ChaosCanvas {
    */
   public void putPixel(Vector2d point) {
     Vector2d transformedPoint = transformCoordsToIndices.transform(point);
-    canvas[(int) transformedPoint.getX0()][(int) transformedPoint.getX1()] = 1;
+    canvas[(int) transformedPoint.getX1()][(int) transformedPoint.getX0()] = 1;
   }
 
   /**
