@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2003.view;
 
+import edu.ntnu.idatt2003.model.ChaosGame;
+import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
 import edu.ntnu.idatt2003.utils.Sizes;
 
 import java.util.Objects;
@@ -9,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -50,6 +53,9 @@ public class MainPageView extends Scene {
    */
   private void render() {
     root.getStyleClass().add("main-page");
+    ChaosGame game = new ChaosGame(ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.descriptionTypeEnum.SIERPINSKI_TRIANGLE), 600,600);
+    game.runSteps(1000);
+    pageContainer.getChildren().add(new ImageView(ChaosImage.createImageFromCanvas(game.getCanvas())));
     createPageContainer();
   }
 
