@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2003;
 
-import edu.ntnu.idatt2003.view.MainPageView;
+import edu.ntnu.idatt2003.controller.MainPageController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -22,15 +22,15 @@ public class Main extends Application {
   }
 
   /**
-   * The starts the application, by setting the Scene of the primary stage to a
-   * new MainPageView, and shows the stage.
+   * The starts the application, by creating a MainPageController, and sets the Scene
+   * to its view.
    *
    * @param primaryStage The primary stage for this application,
    *                     onto which the application scene can be set.
    */
   @Override
   public void start(Stage primaryStage) {
-    primaryStage.setScene(new MainPageView());
+    primaryStage.setScene(new MainPageController().getView());
     primaryStage.show();
   }
 }

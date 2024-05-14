@@ -1,13 +1,13 @@
 package edu.ntnu.idatt2003.view;
 
-import edu.ntnu.idatt2003.model.ChaosGame;
+import edu.ntnu.idatt2003.controller.MainPageController;
+import edu.ntnu.idatt2003.model.ChaosCanvas;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
 import edu.ntnu.idatt2003.utils.Sizes;
-
 import java.util.Objects;
-
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -26,7 +26,7 @@ import javafx.scene.layout.StackPane;
 public class MainPageView extends Scene {
   private final BorderPane root;
   private final StackPane pageContainer;
-
+  private final MainPageController controller;
   private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH - 50) / 6;
   private static final int BUTTON_HEIGHT = 40;
 
@@ -36,34 +36,33 @@ public class MainPageView extends Scene {
    * and a specified width and height.
    * The view is styled with a style sheet.
    */
-  public MainPageView() {
+  public MainPageView(MainPageController mainPageController) {
     super(new BorderPane(), Sizes.SCREEN_WIDTH, Sizes.SCREEN_HEIGHT);
     this.getStylesheets().add(Objects.requireNonNull(getClass()
             .getResource("/styles/mainPage.css")).toExternalForm());
 
     root = (BorderPane) this.getRoot();
     pageContainer = new StackPane();
-
-    render();
+    this.controller = mainPageController;
   }
 
   /**
    * Renders the main page of the application.
    * The main page contains a button container with 7 buttons.
    */
-  private void render() {
+  public void render(ChaosCanvas chaosCanvas) {
     root.getStyleClass().add("main-page");
-    ChaosGame game = new ChaosGame(ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.descriptionTypeEnum.SIERPINSKI_TRIANGLE), 600,600);
-    game.runSteps(1000);
-    pageContainer.getChildren().add(new ImageView(ChaosImage.createImageFromCanvas(game.getCanvas())));
-    createPageContainer();
+    createPageContainer(chaosCanvas);
   }
 
   /**
    * Creates the page container with a button container.
    * The button container contains 7 buttons.
    */
-  private void createPageContainer() {
+  private void createPageContainer(ChaosCanvas chaosCanvas) {
+    pageContainer.getChildren().add(new ImageView(
+            ChaosImage.createImageFromCanvas(chaosCanvas)));
+
     HBox buttonContainer = createButtonContainer();
     pageContainer.getChildren().add(buttonContainer);
     pageContainer.getStyleClass().add("page-container");
@@ -73,7 +72,9 @@ public class MainPageView extends Scene {
   }
 
   /**
-   * Creates a button container with 7 buttons.
+   * Creates a button container with a ComboBox to change the type
+   * of transformation, buttons for running steps/resetting, the
+   * transformation and input field to type custom amount of steps.
    *
    * @return The button container.
    */
@@ -83,6 +84,7 @@ public class MainPageView extends Scene {
     buttonContainer.setMaxHeight(Region.USE_PREF_SIZE);
     buttonContainer.setAlignment(Pos.CENTER);
     StackPane.setAlignment(buttonContainer, Pos.TOP_CENTER);
+
     buttonContainer.getChildren().addAll(
             createComboBox(),
             createButton(10),
@@ -95,19 +97,17 @@ public class MainPageView extends Scene {
     return buttonContainer;
   }
 
-  private ComboBox<String> createComboBox() {
-    ComboBox<String> transformMenu = new ComboBox<>();
+  private ComboBox<ChaosGameDescriptionFactory.descriptionTypeEnum> createComboBox() {
+    ComboBox<ChaosGameDescriptionFactory.descriptionTypeEnum> transformMenu = new ComboBox<>();
     transformMenu.getStyleClass().add("combo-box");
     transformMenu.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
     transformMenu.setPromptText("Transformation");
+
     transformMenu.getItems().addAll(
-            "BarnsleyFern",
-            "Sierpinski",
-            "Julia"
+            ChaosGameDescriptionFactory.descriptionTypeEnum.values()
     );
-    transformMenu.setOnAction(e -> {
-      // Handle combo box selection
-    });
+    transformMenu.setOnAction(e -> controller.changeTransformation(transformMenu.getValue()));
+
     return transformMenu;
   }
 
@@ -127,9 +127,9 @@ public class MainPageView extends Scene {
     }
     button.getStyleClass().add("button");
     button.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-    button.setOnAction(e -> {
-      // Handle button click
-    });
+
+    button.setOnAction(e -> controller.runSteps(steps));
+
     return button;
   }
 
@@ -144,6 +144,27 @@ public class MainPageView extends Scene {
     inputField.getStyleClass().add("input-field");
     inputField.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
     inputField.setPromptText("Steps");
+    inputField.setOnAction(e -> {
+      try {
+        controller.runSteps(Integer.parseInt(inputField.getText()));
+      } catch (Exception ex) {
+        showAlert("Invalid input. Please enter an integer.");
+        inputField.clear();
+      }
+    });
     return inputField;
+  }
+
+  /**
+   * Shows an alert with a specified message to give feedback to the user.
+   *
+   * @param message The message to be shown in the alert.
+   */
+  private void showAlert(String message) {
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setTitle("Error");
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.showAndWait();
   }
 }
