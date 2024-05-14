@@ -29,22 +29,24 @@ public class ChaosImage {
 
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        if (canvasData[x][y] == 1) {
-          image.getPixelWriter().setColor(y, x, Color.BLACK);
+        if (canvasData[y][x] == 1) {
+          image.getPixelWriter().setColor(x, y, Color.BLACK);
         } else {
-          image.getPixelWriter().setColor(y, x, Color.WHITE);
+          image.getPixelWriter().setColor(x, y, Color.WHITE);
         }
       }
     }
+
     return image;
   }
+
 
   /**
    * Scales a given WritableImage by a specified factor.
    * The method creates a new image with dimensions scaled by the scaleFactor and copies the color
    * data from the original image.
    *
-   * @param image The original WritableImage to be scaled.
+   * @param image       The original WritableImage to be scaled.
    * @param scaleFactor The factor by which to scale the image. A scaleFactor > 1 enlarges the
    *                    image,while a scaleFactor < 1 reduces its size.
    * @return A new WritableImage that is scaled by the specified factor.
@@ -57,7 +59,7 @@ public class ChaosImage {
     for (int y = 0; y < newHeight; y++) {
       for (int x = 0; x < newWidth; x++) {
         Color originalColor = image.getPixelReader()
-            .getColor((int) (x / scaleFactor), (int) (y / scaleFactor));
+                .getColor((int) (x / scaleFactor), (int) (y / scaleFactor));
         scaledImage.getPixelWriter().setColor(x, y, originalColor);
       }
     }
