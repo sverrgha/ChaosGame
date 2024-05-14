@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.view;
 
 import edu.ntnu.idatt2003.controller.MainPageController;
 import edu.ntnu.idatt2003.model.ChaosCanvas;
+import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
 import edu.ntnu.idatt2003.utils.Sizes;
 import java.util.Objects;
 import javafx.geometry.Pos;
@@ -61,6 +62,7 @@ public class MainPageView extends Scene {
   private void createPageContainer(ChaosCanvas chaosCanvas) {
     pageContainer.getChildren().add(new ImageView(
             ChaosImage.createImageFromCanvas(chaosCanvas)));
+
     HBox buttonContainer = createButtonContainer();
     pageContainer.getChildren().add(buttonContainer);
     pageContainer.getStyleClass().add("page-container");
@@ -70,7 +72,9 @@ public class MainPageView extends Scene {
   }
 
   /**
-   * Creates a button container with 7 buttons.
+   * Creates a button container with a ComboBox to change the type
+   * of transformation, buttons for running steps/resetting, the
+   * transformation and input field to type custom amount of steps.
    *
    * @return The button container.
    */
@@ -80,6 +84,7 @@ public class MainPageView extends Scene {
     buttonContainer.setMaxHeight(Region.USE_PREF_SIZE);
     buttonContainer.setAlignment(Pos.CENTER);
     StackPane.setAlignment(buttonContainer, Pos.TOP_CENTER);
+
     buttonContainer.getChildren().addAll(
             createComboBox(),
             createButton(10),
@@ -92,19 +97,17 @@ public class MainPageView extends Scene {
     return buttonContainer;
   }
 
-  private ComboBox<String> createComboBox() {
-    ComboBox<String> transformMenu = new ComboBox<>();
+  private ComboBox<ChaosGameDescriptionFactory.descriptionTypeEnum> createComboBox() {
+    ComboBox<ChaosGameDescriptionFactory.descriptionTypeEnum> transformMenu = new ComboBox<>();
     transformMenu.getStyleClass().add("combo-box");
     transformMenu.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
     transformMenu.setPromptText("Transformation");
+
     transformMenu.getItems().addAll(
-            "BarnsleyFern",
-            "Sierpinski",
-            "Julia"
+            ChaosGameDescriptionFactory.descriptionTypeEnum.values()
     );
-    transformMenu.setOnAction(e -> {
-      // Handle combo box selection
-    });
+    transformMenu.setOnAction(e -> controller.changeTransformation(transformMenu.getValue()));
+
     return transformMenu;
   }
 
@@ -124,7 +127,9 @@ public class MainPageView extends Scene {
     }
     button.getStyleClass().add("button");
     button.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+
     button.setOnAction(e -> controller.runSteps(steps));
+
     return button;
   }
 
@@ -149,6 +154,12 @@ public class MainPageView extends Scene {
     });
     return inputField;
   }
+
+  /**
+   * Shows an alert with a specified message to give feedback to the user.
+   *
+   * @param message The message to be shown in the alert.
+   */
   private void showAlert(String message) {
     Alert alert = new Alert(Alert.AlertType.WARNING);
     alert.setTitle("Error");
