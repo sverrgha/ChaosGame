@@ -1,8 +1,8 @@
 package edu.ntnu.idatt2003.view;
 
 import edu.ntnu.idatt2003.controller.MainPageController;
-import edu.ntnu.idatt2003.model.ChaosCanvas;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
+import edu.ntnu.idatt2003.model.ChaosGameObserver;
 import edu.ntnu.idatt2003.utils.Sizes;
 
 import java.io.File;
@@ -28,12 +28,15 @@ import javafx.stage.Stage;
  * GUI with a BorderPane layout.
  * The main page contains a button container with 7 buttons.
  */
-public class MainPageView extends Scene {
+public class MainPageView extends Scene implements ChaosGameObserver {
   private final BorderPane root;
   private final StackPane pageContainer;
   private final MainPageController controller;
-  private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH - 50) / 6;
+  private static final int PAGE_CONTAINER_MARGIN = 50;
+  private static final int BUTTON_COUNT = 6;
   private static final int BUTTON_HEIGHT = 40;
+  private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH - PAGE_CONTAINER_MARGIN)
+          / BUTTON_COUNT;
 
 
   /**
@@ -55,24 +58,32 @@ public class MainPageView extends Scene {
    * Renders the main page of the application.
    * The main page contains a button container with 7 buttons.
    */
-  public void render(ChaosCanvas chaosCanvas) {
+  public void render() {
     root.getStyleClass().add("main-page");
-    createPageContainer(chaosCanvas);
+    createPageContainer();
+  }
+
+  /**
+   * Updates the page container by clearing the children and rendering the page.
+   */
+  public void update() {
+    pageContainer.getChildren().clear();
+    render();
   }
 
   /**
    * Creates the page container with a button container.
    * The button container contains 7 buttons.
    */
-  private void createPageContainer(ChaosCanvas chaosCanvas) {
-    pageContainer.getChildren().add(new ImageView(
-            ChaosImage.createImageFromCanvas(chaosCanvas)));
+  private void createPageContainer() {
+    pageContainer.getChildren().add(new ImageView(ChaosImage
+            .createImageFromCanvas(controller.getGame().getCanvas())));
 
     HBox buttonContainer = createButtonContainer();
     pageContainer.getChildren().add(buttonContainer);
     pageContainer.getStyleClass().add("page-container");
-    pageContainer.setMaxHeight(Sizes.SCREEN_HEIGHT - 50);
-    pageContainer.setMaxWidth(Sizes.SCREEN_WIDTH - 50);
+    pageContainer.setMaxHeight(Sizes.SCREEN_HEIGHT - PAGE_CONTAINER_MARGIN);
+    pageContainer.setMaxWidth(Sizes.SCREEN_WIDTH - PAGE_CONTAINER_MARGIN);
     root.setCenter(pageContainer);
   }
 
