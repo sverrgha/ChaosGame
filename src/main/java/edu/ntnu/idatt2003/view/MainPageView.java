@@ -192,20 +192,21 @@ public class MainPageView extends Scene {
    */
   public VBox createAddTransformationPanel() {
     VBox addPanel = createMainPanel();
+    TextField transformationName = createTextField("transformation name");
     ComboBox<TransformationType> transformationComboBox = createTransformationComboBox();
     HBox transformationInputField = createTransformationInputField(transformationComboBox);
 
     HBox startVectorField = createTransformationHBox(Arrays.asList("x0", "y0"));
     HBox endVectorField = createTransformationHBox(Arrays.asList("x0", "y0"));
 
-    Button saveButton = createSaveButton(transformationComboBox, transformationInputField,
+    Button saveButton = createSaveButton(transformationName.getText(), transformationComboBox, transformationInputField,
         startVectorField, endVectorField);
     Button cancelButton = createCancelButton(transformationInputField, startVectorField,
         endVectorField);
     Button addFileButton = createAddFileButton();
 
     addPanel.getChildren()
-        .addAll(transformationComboBox, transformationInputField, startVectorField, endVectorField,
+        .addAll(transformationName, transformationComboBox, transformationInputField, startVectorField, endVectorField,
             saveButton, cancelButton, addFileButton);
     StackPane.setAlignment(addPanel, Pos.BOTTOM_LEFT);
 
@@ -309,18 +310,17 @@ public class MainPageView extends Scene {
    * @return a configured save Button.
    */
 
-  private Button createSaveButton(ComboBox<TransformationType> transformationComboBox,
+  private Button createSaveButton(String transformationName, ComboBox<TransformationType> transformationComboBox,
       HBox transformationInputField, HBox startVectorField, HBox endVectorField) {
     Button saveButton = new Button("Save");
     saveButton.getStyleClass().add("button");
     saveButton.setOnAction(e -> {
-      String selectedTransformation = transformationComboBox.getValue().toString();
       List<Transform2D> list = getInputInformation(transformationComboBox.getValue(),
           transformationInputField);
       Vector2d startVector = getInputVector(startVectorField);
       Vector2d endVector = getInputVector(endVectorField);
 
-      controller.addNewTransformation(startVector, endVector, list, selectedTransformation);
+      controller.addNewTransformation(startVector, endVector, list, transformationComboBox.getValue(), transformationName);
 
     });
     return saveButton;
@@ -432,17 +432,6 @@ public class MainPageView extends Scene {
   }
 
   /**
-   * Clears the input fields.
-   *
-   * @param fields HBox elements containing input fields.
-   */
-  private void clearFields(List<HBox> fields) {
-    for (HBox field : fields) {
-      field.getChildren().clear();
-    }
-  }
-
-  /**
    * Retrieves input information based on the selected transformation type.
    *
    * @param selectedTransformation   the selected transformation type.
@@ -473,8 +462,8 @@ public class MainPageView extends Scene {
   private List<Transform2D> getJuliaTransformation(HBox transformationInputField) {
     List<Transform2D> list = new ArrayList<>();
     if (!transformationInputField.getChildren().isEmpty()) {
-      VBox juliaVBox = (VBox) transformationInputField.getChildren().get(0);
-      HBox juliaFields = (HBox) juliaVBox.getChildren().get(0);
+      VBox juliaVBox = (VBox) transformationInputField.getChildren().getFirst();
+      HBox juliaFields = (HBox) juliaVBox.getChildren().getFirst();
 
       double realPart = parseDoubleFromTextField(juliaFields, 0);
       double imaginaryPart = parseDoubleFromTextField(juliaFields, 0);
@@ -495,8 +484,8 @@ public class MainPageView extends Scene {
   private List<Transform2D> getAffineTransformation(HBox transformationInputField) {
     List<Transform2D> list = new ArrayList<>();
     if (!transformationInputField.getChildren().isEmpty()) {
-      VBox affineVBox = (VBox) transformationInputField.getChildren().get(0);
-      for (int i = 1; i < affineVBox.getChildren().size(); i++) { // start from 1 to skip the add button
+      VBox affineVBox = (VBox) transformationInputField.getChildren().getFirst();
+      for (int i = 1; i < affineVBox.getChildren().size(); i++) {
         HBox matrixFields = (HBox) affineVBox.getChildren().get(i);
 
         double x0 = parseDoubleFromTextField(matrixFields, 0);

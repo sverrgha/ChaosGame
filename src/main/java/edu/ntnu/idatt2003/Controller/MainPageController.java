@@ -1,8 +1,17 @@
 package edu.ntnu.idatt2003.controller;
 
 import edu.ntnu.idatt2003.model.ChaosGame;
+import edu.ntnu.idatt2003.model.ChaosGameDescription;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
+import edu.ntnu.idatt2003.model.ChaosGameFileHandler;
+import edu.ntnu.idatt2003.model.Transform2D;
+import edu.ntnu.idatt2003.model.Vector2d;
 import edu.ntnu.idatt2003.view.MainPageView;
+import edu.ntnu.idatt2003.view.MainPageView.TransformationType;
+import java.util.List;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 
 /**
  * The controller class for the main page of the ChaosGame application.
@@ -12,6 +21,8 @@ import edu.ntnu.idatt2003.view.MainPageView;
 public class MainPageController {
   private ChaosGame game;
   private final MainPageView view;
+  private int costumJuliaTransformation;
+  private int costumAffineTransformation;
 
   /**
    * The constructor for the MainPageController class.
@@ -49,4 +60,19 @@ public class MainPageController {
             .get(descriptionType), 600, 600);
     view.render(game.getCanvas());
   }
+
+  public void addNewTransformation(Vector2d minCoords, Vector2d maxCoords,
+      List<Transform2D> transform, TransformationType transformationType, String TransformationName) {
+    ChaosGameFileHandler chaosGameFileHandler = new ChaosGameFileHandler();
+    ChaosGameDescription newChaosGameDescription = new ChaosGameDescription(minCoords, maxCoords, transform);
+
+    //switch (transformationType) {
+      //case JULIA -> chaosGameFileHandler.writeToFile(newChaosGameDescription, "src/main/resources/" + TransformationName);
+      //case AFFINE -> chaosGameFileHandler.writeToFile(newChaosGameDescription, "src/main/resources/" + TransformationName);
+    //method must define affine or julia
+  }
+
 }
+
+
+
