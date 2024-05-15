@@ -70,25 +70,50 @@ public class ChaosGameFileHandler {
     }
   }
 
+  /**
+   * Reads a double from the scanner and skips to the next line
+   * if the next token is not a double. This is used to skip
+   * comments in the file.
+   *
+   * @param scanner The scanner to read from.
+   * @return The double read from the scanner.
+   */
   private double readDouble(Scanner scanner) {
     double value = scanner.nextDouble();
-    if (scanner.hasNextLine() && !scanner.hasNextDouble()) {
+    while (scanner.hasNextLine() && !scanner.hasNextDouble()) {
       scanner.nextLine();
     }
     return value;
   }
 
-
+  /**
+   * Parses the transformations from the scanner based on the transformType.
+   * It calls the appropriate method to parse the transformations based on the type
+   * and returns the list of transformations.
+   *
+   * @param scanner       The scanner to read from.
+   * @param transformType The type of transformation to parse.
+   * @return The list of transformations.
+   * @throws IllegalArgumentException If the transformation type is unknown.
+   */
   private List<Transform2D> parseTransformations(Scanner scanner, String transformType) {
     return switch (transformType) {
-      case "affine2d" -> parseAffine2DTransformation(scanner);
+      case "affine2d" -> parseAffine2dTransformation(scanner);
       case "julia" -> parseJuliaTransformations(scanner);
       default -> throw new IllegalArgumentException("Unknown transformation type: "
               + transformType);
     };
   }
 
-  private List<Transform2D> parseAffine2DTransformation(Scanner scanner) {
+  /**
+   * Parses the affine2d transformations from the scanner.
+   * It reads the matrix and vector from the scanner and creates an AffineTransform2D object.
+   * It adds the AffineTransform2D object to the list of transformations.
+   *
+   * @param scanner The scanner to read from.
+   * @return The list of affine2d transformations.
+   */
+  private List<Transform2D> parseAffine2dTransformation(Scanner scanner) {
     List<Transform2D> transform = new ArrayList<>();
     Matrix2x2 matrix;
     Vector2d vector;
@@ -101,6 +126,14 @@ public class ChaosGameFileHandler {
     return transform;
   }
 
+  /**
+   * Parses the julia transformations from the scanner.
+   * It reads the complex number from the scanner and creates two JuliaTransform objects.
+   * It adds the JuliaTransform objects to the list of transformations and returns the list.
+   *
+   * @param scanner The scanner to read from.
+   * @return The list of julia transformations.
+   */
   private List<Transform2D> parseJuliaTransformations(Scanner scanner) {
     List<Transform2D> transform = new ArrayList<>();
     Complex complex = new Complex(readDouble(scanner), readDouble(scanner));
@@ -109,6 +142,13 @@ public class ChaosGameFileHandler {
     return transform;
   }
 
+  /**
+   * Writes a ChaosGameDescription to a file using its toString method.
+   *
+   * @param chaosGameDescription The ChaosGameDescription to write.
+   * @param path                 The path to write the file.
+   * @throws IllegalArgumentException If the file could not be written to.
+   */
   public void writeToFile(ChaosGameDescription chaosGameDescription, String path) {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
       writer.write(chaosGameDescription.toString());
