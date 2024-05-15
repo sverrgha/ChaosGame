@@ -13,11 +13,13 @@ import java.util.Random;
 
 public class ChaosGame {
 
-  private final ChaosCanvas canvas;
-  private final ChaosGameDescription description;
+  private ChaosCanvas canvas;
+  private ChaosGameDescription description;
   private Vector2d currentPoint;
-  private List<ChaosGameObserver> observers;
-  Random random;
+  private final int width;
+  private final int height;
+  private final List<ChaosGameObserver> observers;
+  Random randomGenerator;
 
   /**
    * Constructs a new ChaosGame with specified description and dimensions of the canvas.
@@ -28,11 +30,11 @@ public class ChaosGame {
    */
 
   public ChaosGame(ChaosGameDescription description, int width, int height) {
-    this.description = description;
-    this.canvas = new ChaosCanvas(width, height, description.getMinCoords(), description.getMaxCoords());
-    this.currentPoint = new Vector2d(0, 0);
     this.observers = new ArrayList<>();
-    random = new Random();
+    this.width = width;
+    this.height = height;
+    setDescription(description);
+    randomGenerator = new Random();
   }
 
   /**
@@ -53,13 +55,45 @@ public class ChaosGame {
    * @param steps The number of steps to run the simulation.
    */
   public void runSteps(int steps) {
-    for (int i = 0; i < steps; i++) {
-      int randomIndex = random.nextInt(description.getTransform().size());
-      currentPoint = description.getTransform().get(randomIndex).transform(currentPoint);
-
-      canvas.putPixel(currentPoint);
-
+    if (steps < 0) {
+      this.canvas.clear();
+    } else {
+      for (int i = 0; i < steps; i++) {
+        applyRandomTransformation();
+      }
     }
+    notifyObservers();
+  }
+
+  private void applyRandomTransformation() {
+    int randomIndex = randomGenerator.nextInt(description.getTransform().size());
+    currentPoint = description.getTransform().get(randomIndex).transform(currentPoint);
+    canvas.putPixel(currentPoint);
+  }
+
+  /**
+   * Changes the transformation of the chaos game. Calls the setDescription-method
+   * and notifies the observers that it has changed.
+   *
+   * @param descriptionType The type of fractal description to retrieve.
+   */
+  public void changeTransformation(ChaosGameDescriptionFactory
+                                           .descriptionTypeEnum descriptionType) {
+    setDescription(ChaosGameDescriptionFactory.get(descriptionType));
+    notifyObservers();
+  }
+
+  /**
+   * Sets the description of the chaos game, and creates a new canvas
+   * based on the new description.
+   *
+   * @param description The description of the chaos game.
+   */
+  public void setDescription(ChaosGameDescription description) {
+    this.description = description;
+    this.canvas = new ChaosCanvas(width, height,
+            description.getMinCoords(), description.getMaxCoords());
+    this.currentPoint = new Vector2d(0, 0);
   }
 
   /**
@@ -81,7 +115,7 @@ public class ChaosGame {
   }
 
   /**
-   * Notifies all observers, and calls the update-method
+   * Notifies all observers, and calls their update-method.
    */
   public void notifyObservers() {
     for (ChaosGameObserver observer : observers) {
