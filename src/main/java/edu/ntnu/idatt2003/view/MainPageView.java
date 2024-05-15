@@ -27,8 +27,10 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   private final BorderPane root;
   private final StackPane pageContainer;
   private final MainPageController controller;
-  private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH - 50) / 6;
+  private static final int PAGE_CONTAINER_MARGIN = 50;
+  private static final int BUTTON_COUNT = 6;
   private static final int BUTTON_HEIGHT = 40;
+  private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH - PAGE_CONTAINER_MARGIN) / BUTTON_COUNT;
 
 
   /**
@@ -70,8 +72,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     HBox buttonContainer = createButtonContainer();
     pageContainer.getChildren().add(buttonContainer);
     pageContainer.getStyleClass().add("page-container");
-    pageContainer.setMaxHeight(Sizes.SCREEN_HEIGHT - 50);
-    pageContainer.setMaxWidth(Sizes.SCREEN_WIDTH - 50);
+    pageContainer.setMaxHeight(Sizes.SCREEN_HEIGHT - PAGE_CONTAINER_MARGIN);
+    pageContainer.setMaxWidth(Sizes.SCREEN_WIDTH - PAGE_CONTAINER_MARGIN);
     root.setCenter(pageContainer);
   }
 
