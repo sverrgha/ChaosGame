@@ -64,19 +64,35 @@ public class ChaosGame {
     }
     notifyObservers();
   }
+
   private void applyRandomTransformation() {
     int randomIndex = randomGenerator.nextInt(description.getTransform().size());
     currentPoint = description.getTransform().get(randomIndex).transform(currentPoint);
     canvas.putPixel(currentPoint);
   }
 
-  public void changeTransformation(ChaosGameDescriptionFactory.descriptionTypeEnum descriptionType) {
+  /**
+   * Changes the transformation of the chaos game. Calls the setDescription-method
+   * and notifies the observers that it has changed.
+   *
+   * @param descriptionType The type of fractal description to retrieve.
+   */
+  public void changeTransformation(ChaosGameDescriptionFactory
+                                           .descriptionTypeEnum descriptionType) {
     setDescription(ChaosGameDescriptionFactory.get(descriptionType));
     notifyObservers();
   }
+
+  /**
+   * Sets the description of the chaos game, and creates a new canvas
+   * based on the new description.
+   *
+   * @param description The description of the chaos game.
+   */
   public void setDescription(ChaosGameDescription description) {
     this.description = description;
-    this.canvas = new ChaosCanvas(width, height, description.getMinCoords(), description.getMaxCoords());
+    this.canvas = new ChaosCanvas(width, height,
+            description.getMinCoords(), description.getMaxCoords());
     this.currentPoint = new Vector2d(0, 0);
   }
 
@@ -99,7 +115,7 @@ public class ChaosGame {
   }
 
   /**
-   * Notifies all observers, and calls the update-method
+   * Notifies all observers, and calls their update-method.
    */
   public void notifyObservers() {
     for (ChaosGameObserver observer : observers) {

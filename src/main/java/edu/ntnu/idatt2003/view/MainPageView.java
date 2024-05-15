@@ -30,7 +30,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   private static final int PAGE_CONTAINER_MARGIN = 50;
   private static final int BUTTON_COUNT = 6;
   private static final int BUTTON_HEIGHT = 40;
-  private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH - PAGE_CONTAINER_MARGIN) / BUTTON_COUNT;
+  private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH - PAGE_CONTAINER_MARGIN)
+          / BUTTON_COUNT;
 
 
   /**
@@ -56,6 +57,10 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     root.getStyleClass().add("main-page");
     createPageContainer();
   }
+
+  /**
+   * Updates the page container by clearing the children and rendering the page.
+   */
   public void update() {
     pageContainer.getChildren().clear();
     render();

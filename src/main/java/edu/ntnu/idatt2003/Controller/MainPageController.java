@@ -36,15 +36,32 @@ public class MainPageController {
     return view;
   }
 
+  /**
+   * Get the game of the main page.
+   *
+   * @return the game of the main page.
+   */
   public ChaosGame getGame() {
     return game;
   }
 
+  /**
+   * Run the chaos game simulation for the specified number of steps. If
+   * the number of steps is negative, the canvas will be cleared.
+   *
+   * @param steps The number of steps to run the simulation.
+   */
   public void runSteps(int steps) {
-      game.runSteps(steps);
+    game.runSteps(steps);
   }
 
-  public void changeTransformation(ChaosGameDescriptionFactory.descriptionTypeEnum descriptionType) {
+  /**
+   * Change the transformation-type of the chaos game.
+   *
+   * @param descriptionType The type of fractal description to retrieve.
+   */
+  public void changeTransformation(ChaosGameDescriptionFactory
+                                           .descriptionTypeEnum descriptionType) {
     game.changeTransformation(descriptionType);
   }
 
