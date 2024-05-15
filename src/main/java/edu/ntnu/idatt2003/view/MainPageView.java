@@ -4,8 +4,10 @@ import edu.ntnu.idatt2003.controller.MainPageController;
 import edu.ntnu.idatt2003.model.AffineTransform2D;
 import edu.ntnu.idatt2003.model.ChaosCanvas;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
+import edu.ntnu.idatt2003.model.ChaosGameObserver;
 import edu.ntnu.idatt2003.model.Complex;
 import edu.ntnu.idatt2003.model.JuliaTransform;
+import edu.ntnu.idatt2003.model.AffineTransform2D;
 import edu.ntnu.idatt2003.model.Matrix2x2;
 import edu.ntnu.idatt2003.model.Transform2D;
 import edu.ntnu.idatt2003.model.Vector2d;
@@ -13,12 +15,15 @@ import edu.ntnu.idatt2003.utils.Sizes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import java.io.File;
 import java.util.Objects;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -27,6 +32,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 /**
  * The MainPageView class is the main page of the application.
@@ -34,23 +41,26 @@ import javafx.scene.layout.VBox;
  * GUI with a BorderPane layout.
  * The main page contains a button container with 7 buttons.
  */
-public class MainPageView extends Scene {
-
+public class MainPageView extends Scene implements ChaosGameObserver {
   private final BorderPane root;
   private final StackPane pageContainer;
   private final MainPageController controller;
-  private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH - 50) / 6;
+  private static final int PAGE_CONTAINER_MARGIN = 50;
+  private static final int BUTTON_COUNT = 6;
   private static final int BUTTON_HEIGHT = 40;
+  private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH - PAGE_CONTAINER_MARGIN)
+          / BUTTON_COUNT;
 
 
   /**
-   * Constructs a MainPageView object with a BorderPane as the root node and a specified width and
-   * height. The view is styled with a style sheet.
+   * Constructs a MainPageView object with a BorderPane as the root node
+   * and a specified width and height.
+   * The view is styled with a style sheet.
    */
   public MainPageView(MainPageController mainPageController) {
     super(new BorderPane(), Sizes.SCREEN_WIDTH, Sizes.SCREEN_HEIGHT);
     this.getStylesheets().add(Objects.requireNonNull(getClass()
-        .getResource("/styles/mainPage.css")).toExternalForm());
+            .getResource("/styles/mainPage.css")).toExternalForm());
 
     root = (BorderPane) this.getRoot();
     pageContainer = new StackPane();
@@ -58,36 +68,43 @@ public class MainPageView extends Scene {
   }
 
   /**
-   * Renders the main page of the application. The main page contains a button container with 7
-   * buttons.
+   * Renders the main page of the application.
+   * The main page contains a button container with 7 buttons.
    */
-  public void render(ChaosCanvas chaosCanvas) {
+  public void render() {
     root.getStyleClass().add("main-page");
-    createPageContainer(chaosCanvas);
+    createPageContainer();
   }
 
   /**
-   * Creates the page container with a button container. The button container contains 7 buttons.
+   * Updates the page container by clearing the children and rendering the page.
    */
-  private void createPageContainer(ChaosCanvas chaosCanvas) {
-    ImageView imageView = new ImageView(ChaosImage.createImageFromCanvas(chaosCanvas));
+  public void update() {
+    pageContainer.getChildren().clear();
+    render();
+  }
 
-    HBox mainContent = new HBox();
-    mainContent.setSpacing(20);
-    mainContent.setAlignment(Pos.CENTER);
-    mainContent.getChildren().addAll(imageView, createAddTransformationPanel());
+  /**
+   * Creates the page container with a button container.
+   * The button container contains 7 buttons.
+   */
+  private void createPageContainer() {
 
-    pageContainer.getChildren().add(mainContent);
-    pageContainer.getChildren().add(createButtonContainer());
+    HBox contentContainer = new HBox(createAddTransformationPanel(), new ImageView(ChaosImage.createImageFromCanvas(controller.getGame().getCanvas())));
+    pageContainer.getChildren().add(contentContainer);
+
+    HBox buttonContainer = createButtonContainer();
+    pageContainer.getChildren().add(buttonContainer);
     pageContainer.getStyleClass().add("page-container");
-    pageContainer.setMaxHeight(Sizes.SCREEN_HEIGHT - 50);
-    pageContainer.setMaxWidth(Sizes.SCREEN_WIDTH - 50);
+    pageContainer.setMaxHeight(Sizes.SCREEN_HEIGHT - PAGE_CONTAINER_MARGIN);
+    pageContainer.setMaxWidth(Sizes.SCREEN_WIDTH - PAGE_CONTAINER_MARGIN);
     root.setCenter(pageContainer);
   }
 
   /**
-   * Creates a button container with a ComboBox to change the type of transformation, buttons for
-   * running steps/resetting, the transformation and input field to type custom amount of steps.
+   * Creates a button container with a ComboBox to change the type
+   * of transformation, buttons for running steps/resetting, the
+   * transformation and input field to type custom amount of steps.
    *
    * @return The button container.
    */
@@ -100,12 +117,12 @@ public class MainPageView extends Scene {
     StackPane.setAlignment(buttonContainer, Pos.TOP_CENTER);
 
     buttonContainer.getChildren().addAll(
-        createComboBox(),
-        createButton(10),
-        createButton(100),
-        createButton(1000),
-        createInputField(),
-        createButton(-1)
+            createComboBox(),
+            createButton(10),
+            createButton(100),
+            createButton(1000),
+            createInputField(),
+            createButton(-1)
     );
 
     return buttonContainer;
@@ -118,7 +135,7 @@ public class MainPageView extends Scene {
     transformMenu.setPromptText("Transformation");
 
     transformMenu.getItems().addAll(
-        ChaosGameDescriptionFactory.descriptionTypeEnum.values()
+            ChaosGameDescriptionFactory.descriptionTypeEnum.values()
     );
     transformMenu.setOnAction(e -> controller.changeTransformation(transformMenu.getValue()));
 
@@ -126,7 +143,8 @@ public class MainPageView extends Scene {
   }
 
   /**
-   * Creates a button with a specified number of steps. If -1 it's a reset button
+   * Creates a button with a specified number of steps. If -1 it's
+   * a reset button
    *
    * @param steps The number of steps for the button.
    * @return The button.
@@ -145,7 +163,6 @@ public class MainPageView extends Scene {
 
     return button;
   }
-
 
   /**
    * Creates an input field for custom number of steps.
@@ -170,16 +187,47 @@ public class MainPageView extends Scene {
   }
 
   /**
+   * Opens a file chooser dialog that enables the user to upload a custom
+   * text file with a chaos game description. The file is then uploaded
+   * by the controller. If an exception occurs, an alert is shown.
+   */
+  private void uploadFile() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+    Stage fileChooserStage = new Stage();
+    File file = fileChooser.showOpenDialog(fileChooserStage);
+    if (file != null) {
+      controller.uploadFile(file);
+    }
+  }
+
+  /**
    * Shows an alert with a specified message to give feedback to the user.
    *
    * @param message The message to be shown in the alert.
    */
-  private void showAlert(String message) {
+  public void showAlert(String message) {
     Alert alert = new Alert(Alert.AlertType.WARNING);
     alert.setTitle("Error");
     alert.setHeaderText(null);
     alert.setContentText(message);
     alert.showAndWait();
+  }
+
+  /**
+   * Asks the user for confirmation with a specified message, to ensure
+   * that the user wants to perform the specific action.
+   *
+   * @param message The message to be shown in the confirmation dialog.
+   * @return True if the user confirms, false otherwise.
+   */
+  public boolean askConfirmation(String message) {
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.YES, ButtonType.NO);
+    alert.setHeaderText(null);
+    alert.showAndWait();
+    return alert.getResult() == ButtonType.YES;
   }
 
 
