@@ -3,6 +3,7 @@ package edu.ntnu.idatt2003.view;
 import edu.ntnu.idatt2003.controller.MainPageController;
 import edu.ntnu.idatt2003.model.ChaosCanvas;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
+import edu.ntnu.idatt2003.model.Vector2d;
 import edu.ntnu.idatt2003.utils.Sizes;
 import java.util.Objects;
 import javafx.geometry.Pos;
@@ -306,7 +307,7 @@ public class MainPageView extends Scene {
     saveButton.setOnAction(e -> {
       // Implement the save logic here
       String selectedTransformation = transformationComboBox.getValue().toString();
-      // Get vectors from vectorsBox
+      //Vector2d startVector = new Vector2d()
       // Get start and end vectors
       // Save the transformation using controller
     });
@@ -356,11 +357,13 @@ public class MainPageView extends Scene {
    */
 
   private VBox juliaTransformationTextField() {
-    VBox transformationVbox = new VBox();
-    TextField transformationField = new TextField();
-    transformationField.setPromptText("Transformation");
-    transformationVbox.getChildren().add(transformationField);
-    return transformationVbox;
+    VBox transformationVBox = new VBox(10);
+
+    HBox vectorHbox = vectorHBox("Real part", "Imaginary part");
+
+    transformationVBox.getChildren().add(vectorHbox);
+
+    return transformationVBox;
   }
 
   /**
@@ -374,14 +377,43 @@ public class MainPageView extends Scene {
     Button addTransformationButton = new Button("Add Transformation");
 
     addTransformationButton.setOnAction(e -> {
-      HBox vectorBox = new HBox(5);
-      TextField vectorField = new TextField();
-      vectorField.setPromptText("Enter Affine Transformation");
-      vectorBox.getChildren().add(vectorField);
-      transformationsBox.getChildren().add(vectorBox);
+      HBox matrixHBox = matrixHBox("X0", "Y0", "X1", "Y1");
+      transformationsBox.getChildren().add(matrixHBox);
     });
 
     transformationsBox.getChildren().add(addTransformationButton);
     return transformationsBox;
+  }
+
+  private HBox vectorHBox (String namex0, String namey0) {
+    HBox transformationHbox = new HBox(10);
+    TextField x0 = new TextField();
+    x0.setPromptText(namex0);
+
+    TextField y0 = new TextField();
+    y0.setPromptText(namey0);
+
+    transformationHbox.getChildren().addAll(x0, y0);
+    return transformationHbox;
+  }
+
+  private HBox matrixHBox (String namex0, String namey0, String namex1, String namey1) {
+    HBox transformationHbox = new HBox(10);
+
+    TextField x0 = new TextField();
+    x0.setPromptText(namex0);
+
+    TextField y0 = new TextField();
+    y0.setPromptText(namey0);
+
+    TextField x1 = new TextField();
+    x1.setPromptText(namex1);
+
+    TextField y1 = new TextField();
+    y1.setPromptText(namey1);
+
+    transformationHbox.getChildren().addAll(x0, y0, x1, y1);
+
+    return transformationHbox;
   }
 }
