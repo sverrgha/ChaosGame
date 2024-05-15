@@ -45,7 +45,7 @@ public class MainPageController {
   }
 
   public void changeTransformation(ChaosGameDescriptionFactory.descriptionTypeEnum descriptionType) {
-    game.setDescription(ChaosGameDescriptionFactory.get(descriptionType));
+    game.changeTransformation(descriptionType);
   }
 
 }

@@ -70,11 +70,14 @@ public class ChaosGame {
     canvas.putPixel(currentPoint);
   }
 
+  public void changeTransformation(ChaosGameDescriptionFactory.descriptionTypeEnum descriptionType) {
+    setDescription(ChaosGameDescriptionFactory.get(descriptionType));
+    notifyObservers();
+  }
   public void setDescription(ChaosGameDescription description) {
     this.description = description;
     this.canvas = new ChaosCanvas(width, height, description.getMinCoords(), description.getMaxCoords());
     this.currentPoint = new Vector2d(0, 0);
-    notifyObservers();
   }
 
   /**
