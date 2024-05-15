@@ -1,8 +1,8 @@
 package edu.ntnu.idatt2003.view;
 
 import edu.ntnu.idatt2003.controller.MainPageController;
-import edu.ntnu.idatt2003.model.ChaosCanvas;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
+import edu.ntnu.idatt2003.model.ChaosGameObserver;
 import edu.ntnu.idatt2003.utils.Sizes;
 import java.util.Objects;
 import javafx.geometry.Pos;
@@ -23,7 +23,7 @@ import javafx.scene.layout.StackPane;
  * GUI with a BorderPane layout.
  * The main page contains a button container with 7 buttons.
  */
-public class MainPageView extends Scene {
+public class MainPageView extends Scene implements ChaosGameObserver {
   private final BorderPane root;
   private final StackPane pageContainer;
   private final MainPageController controller;
@@ -50,18 +50,22 @@ public class MainPageView extends Scene {
    * Renders the main page of the application.
    * The main page contains a button container with 7 buttons.
    */
-  public void render(ChaosCanvas chaosCanvas) {
+  public void render() {
     root.getStyleClass().add("main-page");
-    createPageContainer(chaosCanvas);
+    createPageContainer();
+  }
+  public void update() {
+    pageContainer.getChildren().clear();
+    render();
   }
 
   /**
    * Creates the page container with a button container.
    * The button container contains 7 buttons.
    */
-  private void createPageContainer(ChaosCanvas chaosCanvas) {
-    pageContainer.getChildren().add(new ImageView(
-            ChaosImage.createImageFromCanvas(chaosCanvas)));
+  private void createPageContainer() {
+    pageContainer.getChildren().add(new ImageView(ChaosImage
+            .createImageFromCanvas(controller.getGame().getCanvas())));
 
     HBox buttonContainer = createButtonContainer();
     pageContainer.getChildren().add(buttonContainer);

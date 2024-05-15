@@ -13,11 +13,13 @@ import java.util.Random;
 
 public class ChaosGame {
 
-  private final ChaosCanvas canvas;
-  private final ChaosGameDescription description;
+  private ChaosCanvas canvas;
+  private ChaosGameDescription description;
   private Vector2d currentPoint;
-  private List<ChaosGameObserver> observers;
-  Random random;
+  private final int width;
+  private final int height;
+  private final List<ChaosGameObserver> observers;
+  Random randomGenerator;
 
   /**
    * Constructs a new ChaosGame with specified description and dimensions of the canvas.
@@ -28,11 +30,11 @@ public class ChaosGame {
    */
 
   public ChaosGame(ChaosGameDescription description, int width, int height) {
-    this.description = description;
-    this.canvas = new ChaosCanvas(width, height, description.getMinCoords(), description.getMaxCoords());
-    this.currentPoint = new Vector2d(0, 0);
     this.observers = new ArrayList<>();
-    random = new Random();
+    this.width = width;
+    this.height = height;
+    setDescription(description);
+    randomGenerator = new Random();
   }
 
   /**
@@ -53,13 +55,26 @@ public class ChaosGame {
    * @param steps The number of steps to run the simulation.
    */
   public void runSteps(int steps) {
-    for (int i = 0; i < steps; i++) {
-      int randomIndex = random.nextInt(description.getTransform().size());
-      currentPoint = description.getTransform().get(randomIndex).transform(currentPoint);
-
-      canvas.putPixel(currentPoint);
-
+    if (steps < 0) {
+      this.canvas.clear();
+    } else {
+      for (int i = 0; i < steps; i++) {
+        applyRandomTransformation();
+      }
     }
+    notifyObservers();
+  }
+  private void applyRandomTransformation() {
+    int randomIndex = randomGenerator.nextInt(description.getTransform().size());
+    currentPoint = description.getTransform().get(randomIndex).transform(currentPoint);
+    canvas.putPixel(currentPoint);
+  }
+
+  public void setDescription(ChaosGameDescription description) {
+    this.description = description;
+    this.canvas = new ChaosCanvas(width, height, description.getMinCoords(), description.getMaxCoords());
+    this.currentPoint = new Vector2d(0, 0);
+    notifyObservers();
   }
 
   /**

@@ -10,7 +10,7 @@ import edu.ntnu.idatt2003.view.MainPageView;
  * and handling events from the view.
  */
 public class MainPageController {
-  private ChaosGame game;
+  private final ChaosGame game;
   private final MainPageView view;
 
   /**
@@ -23,7 +23,8 @@ public class MainPageController {
             .get(ChaosGameDescriptionFactory.descriptionTypeEnum.SIERPINSKI_TRIANGLE),
             600, 600);
     this.view = new MainPageView(this);
-    this.view.render(game.getCanvas());
+    this.game.registerObserver(view);
+    this.view.render();
   }
 
   /**
@@ -35,18 +36,16 @@ public class MainPageController {
     return view;
   }
 
+  public ChaosGame getGame() {
+    return game;
+  }
+
   public void runSteps(int steps) {
-    if (steps < 0) {
-      game.getCanvas().clear();
-    } else {
       game.runSteps(steps);
-    }
-    view.render(game.getCanvas());
   }
 
   public void changeTransformation(ChaosGameDescriptionFactory.descriptionTypeEnum descriptionType) {
-    this.game = new ChaosGame(ChaosGameDescriptionFactory
-            .get(descriptionType), 600, 600);
-    view.render(game.getCanvas());
+    game.setDescription(ChaosGameDescriptionFactory.get(descriptionType));
   }
+
 }
