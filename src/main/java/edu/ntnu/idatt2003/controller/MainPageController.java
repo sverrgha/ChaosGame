@@ -9,9 +9,6 @@ import edu.ntnu.idatt2003.model.Vector2d;
 import edu.ntnu.idatt2003.view.MainPageView;
 import edu.ntnu.idatt2003.view.MainPageView.TransformationType;
 import java.util.List;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 
 /**
  * The controller class for the main page of the ChaosGame application.
@@ -21,8 +18,6 @@ import javafx.scene.layout.HBox;
 public class MainPageController {
   private ChaosGame game;
   private final MainPageView view;
-  private int costumJuliaTransformation;
-  private int costumAffineTransformation;
 
   /**
    * The constructor for the MainPageController class.
