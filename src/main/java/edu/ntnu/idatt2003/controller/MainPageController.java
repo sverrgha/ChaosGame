@@ -132,6 +132,7 @@ public class MainPageController {
       List<Transform2D> transform, TransformationType transformationType, String TransformationName) {
     ChaosGameFileHandler chaosGameFileHandler = new ChaosGameFileHandler();
     ChaosGameDescription newChaosGameDescription = new ChaosGameDescription(minCoords, maxCoords, transform);
+    chaosGameFileHandler.writeToFile(newChaosGameDescription, TRANSFORMATIONS_PATH + TransformationName +".txt");
 
     //switch (transformationType) {
       //case JULIA -> chaosGameFileHandler.writeToFile(newChaosGameDescription, "src/main/resources/" + TransformationName);

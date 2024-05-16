@@ -247,7 +247,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     HBox startVectorField = createTransformationHBox(Arrays.asList("x0", "y0"));
     HBox endVectorField = createTransformationHBox(Arrays.asList("x0", "y0"));
 
-    Button saveButton = createSaveButton(transformationName.getText(), transformationComboBox, transformationInputField,
+    Button saveButton = createSaveButton(transformationName, transformationComboBox, transformationInputField,
         startVectorField, endVectorField);
     Button cancelButton = createCancelButton(transformationInputField, startVectorField,
         endVectorField);
@@ -358,17 +358,16 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * @return a configured save Button.
    */
 
-  private Button createSaveButton(String transformationName, ComboBox<TransformationType> transformationComboBox,
+  private Button createSaveButton(TextField transformationName, ComboBox<TransformationType> transformationComboBox,
       HBox transformationInputField, HBox startVectorField, HBox endVectorField) {
     Button saveButton = new Button("Save");
     saveButton.getStyleClass().add("button");
     saveButton.setOnAction(e -> {
       List<Transform2D> list = getInputInformation(transformationComboBox.getValue(),
-          transformationInputField, );
+          transformationInputField);
       Vector2d startVector = getInputVector(startVectorField);
       Vector2d endVector = getInputVector(endVectorField);
-
-      controller.addNewTransformation(startVector, endVector, list, transformationComboBox.getValue(), transformationName);
+      controller.addNewTransformation(startVector, endVector, list, transformationComboBox.getValue(), transformationName.getText());
 
     });
     return saveButton;
@@ -515,11 +514,10 @@ public class MainPageView extends Scene implements ChaosGameObserver {
       HBox juliaFields = (HBox) juliaVBox.getChildren().getFirst();
 
       double realPart = parseDoubleFromTextField(juliaFields, 0);
-      double imaginaryPart = parseDoubleFromTextField(juliaFields, 0);
+      double imaginaryPart = parseDoubleFromTextField(juliaFields, 1);
 
       Complex complex = new Complex(realPart, imaginaryPart);
       list.add(new JuliaTransform(complex, 1));
-      list.add(new JuliaTransform(complex, -1));
     }
     return list;
   }
