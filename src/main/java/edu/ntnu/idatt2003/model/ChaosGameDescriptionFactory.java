@@ -29,7 +29,6 @@ public class ChaosGameDescriptionFactory {
       case SIERPINSKI_TRIANGLE -> sierpinskiTriangle();
       case BARNSLEY_FERN -> barnsleyFern();
       case JULIA -> juliaTransformation();
-      case CUSTOM -> customTransformation();
     };
   }
 
@@ -41,8 +40,7 @@ public class ChaosGameDescriptionFactory {
   public enum descriptionTypeEnum {
     SIERPINSKI_TRIANGLE,
     BARNSLEY_FERN,
-    JULIA,
-    CUSTOM
+    JULIA
   }
 
   /**
@@ -75,12 +73,6 @@ public class ChaosGameDescriptionFactory {
     return transformations("src/test/resources/JuliaExample.txt");
   }
 
-  private static ChaosGameDescription customTransformation() {
-    //method to write to file
-    //return transformations("path to an file")
-    return null;
-  }
-
 
   private static ChaosGameDescription transformations(String pathToFile) {
     try {
@@ -89,6 +81,12 @@ public class ChaosGameDescriptionFactory {
       throw new RuntimeException("File " + pathToFile + " not found." + e.getMessage());
     }
   }
+
+  public static ChaosGameDescription getCustom(String transformationName) {
+    String filePath = "src/test/resources/" + transformationName + ".txt";
+    return transformations(filePath);
+  }
+
 
 
 }
