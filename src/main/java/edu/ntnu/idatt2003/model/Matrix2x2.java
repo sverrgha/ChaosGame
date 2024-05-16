@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.model;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Locale;
  *
  * @author nicklapt
  */
-public class Matrix2x2 {
+public class Matrix2x2 implements Serializable {
 
   private final double a00;
   private final double a01;

@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  * the game, and the transformations to be used.
  * Goal: act as a model for a chaos game description.
  */
-public class ChaosGameDescription {
+public class ChaosGameDescription implements Serializable {
   /**
    * The minimum (bottom left) coordinates of the game.
    */

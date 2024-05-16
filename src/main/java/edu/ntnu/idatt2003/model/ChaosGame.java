@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2003.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,7 +12,7 @@ import java.util.Random;
  * Goal: act as a model for a chaos game.
  */
 
-public class ChaosGame {
+public class ChaosGame implements Serializable {
 
   private ChaosCanvas canvas;
   private ChaosGameDescription description;

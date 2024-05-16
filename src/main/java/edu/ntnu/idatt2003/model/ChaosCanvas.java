@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2003.model;
 
+import java.io.Serializable;
+
 /**
  * Class for creating a canvas for the chaos game.
  * Contains methods for converting coordinates to indices on the canvas, and for displaying the canvas.
@@ -7,7 +9,7 @@ package edu.ntnu.idatt2003.model;
  * Goal: act as a model for a canvas for the chaos game.
  */
 
-public class ChaosCanvas {
+public class ChaosCanvas implements Serializable {
 
   private final int[][] canvas;
   private final int width;
