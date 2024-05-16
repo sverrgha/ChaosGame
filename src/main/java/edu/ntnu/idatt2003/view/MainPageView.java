@@ -249,8 +249,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
 
     Button saveButton = createSaveButton(transformationName, transformationComboBox, transformationInputField,
         startVectorField, endVectorField);
-    Button cancelButton = createCancelButton(transformationInputField, startVectorField,
-        endVectorField);
+    Button cancelButton = createCancelButton();
     Button addFileButton = createAddFileButton();
 
     addPanel.getChildren()
@@ -368,7 +367,6 @@ public class MainPageView extends Scene implements ChaosGameObserver {
       Vector2d startVector = getInputVector(startVectorField);
       Vector2d endVector = getInputVector(endVectorField);
       controller.addNewTransformation(startVector, endVector, list, transformationComboBox.getValue(), transformationName.getText());
-
     });
     return saveButton;
   }
@@ -376,52 +374,23 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   /**
    * Creates the cancel button.
    *
-   * @param transformationInputField the HBox containing the input fields for transformations.
-   * @param startVectorField         the TextField for the start vector.
-   * @param endVectorField           the TextField for the end vector.
    * @return a configured cancel Button.
    */
 
-  private Button createCancelButton(HBox transformationInputField, HBox startVectorField,
-      HBox endVectorField) {
+  private Button createCancelButton() {
     Button cancelButton = new Button("Cancel");
     cancelButton.getStyleClass().add("button");
     cancelButton.setOnAction(e -> {
-      //clearTransformationFields(transformationInputField);
-      //clearVectorFields(startVectorField);
-      //clearVectorFields(endVectorField);
       render();
     });
     return cancelButton;
-  }
-
-  /**
-   * Clears the input fields for transformations.
-   *
-   * @param transformationInputField the HBox containing the input fields for transformations.
-   */
-  private void clearTransformationFields(HBox transformationInputField) {
-    transformationInputField.getChildren().clear();
-  }
-
-  /**
-   * Clears the input fields for vectors.
-   *
-   * @param vectorField the HBox containing the vector input fields.
-   */
-  private void clearVectorFields(HBox vectorField) {
-    for (Node node : vectorField.getChildren()) {
-      if (node instanceof TextField) {
-        ((TextField) node).clear();
-      }
-    }
   }
 
   private Button createAddFileButton() {
     Button addFileButton = new Button("Add File");
     addFileButton.getStyleClass().add("button");
     addFileButton.setOnAction(e -> {
-      // Code to add file
+      uploadFile();
     });
     return addFileButton;
   }
@@ -557,12 +526,10 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * @return a Vector2d object representing the input vector.
    */
   private Vector2d getInputVector(HBox vectorHBox) {
-    TextField v0Text = (TextField) vectorHBox.getChildren().get(0);
-    TextField v1Text = (TextField) vectorHBox.getChildren().get(1);
+    double v0 = parseDoubleFromTextField(vectorHBox, 0);
+    double v1 = parseDoubleFromTextField(vectorHBox, 1);
 
-    double v0 = Double.parseDouble(v0Text.getText());
-    double v1 = Double.parseDouble(v1Text.getText());
-    return new Vector2d(v0, v1);
+    return new Vector2d(v0,v1);
   }
 
   /**
