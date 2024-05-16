@@ -118,6 +118,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
 
     buttonContainer.getChildren().addAll(
             createComboBox(),
+            createCustomComboBox(),
             createButton(10),
             createButton(100),
             createButton(1000),
@@ -140,6 +141,23 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     transformMenu.setOnAction(e -> controller.changeTransformation(transformMenu.getValue()));
 
     return transformMenu;
+  }
+
+  private ComboBox<String> createCustomComboBox() {
+    ComboBox<String> customMenu = new ComboBox<>();
+    customMenu.getStyleClass().add("combo-box");
+    customMenu.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+    customMenu.setPromptText("Custom Transformations");
+
+    List<String> customTransformations = controller.getCustomTransformation();
+
+    if (customTransformations != null && !customTransformations.isEmpty()){
+    customMenu.getItems().addAll(customTransformations);
+    }
+
+    customMenu.setOnAction(e -> controller.changeCustomTransformation(customMenu.getValue()));
+
+    return customMenu;
   }
 
   /**
@@ -366,7 +384,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
           transformationInputField);
       Vector2d startVector = getInputVector(startVectorField);
       Vector2d endVector = getInputVector(endVectorField);
-      controller.addNewTransformation(startVector, endVector, list, transformationComboBox.getValue(), transformationName.getText());
+      controller.addCustomTransformation(startVector, endVector, list, transformationComboBox.getValue(), transformationName.getText());
     });
     return saveButton;
   }
