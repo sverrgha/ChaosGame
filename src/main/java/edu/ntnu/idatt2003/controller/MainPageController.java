@@ -3,12 +3,14 @@ package edu.ntnu.idatt2003.controller;
 import edu.ntnu.idatt2003.model.ChaosGame;
 import edu.ntnu.idatt2003.model.ChaosGameDescription;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
+import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory.descriptionTypeEnum;
 import edu.ntnu.idatt2003.model.ChaosGameFileHandler;
 import edu.ntnu.idatt2003.model.ChaosGameFileHandler;
 import edu.ntnu.idatt2003.model.Transform2D;
 import edu.ntnu.idatt2003.model.Vector2d;
 import edu.ntnu.idatt2003.view.MainPageView;
 import edu.ntnu.idatt2003.view.MainPageView.TransformationType;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.io.File;
@@ -27,7 +29,7 @@ import java.util.InputMismatchException;
 public class MainPageController {
   private final ChaosGame game;
   private final MainPageView view;
-
+  private List<String> customTransformations = new ArrayList<>();
   private static final String TRANSFORMATIONS_PATH = "src/main/resources/transformations/";
 
   /**
@@ -127,17 +129,27 @@ public class MainPageController {
     game.changeTransformation(descriptionType);
   }
 
+  public void changeCustomTransformation(String customName) {
+    ChaosGameDescription chaosGameDescription = customNameHandle(customName);
+    game.changeCustomTransformation(chaosGameDescription);
+  }
 
-  public void addNewTransformation(Vector2d minCoords, Vector2d maxCoords,
-      List<Transform2D> transform, TransformationType transformationType, String TransformationName) {
+  public ChaosGameDescription customNameHandle(String customName) {
+    return ChaosGameDescriptionFactory.getCustom(customName);
+  }
+
+  public void addCustomTransformation(Vector2d minCoords, Vector2d maxCoords,
+      List<Transform2D> transform, TransformationType transformationType, String transformationName) {
     ChaosGameFileHandler chaosGameFileHandler = new ChaosGameFileHandler();
     ChaosGameDescription newChaosGameDescription = new ChaosGameDescription(minCoords, maxCoords, transform);
-    chaosGameFileHandler.writeToFile(newChaosGameDescription, TRANSFORMATIONS_PATH + TransformationName +".txt");
+    chaosGameFileHandler.writeToFile(newChaosGameDescription, TRANSFORMATIONS_PATH + transformationName +".txt");
+    System.out.println(transformationName);
+    customTransformations.add(transformationName);
+    view.render();
+  }
 
-    //switch (transformationType) {
-      //case JULIA -> chaosGameFileHandler.writeToFile(newChaosGameDescription, "src/main/resources/" + TransformationName);
-      //case AFFINE -> chaosGameFileHandler.writeToFile(newChaosGameDescription, "src/main/resources/" + TransformationName);
-    //method must define affine or julia
+  public List<String> getCustomTransformation() {
+    return customTransformations;
   }
 
 }
