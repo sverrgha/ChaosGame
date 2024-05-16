@@ -29,7 +29,7 @@ public class ChaosGameDescriptionFactory {
       case SIERPINSKI_TRIANGLE -> sierpinskiTriangle();
       case BARNSLEY_FERN -> barnsleyFern();
       case JULIA -> juliaTransformation();
-      case COSTUME -> costumTransformation();
+      case CUSTOM -> customTransformation();
     };
   }
 
@@ -42,7 +42,7 @@ public class ChaosGameDescriptionFactory {
     SIERPINSKI_TRIANGLE,
     BARNSLEY_FERN,
     JULIA,
-    COSTUME
+    CUSTOM
   }
 
   /**
@@ -75,7 +75,7 @@ public class ChaosGameDescriptionFactory {
     return transformations("src/test/resources/JuliaExample.txt");
   }
 
-  private static ChaosGameDescription costumTransformation() {
+  private static ChaosGameDescription customTransformation() {
     //method to write to file
     //return transformations("path to an file")
     return null;

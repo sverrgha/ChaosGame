@@ -73,6 +73,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    */
   public void render() {
     root.getStyleClass().add("main-page");
+    pageContainer.getChildren().clear();
     createPageContainer();
   }
 
@@ -80,7 +81,6 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * Updates the page container by clearing the children and rendering the page.
    */
   public void update() {
-    pageContainer.getChildren().clear();
     render();
   }
 
@@ -364,7 +364,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     saveButton.getStyleClass().add("button");
     saveButton.setOnAction(e -> {
       List<Transform2D> list = getInputInformation(transformationComboBox.getValue(),
-          transformationInputField);
+          transformationInputField, );
       Vector2d startVector = getInputVector(startVectorField);
       Vector2d endVector = getInputVector(endVectorField);
 
@@ -388,9 +388,10 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     Button cancelButton = new Button("Cancel");
     cancelButton.getStyleClass().add("button");
     cancelButton.setOnAction(e -> {
-      clearTransformationFields(transformationInputField);
-      clearVectorFields(startVectorField);
-      clearVectorFields(endVectorField);
+      //clearTransformationFields(transformationInputField);
+      //clearVectorFields(startVectorField);
+      //clearVectorFields(endVectorField);
+      render();
     });
     return cancelButton;
   }
