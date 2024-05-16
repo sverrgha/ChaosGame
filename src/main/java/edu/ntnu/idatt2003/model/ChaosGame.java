@@ -82,6 +82,10 @@ public class ChaosGame {
     setDescription(ChaosGameDescriptionFactory.get(descriptionType));
     notifyObservers();
   }
+  public void changeCustomTransformation(ChaosGameDescription customDescription) {
+    setDescription(customDescription);
+    notifyObservers();
+  }
 
   /**
    * Sets the description of the chaos game, and creates a new canvas

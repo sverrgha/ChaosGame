@@ -83,7 +83,7 @@ public class ChaosGameDescriptionFactory {
   }
 
   public static ChaosGameDescription getCustom(String transformationName) {
-    String filePath = "src/test/resources/" + transformationName + ".txt";
+    String filePath = "src/main/resources/transformations/" + transformationName + ".txt";
     return transformations(filePath);
   }
 
