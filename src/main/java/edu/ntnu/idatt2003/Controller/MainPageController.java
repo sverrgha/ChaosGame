@@ -16,6 +16,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.InputMismatchException;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  * The controller class for the main page of the ChaosGame application.
@@ -28,6 +32,22 @@ public class MainPageController {
 
   private static final String TRANSFORMATIONS_PATH = "src/main/resources/transformations/";
   private static final String SERIALIZED_GAME_PATH = "src/main/resources/savedTransformation.ser";
+  private static final Logger LOGGER = Logger.getLogger(MainPageController.class.getName());
+
+  static {
+    try {
+      // Ensure the logs directory exists
+      new File("logs").mkdirs();
+
+      FileHandler fileHandler = new FileHandler("logs/application.log", false);
+      fileHandler.setFormatter(new SimpleFormatter());
+      fileHandler.setLevel(Level.WARNING);
+      LOGGER.addHandler(fileHandler);
+      LOGGER.setLevel(Level.ALL);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
   /**
    * The constructor for the MainPageController class.
@@ -35,11 +55,12 @@ public class MainPageController {
    * and renders the view.
    */
   public MainPageController() {
-    this.game = loadCanvasFromFile();
+    this.game = loadGameState();
     this.view = new MainPageView(this);
     this.game.registerObserver(view);
     this.view.render();
-    Runtime.getRuntime().addShutdownHook(new Thread(this::saveCanvasInFile));
+    Runtime.getRuntime().addShutdownHook(new Thread(this::saveGameState));
+    LOGGER.log(Level.INFO, "MainPageController initialized successfully.");
   }
 
   /**
@@ -68,6 +89,7 @@ public class MainPageController {
    */
   public void runSteps(int steps) {
     game.runSteps(steps);
+    LOGGER.log(Level.INFO, "Chaos game simulation ran {0} steps successfully.", steps);
   }
 
   /**
@@ -78,25 +100,21 @@ public class MainPageController {
    * @throws InputMismatchException If the file is not found or the input is invalid.
    */
   public void uploadFile(File file) {
-    try {
-      validateFile(file);
-      if (!Files.exists(Path.of(TRANSFORMATIONS_PATH + file.getName()))
-              || view.askConfirmation("File already exists. Do you want to overwrite it?")) {
-        storeFile(file);
-      }
-    } catch (Exception e) {
-      view.showAlert(e.getMessage());
+    LOGGER.log(Level.INFO, "Uploading file: {0}", file.getName());
+    validateFile(file);
+    if (!Files.exists(Path.of(TRANSFORMATIONS_PATH + file.getName()))
+            || view.askConfirmation("File already exists. Do you want to overwrite it?")) {
+      storeFile(file);
     }
+
   }
 
-  private void validateFile(File file)
-          throws InputMismatchException, FileNotFoundException {
+  private void validateFile(File file) {
     try {
       new ChaosGameFileHandler().readFromFile(file);
-    } catch (InputMismatchException e) {
-      throw new InputMismatchException(e.getMessage());
-    } catch (FileNotFoundException e) {
-      throw new FileNotFoundException(e.getMessage());
+    } catch (InputMismatchException | FileNotFoundException e) {
+      view.showAlert(e.getMessage());
+      LOGGER.log(Level.WARNING, "Error uploading file. File was not uploaded.");
     }
   }
 
@@ -111,10 +129,13 @@ public class MainPageController {
       String destinationPath = projectPath + File.separator
               + TRANSFORMATIONS_PATH + file.getName();
       Files.copy(file.toPath(), Path.of(destinationPath), StandardCopyOption.REPLACE_EXISTING);
+      LOGGER.log(Level.INFO, "File stored successfully in {0}", destinationPath);
     } catch (IOException e) {
-      throw new InputMismatchException("Error copying file: " + e.getMessage());
+      view.showAlert("Error storing file. Please try again.");
+      LOGGER.log(Level.WARNING, "Error storing file. File was not stored.");
     }
   }
+
   /**
    * Change the transformation-type of the chaos game.
    *
@@ -123,24 +144,35 @@ public class MainPageController {
   public void changeTransformation(ChaosGameDescriptionFactory
                                            .descriptionTypeEnum descriptionType) {
     game.changeTransformation(descriptionType);
+    LOGGER.log(Level.INFO, "Transformation was changed successfully to {0}"
+            , descriptionType);
   }
 
-  private void saveCanvasInFile() {
+  private void saveGameState() {
+    LOGGER.log(Level.INFO, "Saving game state.");
     game.removeObserver(view);
     try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SERIALIZED_GAME_PATH))) {
       oos.writeObject(game);
+      LOGGER.log(Level.INFO, "Game state saved successfully in {0}", SERIALIZED_GAME_PATH);
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.WARNING, "Failed to save game state. Next time the application is"
+              + " started, the game will be launched in same game state as this time.");
     }
   }
-  public ChaosGame loadCanvasFromFile() {
+
+  public ChaosGame loadGameState() {
+    LOGGER.log(Level.INFO, "Loading game state.");
     File file = new File(SERIALIZED_GAME_PATH);
     if (file.exists()) {
       try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-        return (ChaosGame) ois.readObject();
+        ChaosGame loadedGame = (ChaosGame) ois.readObject();
+        LOGGER.log(Level.INFO, "Game state loaded successfully.");
+        return loadedGame;
       } catch (IOException | ClassNotFoundException e) {
-        e.printStackTrace();
+        LOGGER.log(Level.WARNING, "Failed to load game state. Creating new game.");
       }
+    } else {
+      LOGGER.log(Level.WARNING, "No saved game state found. Creating new game.");
     }
     return new ChaosGame(ChaosGameDescriptionFactory
             .get(ChaosGameDescriptionFactory.descriptionTypeEnum.SIERPINSKI_TRIANGLE),
