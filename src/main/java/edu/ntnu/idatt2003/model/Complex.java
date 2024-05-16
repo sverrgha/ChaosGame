@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2003.model;
 
+import java.io.Serializable;
+
 /**
  * Represents a subclass that extends the {@link Vector2d}.
  * It adds the additional functionality of finding the square root of a complex number.
@@ -7,7 +9,7 @@ package edu.ntnu.idatt2003.model;
  *
  * @author svhaa
  */
-public class Complex extends Vector2d {
+public class Complex extends Vector2d implements Serializable {
   /**
    * Constructs a Complex object.
    *

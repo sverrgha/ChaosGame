@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2003.model;
 
+import java.io.Serializable;
+
 /**
  * Represents a 2-dimensional vector.
  * Contains a constructor and getters for the x0 and x1 attributes.
@@ -8,7 +10,7 @@ package edu.ntnu.idatt2003.model;
  *
  * @author sverrgha
  */
-public class Vector2d {
+public class Vector2d implements Serializable {
 
   /**
    * The first coordinate of the vector.

@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2003.model;
 
+import java.io.Serializable;
+
 /**
  * Represents a Julia transformation applied to 2D vectors.
  * Contains a constructor and a method for transforming a 2D vector.
@@ -7,7 +9,7 @@ package edu.ntnu.idatt2003.model;
  *
  * @author sverrgha
  */
-public class JuliaTransform implements Transform2D {
+public class JuliaTransform implements Transform2D, Serializable {
 
   /**
    * The point to transform the 2D vector by.

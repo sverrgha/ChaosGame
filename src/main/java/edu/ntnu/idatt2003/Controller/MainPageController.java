@@ -6,8 +6,12 @@ import edu.ntnu.idatt2003.model.ChaosGameFileHandler;
 import edu.ntnu.idatt2003.view.MainPageView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -23,6 +27,7 @@ public class MainPageController {
   private final MainPageView view;
 
   private static final String TRANSFORMATIONS_PATH = "src/main/resources/transformations/";
+  private static final String SERIALIZED_GAME_PATH = "src/main/resources/savedTransformation.ser";
 
   /**
    * The constructor for the MainPageController class.
@@ -30,12 +35,11 @@ public class MainPageController {
    * and renders the view.
    */
   public MainPageController() {
-    this.game = new ChaosGame(ChaosGameDescriptionFactory
-            .get(ChaosGameDescriptionFactory.descriptionTypeEnum.SIERPINSKI_TRIANGLE),
-            600, 600);
+    this.game = loadCanvasFromFile();
     this.view = new MainPageView(this);
     this.game.registerObserver(view);
     this.view.render();
+    Runtime.getRuntime().addShutdownHook(new Thread(this::saveCanvasInFile));
   }
 
   /**
@@ -119,6 +123,28 @@ public class MainPageController {
   public void changeTransformation(ChaosGameDescriptionFactory
                                            .descriptionTypeEnum descriptionType) {
     game.changeTransformation(descriptionType);
+  }
+
+  private void saveCanvasInFile() {
+    game.removeObserver(view);
+    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SERIALIZED_GAME_PATH))) {
+      oos.writeObject(game);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  public ChaosGame loadCanvasFromFile() {
+    File file = new File(SERIALIZED_GAME_PATH);
+    if (file.exists()) {
+      try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+        return (ChaosGame) ois.readObject();
+      } catch (IOException | ClassNotFoundException e) {
+        e.printStackTrace();
+      }
+    }
+    return new ChaosGame(ChaosGameDescriptionFactory
+            .get(ChaosGameDescriptionFactory.descriptionTypeEnum.SIERPINSKI_TRIANGLE),
+            600, 600);
   }
 
 }

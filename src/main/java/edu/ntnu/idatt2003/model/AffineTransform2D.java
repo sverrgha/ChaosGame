@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2003.model;
 
+import java.io.Serializable;
+
 /**
  * Represents a 2-dimensional affine transformation.
  * Contains a constructor and a method for transforming a 2-dimensional vector.
@@ -7,7 +9,7 @@ package edu.ntnu.idatt2003.model;
  * autor: nicklapt
  */
 
-public class AffineTransform2D implements Transform2D {
+public class AffineTransform2D implements Transform2D, Serializable {
 
   /**
    * The 2x2 matrix of the affine transformation.
