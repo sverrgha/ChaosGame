@@ -76,8 +76,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * The button container contains 7 buttons.
    */
   private void createPageContainer() {
-    pageContainer.getChildren().add(new ImageView(ChaosImage
-            .createImageFromCanvas(controller.getGame().getCanvas())));
+    pageContainer.getChildren().add(ChaosImage.createImageFromCanvas(controller
+            .getGame().getCanvas()));
 
     HBox buttonContainer = createButtonContainer();
     pageContainer.getChildren().add(buttonContainer);

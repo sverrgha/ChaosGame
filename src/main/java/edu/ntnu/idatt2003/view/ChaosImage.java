@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.view;
 
 import edu.ntnu.idatt2003.model.ChaosCanvas;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
@@ -21,7 +22,7 @@ public class ChaosImage {
    * @return A WritableImage representing the canvas data.
    */
 
-  public static WritableImage createImageFromCanvas(ChaosCanvas chaosCanvas) {
+  public static ImageView createImageFromCanvas(ChaosCanvas chaosCanvas) {
     int width = chaosCanvas.getWidth();
     int height = chaosCanvas.getHeight();
     WritableImage image = new WritableImage(width, height);
@@ -37,7 +38,7 @@ public class ChaosImage {
       }
     }
 
-    return image;
+    return new ImageView(image);
   }
 
 
