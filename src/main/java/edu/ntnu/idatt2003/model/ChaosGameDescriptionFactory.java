@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2003.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.io.FileNotFoundException;
 
 
@@ -7,11 +9,8 @@ import java.io.FileNotFoundException;
  * Represents a factory for handling descriptions.
  * Contains a variety of descriptions, and the method to switch between descriptions.
  * Includes an enum.
- * Goal: switch between descriptions.
- *
+ * Goal: Create pre-defined ChaosGameDescriptions.
  */
-
-
 public class ChaosGameDescriptionFactory {
 
   /**
@@ -44,33 +43,81 @@ public class ChaosGameDescriptionFactory {
   }
 
   /**
-   * A static method for the sierpinskiTriangle.
+   * A static method that generates a ChaosGameDescription for a pre-defined
+   * Affine transformation, which is called a Sierpinski Triangle.
    *
    * @return a description for sierpinski triangle
    */
 
   private static ChaosGameDescription sierpinskiTriangle() {
-    return transformations("src/test/resources/Affine2DExample.txt");
+    List<Transform2D> transformations = new ArrayList<>();
+    transformations.add(new AffineTransform2D(
+            new Matrix2x2(0.5, 0.0, 0.0, 0.5),
+            new Vector2d(0.0, 0.0))
+    );
+    transformations.add(new AffineTransform2D(
+            new Matrix2x2(0.5, 0.0, 0.0, 0.5),
+            new Vector2d(.25, .5))
+    );
+    transformations.add(new AffineTransform2D(
+            new Matrix2x2(0.5, 0.0, 0.0, 0.5),
+            new Vector2d(.5, 0))
+    );
+
+    return new ChaosGameDescription(
+            new Vector2d(0, 0),
+            new Vector2d(1, 1),
+            transformations
+    );
+
   }
 
   /**
-   * A static method for barnsley fern transformations.
+   * A static method that generates a ChaosGameDescription for a pre-defined
+   * Affine transformation, which is called a Barnsley Fern.
    *
    * @return a description of the barnsley fern transformation.
    */
 
   private static ChaosGameDescription barnsleyFern() {
-    return transformations("src/test/resources/BarnsleyFern.txt");
-  }
+    List<Transform2D> transformations = new ArrayList<>();
+    transformations.add(new AffineTransform2D(
+            new Matrix2x2(0,0,0,0.16),
+            new Vector2d(0, 0))
+    );
+    transformations.add(new AffineTransform2D(
+            new Matrix2x2(0.85, 0.04, -0.04, 0.85),
+            new Vector2d(0, 1.6))
+    );
+    transformations.add(new AffineTransform2D(
+            new Matrix2x2(0.2, -0.26, 0.23, 0.22),
+            new Vector2d(0, 0.16))
+    );
+    transformations.add(new AffineTransform2D(
+            new Matrix2x2(-.15, .28, .26, .24),
+            new Vector2d(0, 0.44))
+    );
+
+    return new ChaosGameDescription(
+            new Vector2d(-2.5, 0),
+            new Vector2d(2.5, 10),
+            transformations
+    );  }
 
   /**
-   * A static method for the julia transformation.
+   * A static method that generates a ChaosGameDescription for a pre-defined
+   * Julia transformation.
    *
    * @return a description based on a julia transformation.
    */
-
   private static ChaosGameDescription juliaTransformation() {
-    return transformations("src/test/resources/JuliaExample.txt");
+    return new ChaosGameDescription(
+            new Vector2d(-1.6, -1),
+            new Vector2d(1.6, 1),
+            List.of(
+                    new JuliaTransform(new Complex(-0.74543, 0.11301), 1),
+                    new JuliaTransform(new Complex(-0.74543, 0.11301), -1)
+            ));
   }
 
 
