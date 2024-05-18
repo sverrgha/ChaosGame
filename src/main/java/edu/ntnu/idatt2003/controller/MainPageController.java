@@ -129,14 +129,37 @@ public class MainPageController {
     game.changeTransformation(descriptionType);
   }
 
+  /**
+   * Changes the current custom transformation based on the given custom name.
+   *
+   * @param customName the name of the custom transformation to be applied
+   */
+
   public void changeCustomTransformation(String customName) {
     ChaosGameDescription chaosGameDescription = customNameHandle(customName);
     game.changeCustomTransformation(chaosGameDescription);
   }
 
+  /**
+   * Retrieves the ChaosGameDescription associated with the given custom name.
+   *
+   * @param customName the name of the custom transformation
+   * @return the ChaosGameDescription corresponding to the custom name
+   */
+
   public ChaosGameDescription customNameHandle(String customName) {
     return ChaosGameDescriptionFactory.getCustom(customName);
   }
+
+  /**
+   * Adds a new custom transformation with the specified parameters and writes it to a file.
+   *
+   * @param minCoords the minimum coordinates for the transformation
+   * @param maxCoords the maximum coordinates for the transformation
+   * @param transform the list of 2D transformations to be applied
+   * @param transformationType the type of transformation
+   * @param transformationName the name of the custom transformation
+   */
 
   public void addCustomTransformation(Vector2d minCoords, Vector2d maxCoords,
       List<Transform2D> transform, TransformationType transformationType, String transformationName) {
@@ -147,6 +170,12 @@ public class MainPageController {
     customTransformations.add(transformationName);
     view.render();
   }
+
+  /**
+   * Retrieves the list of custom transformation names.
+   *
+   * @return the list of custom transformation names
+   */
 
   public List<String> getCustomTransformation() {
     return customTransformations;

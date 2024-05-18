@@ -74,6 +74,7 @@ public class ChaosGameDescriptionFactory {
   }
 
 
+
   private static ChaosGameDescription transformations(String pathToFile) {
     try {
       return new ChaosGameFileHandler().readFromFile(pathToFile);
@@ -81,6 +82,13 @@ public class ChaosGameDescriptionFactory {
       throw new RuntimeException("File " + pathToFile + " not found." + e.getMessage());
     }
   }
+
+  /**
+   * A static method for returning a ChaosGameDescription based on the given transformation name.
+   *
+   * @param transformationName the name of the custom transformation
+   * @return the ChaosGameDescription corresponding to the given transformation name
+   */
 
   public static ChaosGameDescription getCustom(String transformationName) {
     String filePath = "src/main/resources/transformations/" + transformationName + ".txt";

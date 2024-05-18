@@ -108,30 +108,15 @@ public class ChaosCanvas {
    * @return AffineTransform2D object representing the transformation matrix and vector.
    */
 
-  // private AffineTransform2D setTransformCoordsToIndices() {
-    // double a01 = (height - 1) / (minCoords.getX1() - maxCoords.getX1());
-    // double a10 = (width - 1) / (maxCoords.getX0() - minCoords.getX0());
-
-    // Matrix2x2 transformMatrix = new Matrix2x2(0, a01, a10, 0);
-
-    //double x0 = ((height - 1) * maxCoords.getX1()) / (maxCoords.getX1() - minCoords.getX1());
-    //double x1 = ((width - 1) * minCoords.getX0()) / (minCoords.getX0() - maxCoords.getX0());
-
-    //Vector2d transformVector = new Vector2d(x0, x1);
-
-    //return new AffineTransform2D(transformMatrix, transformVector);
-  //}
-
   private AffineTransform2D setTransformCoordsToIndices() {
-    double scaleX = (width - 1) / (maxCoords.getX0() - minCoords.getX0());
-    double scaleY = (height - 1) / (maxCoords.getX1() - minCoords.getX1());
+    double a01 = (height - 1) / (minCoords.getX1() - maxCoords.getX1());
+    double a10 = (width - 1) / (maxCoords.getX0() - minCoords.getX0());
+    Matrix2x2 transformMatrix = new Matrix2x2(0, a01, a10, 0);
 
-    Matrix2x2 transformMatrix = new Matrix2x2(scaleX, 0, 0, scaleY);
+    double x0 = ((height - 1) * maxCoords.getX1()) / (maxCoords.getX1() - minCoords.getX1());
+    double x1 = ((width - 1) * minCoords.getX0()) / (minCoords.getX0() - maxCoords.getX0());
 
-    double translateX = -minCoords.getX0() * scaleX;
-    double translateY = -minCoords.getX1() * scaleY;
-
-    Vector2d transformVector = new Vector2d(translateX, translateY);
+    Vector2d transformVector = new Vector2d(x0, x1);
 
     return new AffineTransform2D(transformMatrix, transformVector);
   }
