@@ -3,15 +3,12 @@ package edu.ntnu.idatt2003.controller;
 import edu.ntnu.idatt2003.model.ChaosGame;
 import edu.ntnu.idatt2003.model.ChaosGameDescription;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
-import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory.descriptionTypeEnum;
-import edu.ntnu.idatt2003.model.ChaosGameFileHandler;
 import edu.ntnu.idatt2003.model.ChaosGameFileHandler;
 import edu.ntnu.idatt2003.model.Complex;
 import edu.ntnu.idatt2003.model.JuliaTransform;
 import edu.ntnu.idatt2003.model.Transform2D;
 import edu.ntnu.idatt2003.model.Vector2d;
 import edu.ntnu.idatt2003.view.MainPageView;
-import edu.ntnu.idatt2003.view.MainPageView.TransformationType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +40,7 @@ public class MainPageController {
   private static final String TRANSFORMATIONS_PATH = "src/main/resources/transformations/";
   private static final String SERIALIZED_GAME_PATH = "src/main/resources/savedTransformation.ser";
   private static final Logger LOGGER = Logger.getLogger(MainPageController.class.getName());
-  private static int stepsCounter;
+  private int stepsCounter;
 
   static {
     try {
@@ -102,10 +99,6 @@ public class MainPageController {
     game.runSteps(steps);
     stepsCounter += steps;
     LOGGER.log(Level.INFO, "Chaos game simulation ran {0} steps successfully.", steps);
-  }
-
-  public int getSteps() {
-    return stepsCounter;
   }
 
   /**
@@ -234,7 +227,6 @@ public class MainPageController {
         new ChaosGameDescription(minCoords, maxCoords, transform);
     chaosGameFileHandler
         .writeToFile(newChaosGameDescription, TRANSFORMATIONS_PATH + transformationName + ".txt");
-    System.out.println(transformationName);
     customTransformations.add(transformationName);
     view.render();
   }
@@ -266,6 +258,7 @@ public class MainPageController {
     list.add(new JuliaTransform(complex, -1));
     ChaosGameDescription chaosGameDescription = new ChaosGameDescription(min, max, list);
     game.setDescription(chaosGameDescription);
+    game.runSteps(stepsCounter);
   }
 
 }
