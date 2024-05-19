@@ -83,6 +83,10 @@ public class ChaosGame implements Serializable {
     setDescription(ChaosGameDescriptionFactory.get(descriptionType));
     notifyObservers();
   }
+  public void changeCustomTransformation(ChaosGameDescription customDescription) {
+    setDescription(customDescription);
+    notifyObservers();
+  }
 
   /**
    * Sets the description of the chaos game, and creates a new canvas
@@ -95,6 +99,11 @@ public class ChaosGame implements Serializable {
     this.canvas = new ChaosCanvas(width, height,
             description.getMinCoords(), description.getMaxCoords());
     this.currentPoint = new Vector2d(0, 0);
+    notifyObservers();
+  }
+
+  public ChaosGameDescription getDescription() {
+    return description;
   }
 
   /**

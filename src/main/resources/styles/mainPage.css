@@ -49,3 +49,17 @@
     -fx-border-radius: 10px;
     -fx-padding: 20px;
 }
+/* Editing Panel Styling */
+.editing-panel {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 20px;
+    -fx-spacing: 10px;
+    -fx-alignment: top-center;
+}
+
+.editing-panel .label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px;
+}

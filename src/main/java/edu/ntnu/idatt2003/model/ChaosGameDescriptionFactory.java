@@ -2,6 +2,7 @@ package edu.ntnu.idatt2003.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileNotFoundException;
 
 
 /**
@@ -38,7 +39,7 @@ public class ChaosGameDescriptionFactory {
   public enum descriptionTypeEnum {
     SIERPINSKI_TRIANGLE,
     BARNSLEY_FERN,
-    JULIA,
+    JULIA
   }
 
   /**
@@ -118,6 +119,31 @@ public class ChaosGameDescriptionFactory {
                     new JuliaTransform(new Complex(-0.74543, 0.11301), -1)
             ));
   }
+
+
+
+  private static ChaosGameDescription transformations(String pathToFile) {
+    try {
+      return new ChaosGameFileHandler().readFromFile(pathToFile);
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException("File " + pathToFile + " not found." + e.getMessage());
+    }
+  }
+
+  /**
+   * A static method for returning a ChaosGameDescription based on the given transformation name.
+   *
+   * @param transformationName the name of the custom transformation
+   * @return the ChaosGameDescription corresponding to the given transformation name
+   */
+
+  public static ChaosGameDescription getCustom(String transformationName) {
+    String filePath = "src/main/resources/transformations/" + transformationName + ".txt";
+    return transformations(filePath);
+  }
+
+
+
 }
 
 
