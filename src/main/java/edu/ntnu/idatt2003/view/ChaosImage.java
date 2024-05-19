@@ -1,6 +1,9 @@
 package edu.ntnu.idatt2003.view;
 
 import edu.ntnu.idatt2003.model.ChaosCanvas;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Point2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.ScrollEvent;
@@ -16,11 +19,13 @@ import javafx.scene.transform.Scale;
  * an image by a specified factor.
  */
 
-public class ChaosImage {
+class ChaosImage {
   private static final int MAX_SCALE = 5;
   private static final int MIN_SCALE = 1;
   private static final double ZOOM_FACTOR = 1.05;
 
+  private ChaosImage() {
+  }
   /**
    * Creates a WritableImage from a given ChaosCanvas object.
    * Each element in the canvas array is mapped to a pixel in the image,
@@ -54,7 +59,7 @@ public class ChaosImage {
     StackPane.setAlignment(imageView, javafx.geometry.Pos.CENTER);
     pane.setClip(new Rectangle(600, 600));
     enableZoom(imageView);
-
+    enablePan(imageView);
     return pane;
   }
 
@@ -67,6 +72,26 @@ public class ChaosImage {
     Scale scaleTransform = new Scale();
     imageView.getTransforms().add(scaleTransform);
     imageView.setOnScroll(e -> zoom(imageView, e));
+  }
+
+  /**
+   * Enables panning on an ImageView object, by translating the image based on mouse drag events
+   * and the last mouse coordinates. The panning is limited to the edges of the image.
+   *
+   * @param imageView The ImageView object to enable panning on.
+   */
+  private static void enablePan(ImageView imageView) {
+    final ObjectProperty<Point2D> lastMouseCoordinates = new SimpleObjectProperty<>();
+    imageView.setOnMousePressed(e -> lastMouseCoordinates.set(new Point2D(e.getX(), e.getY())));
+    imageView.setOnMouseDragged(e -> {
+      double deltaX = e.getX() - lastMouseCoordinates.get().getX();
+      double deltaY = e.getY() - lastMouseCoordinates.get().getY();
+
+      int newX = (int) (imageView.getTranslateX() + deltaX);
+      int newY = (int) (imageView.getTranslateY() + deltaY);
+
+      checkEdgesPan(imageView, newX, newY);
+    });
   }
 
   /**
@@ -102,8 +127,8 @@ public class ChaosImage {
    * If the image is outside the bounds, the image is translated back into the bounds.
    *
    * @param imageView The ImageView object to check the edges of.
-   * @param newX The new x-coordinate of the image.
-   * @param newY The new y-coordinate of the image.
+   * @param newX      The new x-coordinate of the image.
+   * @param newY      The new y-coordinate of the image.
    */
   private static void checkEdgesZoom(ImageView imageView, double newX, double newY) {
     double imageWidthHalf = imageView.getFitWidth() / 2;
@@ -119,6 +144,28 @@ public class ChaosImage {
       imageView.setTranslateY(newY);
     } else if (imageView.getScaleY() <= 1) {
       imageView.setTranslateY(0);
+    }
+  }
+
+  /**
+   * Checks if the image is within the bounds of the ImageView after panning.
+   * If the image is outside the bounds, the image is not moved.
+   *
+   * @param imageView The ImageView object to check the edges of.
+   * @param newX      The new x-coordinate of the image.
+   * @param newY      The new y-coordinate of the image.
+   */
+
+  private static void checkEdgesPan(ImageView imageView, double newX, double newY) {
+    double imageWidthHalf = imageView.getFitWidth() / 2;
+    double imageHeightHalf = imageView.getFitHeight() / 2;
+    if ((newX + imageWidthHalf) / imageView.getScaleX() <= imageWidthHalf
+            && (newX - imageWidthHalf) / imageView.getScaleX() >= -imageWidthHalf) {
+      imageView.setTranslateX(newX);
+    }
+    if ((newY + imageHeightHalf) / imageView.getScaleY() <= imageHeightHalf
+            && (newY - imageHeightHalf) / imageView.getScaleY() >= -imageHeightHalf) {
+      imageView.setTranslateY(newY);
     }
   }
 
@@ -139,9 +186,9 @@ public class ChaosImage {
    * the scale factor after zooming, the scale factor before zooming, and the translation before
    * zooming.
    *
-   * @param mousePosition The position of the mouse.
-   * @param scale The scale factor after zooming.
-   * @param scaleBefore The scale factor before zooming.
+   * @param mousePosition   The position of the mouse.
+   * @param scale           The scale factor after zooming.
+   * @param scaleBefore     The scale factor before zooming.
    * @param translateBefore The translation before zooming.
    * @return The new translation of the image.
    */
@@ -154,8 +201,8 @@ public class ChaosImage {
    * Clamp a value between a minimum and maximum value. Makes sure the value is within the bounds.
    *
    * @param value The value to clamp.
-   * @param min The minimum value.
-   * @param max The maximum value.
+   * @param min   The minimum value.
+   * @param max   The maximum value.
    * @return The clamped value.
    */
   private static double clamp(double value, double min, double max) {
