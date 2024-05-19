@@ -42,25 +42,35 @@ public class ChaosCanvas implements Serializable {
 
   /**
    * Translates a vector with coordinates in the range of minCoords and maxCoords to the corresponding indices in the canvas.
-   * returns the pixel in defined vector.
+   * Returns the pixel at the defined vector.
    *
    * @param point The placement in the picture defined as vector.
-   *
    * @return the pixel as 0 or 1.
    */
   public int getPixel(Vector2d point) {
     Vector2d transformedPoint = transformCoordsToIndices.transform(point);
-    return canvas[(int) transformedPoint.getX0()][(int) transformedPoint.getX1()];
+    int x = (int) transformedPoint.getX0();
+    int y = (int) transformedPoint.getX1();
+    if (x >= 0 && x < width && y >= 0 && y < height) {
+      return canvas[x][y];
+    } else {
+      return 0; // Return 0 for out-of-bounds points
+    }
   }
+
   /**
    * Translates a vector with coordinates in the range of minCoords and maxCoords to the corresponding indices in the canvas.
-   * set pixel to 1 in the placement of a defined vector.
+   * Sets pixel to 1 at the placement of the defined vector.
    *
-   * @param point The placement of pixel defined as a vector
+   * @param point The placement of pixel defined as a vector.
    */
   public void putPixel(Vector2d point) {
     Vector2d transformedPoint = transformCoordsToIndices.transform(point);
-    canvas[(int) transformedPoint.getX0()][(int) transformedPoint.getX1()] = 1;
+    int x = (int) transformedPoint.getX0();
+    int y = (int) transformedPoint.getX1();
+    if (x >= 0 && x < width && y >= 0 && y < height) {
+      canvas[x][y] = 1;
+    }
   }
 
   /**
@@ -103,7 +113,6 @@ public class ChaosCanvas implements Serializable {
   private AffineTransform2D setTransformCoordsToIndices() {
     double a01 = (height - 1) / (minCoords.getX1() - maxCoords.getX1());
     double a10 = (width - 1) / (maxCoords.getX0() - minCoords.getX0());
-
     Matrix2x2 transformMatrix = new Matrix2x2(0, a01, a10, 0);
 
     double x0 = ((height - 1) * maxCoords.getX1()) / (maxCoords.getX1() - minCoords.getX1());
@@ -113,6 +122,8 @@ public class ChaosCanvas implements Serializable {
 
     return new AffineTransform2D(transformMatrix, transformVector);
   }
+
+
 
   /**
    * Displays the canvas in the console.

@@ -1,11 +1,19 @@
 package edu.ntnu.idatt2003.view;
 
 import edu.ntnu.idatt2003.controller.MainPageController;
+import edu.ntnu.idatt2003.model.AffineTransform2D;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
 import edu.ntnu.idatt2003.model.ChaosGameObserver;
+import edu.ntnu.idatt2003.model.Complex;
+import edu.ntnu.idatt2003.model.JuliaTransform;
+import edu.ntnu.idatt2003.model.Matrix2x2;
+import edu.ntnu.idatt2003.model.Transform2D;
+import edu.ntnu.idatt2003.model.Vector2d;
 import edu.ntnu.idatt2003.utils.Sizes;
-
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,8 +25,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -37,6 +47,9 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   private static final int BUTTON_HEIGHT = 40;
   private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH - PAGE_CONTAINER_MARGIN)
           / BUTTON_COUNT;
+  private static TextField xField;
+  private static TextField yField;
+
 
 
   /**
@@ -60,6 +73,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    */
   public void render() {
     root.getStyleClass().add("main-page");
+    pageContainer.getChildren().clear();
     createPageContainer();
   }
 
@@ -67,7 +81,6 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * Updates the page container by clearing the children and rendering the page.
    */
   public void update() {
-    pageContainer.getChildren().clear();
     render();
   }
 
@@ -76,8 +89,11 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * The button container contains 7 buttons.
    */
   private void createPageContainer() {
-    pageContainer.getChildren().add(new ImageView(ChaosImage
-            .createImageFromCanvas(controller.getGame().getCanvas())));
+
+    HBox contentContainer = new HBox(createAddTransformationPanel(),
+        new ImageView(ChaosImage
+            .createImageFromCanvas(controller.getGame().getCanvas())), mouseBox());
+    pageContainer.getChildren().add(contentContainer);
 
     HBox buttonContainer = createButtonContainer();
     pageContainer.getChildren().add(buttonContainer);
@@ -94,6 +110,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    *
    * @return The button container.
    */
+
   private HBox createButtonContainer() {
     HBox buttonContainer = new HBox();
     buttonContainer.getStyleClass().add("button-container");
@@ -103,6 +120,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
 
     buttonContainer.getChildren().addAll(
             createComboBox(),
+            createCustomComboBox(),
             createButton(10),
             createButton(100),
             createButton(1000),
@@ -125,6 +143,23 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     transformMenu.setOnAction(e -> controller.changeTransformation(transformMenu.getValue()));
 
     return transformMenu;
+  }
+
+  private ComboBox<String> createCustomComboBox() {
+    ComboBox<String> customMenu = new ComboBox<>();
+    customMenu.getStyleClass().add("combo-box");
+    customMenu.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+    customMenu.setPromptText("Custom Transformations");
+
+    List<String> customTransformations = controller.getCustomTransformation();
+
+    if (customTransformations != null && !customTransformations.isEmpty()) {
+      customMenu.getItems().addAll(customTransformations);
+    }
+
+    customMenu.setOnAction(e -> controller.changeCustomTransformation(customMenu.getValue()));
+
+    return customMenu;
   }
 
   /**
@@ -214,4 +249,383 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     alert.showAndWait();
     return alert.getResult() == ButtonType.YES;
   }
+
+
+  /**
+   * Creates the add panel for adding new transformations. It uses combobox to give the alternative
+   * transformation type, buttons to save, cancel and add to file button. And text fields to give
+   * start vector, input vector, and the necessary matrix.
+   *
+   * @return The add panel.
+   */
+  public VBox createAddTransformationPanel() {
+    VBox addPanel = createMainPanel();
+    TextField transformationName = createTextField("transformation name");
+    ComboBox<TransformationType> transformationComboBox = createTransformationComboBox();
+    HBox transformationInputField = createTransformationInputField(transformationComboBox);
+
+    HBox startVectorField = createtransformationHbox(Arrays.asList("x0", "y0"));
+    HBox endVectorField = createtransformationHbox(Arrays.asList("x0", "y0"));
+
+    Button saveButton =
+        createSaveButton(transformationName, transformationComboBox, transformationInputField,
+        startVectorField, endVectorField);
+    Button cancelButton = createCancelButton();
+    Button addFileButton = createAddFileButton();
+
+    addPanel.getChildren()
+        .addAll(transformationName, transformationComboBox,
+            transformationInputField, startVectorField, endVectorField,
+            saveButton, cancelButton, addFileButton);
+    StackPane.setAlignment(addPanel, Pos.BOTTOM_LEFT);
+
+    return addPanel;
+  }
+
+  /**
+   * Creates the main panel.
+   *
+   * @return a VBox configured as the main panel.
+   */
+
+  private VBox createMainPanel() {
+    VBox addPanel = new VBox(10);
+    addPanel.getStyleClass().add("add-panel");
+    addPanel.setAlignment(Pos.CENTER);
+    return addPanel;
+  }
+
+  /**
+   * Creates the transformation ComboBox.
+   *
+   * @return a ComboBox populated with transformation types.
+   */
+
+  private ComboBox<TransformationType> createTransformationComboBox() {
+    ComboBox<TransformationType> transformationComboBox = new ComboBox<>();
+    transformationComboBox.getItems().addAll(TransformationType.values());
+    transformationComboBox.setPromptText("Select Transformation");
+    return transformationComboBox;
+  }
+
+  /**
+   * Enumeration of transformation types.
+   */
+
+  public enum TransformationType {
+    JULIA,
+    AFFINE,
+  }
+
+  /**
+   * Creates the transformation input field container.
+   *
+   * @param transformationComboBox the ComboBox for selecting transformation types.
+   * @return an HBox containing the input fields for transformations.
+   */
+
+  private HBox createTransformationInputField(ComboBox<TransformationType> transformationComboBox) {
+    HBox transformationInputField = new HBox();
+    transformationInputField.setSpacing(10);
+
+    transformationComboBox.setOnAction(
+        e -> updateTransformationFields(transformationComboBox, transformationInputField));
+    updateTransformationFields(transformationComboBox, transformationInputField);
+
+    return transformationInputField;
+  }
+
+  /**
+   * Updates the transformation input fields based on the selected transformation type.
+   *
+   * @param comboBox   the ComboBox for selecting transformation types.
+   * @param inputField the HBox containing the input fields for transformations.
+   */
+
+  private void updateTransformationFields(ComboBox<TransformationType> comboBox, HBox inputField) {
+    inputField.getChildren().clear();
+    if (comboBox.getValue() != null) {
+      switch (comboBox.getValue()) {
+        case JULIA:
+          inputField.getChildren().add(createJuliaTransformationVbox());
+          break;
+        case AFFINE:
+          inputField.getChildren().add(createAffineTransformationVbox());
+          break;
+      }
+    }
+  }
+
+  /**
+   * Creates a TextField with the specified prompt text.
+   *
+   * @param promptText the prompt text for the TextField.
+   * @return a configured TextField.
+   */
+
+  private TextField createTextField(String promptText) {
+    TextField textField = new TextField();
+    textField.setPromptText(promptText);
+    return textField;
+  }
+
+  /**
+   * Creates the save button.
+   *
+   * @param transformationComboBox   the ComboBox for selecting transformation types.
+   * @param transformationInputField the HBox containing the input fields for transformations.
+   * @param startVectorField         the TextField for the start vector.
+   * @param endVectorField           the TextField for the end vector.
+   * @return a configured save Button.
+   */
+
+  private Button createSaveButton(TextField transformationName,
+      ComboBox<TransformationType> transformationComboBox, HBox transformationInputField,
+      HBox startVectorField, HBox endVectorField) {
+    Button saveButton = new Button("Save");
+    saveButton.getStyleClass().add("button");
+    saveButton.setOnAction(e -> {
+      List<Transform2D> list = getInputInformation(transformationComboBox.getValue(),
+          transformationInputField);
+      Vector2d startVector = getInputVector(startVectorField);
+      Vector2d endVector = getInputVector(endVectorField);
+      controller
+          .addCustomTransformation(startVector, endVector, list, transformationName.getText());
+    });
+    return saveButton;
+  }
+
+  /**
+   * Creates the cancel button.
+   *
+   * @return a configured cancel Button.
+   */
+
+  private Button createCancelButton() {
+    Button cancelButton = new Button("Cancel");
+    cancelButton.getStyleClass().add("button");
+    cancelButton.setOnAction(e -> {
+      render();
+    });
+    return cancelButton;
+  }
+
+  private Button createAddFileButton() {
+    Button addFileButton = new Button("Add File");
+    addFileButton.getStyleClass().add("button");
+    addFileButton.setOnAction(e -> {
+      uploadFile();
+    });
+    return addFileButton;
+  }
+
+  /**
+   * Creates a VBox containing the input field for Julia transformation.
+   *
+   * @return a VBox configured for Julia transformation input.
+   */
+  private VBox createJuliaTransformationVbox() {
+    return createTransformationVbox(Arrays.asList("Real part", "Imaginary part"));
+  }
+
+  /**
+   * Creates a VBox containing the input fields for affine transformations.
+   *
+   * @return a VBox configured for affine transformation inputs.
+   */
+  private VBox createAffineTransformationVbox() {
+    VBox transformationsBox = new VBox(5);
+    Button addTransformationButton = new Button("Add Transformation");
+    addTransformationButton.setOnAction(e -> {
+      HBox matrixHbox = createtransformationHbox(Arrays.asList("X0", "Y0", "X1", "Y1", "V0", "V1"));
+      transformationsBox.getChildren().add(matrixHbox);
+    });
+    transformationsBox.getChildren().add(addTransformationButton);
+    return transformationsBox;
+  }
+
+  /**
+   * Creates a VBox containing input fields for transformations.
+   *
+   * @param promptTexts array of prompt texts for the TextFields.
+   * @return a VBox configured with input TextFields.
+   */
+  private VBox createTransformationVbox(List<String> promptTexts) {
+    VBox tranformationVbox = new VBox(10);
+    HBox transformationHbox = createtransformationHbox(promptTexts);
+    tranformationVbox.getChildren().add(transformationHbox);
+    return tranformationVbox;
+  }
+
+  /**
+   * Creates an HBox containing input fields for transformations.
+   *
+   * @param promptTexts array of prompt texts for the TextFields.
+   * @return an HBox configured with input TextFields.
+   */
+  private HBox createtransformationHbox(List<String> promptTexts) {
+    HBox transformationHbox = new HBox(10);
+    for (String promptText : promptTexts) {
+      TextField textField = createTextField(promptText);
+      transformationHbox.getChildren().add(textField);
+    }
+    return transformationHbox;
+  }
+
+  /**
+   * Retrieves input information based on the selected transformation type.
+   *
+   * @param selectedTransformation   the selected transformation type.
+   * @param transformationInputField the HBox containing the input fields.
+   * @return a list of Transform2D objects.
+   */
+  private List<Transform2D> getInputInformation(TransformationType selectedTransformation,
+      HBox transformationInputField) {
+    List<Transform2D> list = new ArrayList<>();
+    if (selectedTransformation != null) {
+      switch (selectedTransformation) {
+        case JULIA:
+          list.addAll(getJuliaTransformation(transformationInputField));
+          break;
+        case AFFINE:
+          list.addAll(getAffineTransformation(transformationInputField));
+          break;
+      }
+    }
+    return list;
+  }
+  /**
+   * Retrieves input information for the Julia transformation.
+   *
+   * @param transformationInputField the HBox containing the input fields for the Julia
+   *                                 transformation.
+   *
+   * @return a list of Transform2D objects for the Julia transformation.
+   */
+
+  private List<Transform2D> getJuliaTransformation(HBox transformationInputField) {
+    List<Transform2D> list = new ArrayList<>();
+    if (!transformationInputField.getChildren().isEmpty()) {
+      VBox juliaVbox = (VBox) transformationInputField.getChildren().getFirst();
+      HBox juliaFields = (HBox) juliaVbox.getChildren().getFirst();
+
+      double realPart = parseDoubleFromTextField(juliaFields, 0);
+      double imaginaryPart = parseDoubleFromTextField(juliaFields, 1);
+
+      Complex complex = new Complex(realPart, imaginaryPart);
+      list.add(new JuliaTransform(complex, 1));
+    }
+    return list;
+  }
+
+  /**
+   * Retrieves input information for the Affine transformation.
+   *
+   * @param transformationInputField the HBox containing the input fields for the
+   *                                 Affine transformation.
+   * @return a list of Transform2D objects for the Affine transformation.
+   */
+  private List<Transform2D> getAffineTransformation(HBox transformationInputField) {
+    List<Transform2D> list = new ArrayList<>();
+    if (!transformationInputField.getChildren().isEmpty()) {
+      VBox affineVbox = (VBox) transformationInputField.getChildren().getFirst();
+      for (int i = 1; i < affineVbox.getChildren().size(); i++) {
+        HBox matrixFields = (HBox) affineVbox.getChildren().get(i);
+
+        double x0 = parseDoubleFromTextField(matrixFields, 0);
+        double y0 = parseDoubleFromTextField(matrixFields, 1);
+        double x1 = parseDoubleFromTextField(matrixFields, 2);
+        double y1 = parseDoubleFromTextField(matrixFields, 3);
+        double v0 = parseDoubleFromTextField(matrixFields, 4);
+        double v1 = parseDoubleFromTextField(matrixFields, 5);
+
+        Matrix2x2 matrix2x2 = new Matrix2x2(x0, y0, x1, y1);
+        Vector2d vector2d = new Vector2d(v0, v1);
+        list.add(new AffineTransform2D(matrix2x2, vector2d));
+      }
+    }
+    return list;
+  }
+
+  /**
+   * Retrieves the input vector from an HBox.
+   *
+   * @param vectorHbox the HBox containing the input fields for the vector.
+   *
+   * @return a Vector2d object representing the input vector.
+   */
+  private Vector2d getInputVector(HBox vectorHbox) {
+    double v0 = parseDoubleFromTextField(vectorHbox, 0);
+    double v1 = parseDoubleFromTextField(vectorHbox, 1);
+    return new Vector2d(v0, v1);
+  }
+
+  /**
+   * Parses a double value from the TextField at the specified index in the HBox.
+   *
+   * @param hbox the HBox containing the TextField.
+   * @param index the index of the TextField in the HBox.
+   * @return the parsed double value.
+   */
+  private double parseDoubleFromTextField(HBox hbox, int index) {
+    TextField textField = (TextField) hbox.getChildren().get(index);
+    return Double.parseDouble(textField.getText());
+  }
+
+  /**
+   * Creates a VBox containing a Pane that tracks mouse movement and two TextFields
+   * that display the normalized mouse coordinates within the Pane.
+   * The Pane is 400x400 in size. When the mouse is moved within the Pane, the
+   * coordinates are normalized to the range [-1, 1] and the values are updated
+   * in the TextFields.
+   *
+   * @return a VBox containing the Pane and the TextFields
+   */
+  private VBox mouseBox() {
+    Pane box = new Pane();
+    box.setPrefSize(400, 400);
+
+    xField = new TextField();
+    yField = new TextField();
+
+    VBox vbox = new VBox(xField, yField);
+    vbox.setSpacing(10);
+
+    box.setOnMouseMoved(e -> {
+      double mouseX = e.getX();
+      double mouseY = e.getY();
+      double normalizedX = (mouseX / box.getWidth()) * 2 - 1;
+      double normalizedY = (mouseY / box.getHeight()) * 2 - 1;
+      updateValues(normalizedX, normalizedY);
+    });
+
+    VBox root = new VBox(box, vbox);
+    root.setSpacing(10);
+
+    return root;
+  }
+
+  /**
+   * Updates the displayed values in the TextFields and triggers a change in the
+   * Julia transformation dynamically.
+   *
+   * @param x the normalized x-coordinate in the range [-1, 1]
+   * @param y the normalized y-coordinate in the range [-1, 1]
+   */
+  private void updateValues(double x, double y) {
+    controller.changeJuliaTransformationDynamic(x, y);
+    controller.runSteps(controller.getSteps());
+    xField.setText(String.format("X: %.1f", x));
+    yField.setText(String.format("Y: %.1f", y));
+  }
+
+
+
+
+
+
+
+
+
+
 }
