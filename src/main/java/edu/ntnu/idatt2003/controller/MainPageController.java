@@ -11,7 +11,6 @@ import edu.ntnu.idatt2003.model.Vector2d;
 import edu.ntnu.idatt2003.view.MainPageView;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -40,7 +39,6 @@ public class MainPageController {
   private static final String TRANSFORMATIONS_PATH = "src/main/resources/transformations/";
   private static final String SERIALIZED_GAME_PATH = "src/main/resources/savedTransformation.ser";
   private static final Logger LOGGER = Logger.getLogger(MainPageController.class.getName());
-  private int stepsCounter;
 
   static {
     try {
@@ -96,8 +94,7 @@ public class MainPageController {
    * @param steps The number of steps to run the simulation.
    */
   public void runSteps(int steps) {
-    game.runSteps(steps);
-    stepsCounter += steps;
+    game.runStepsAndUpdateTotal(steps);
     LOGGER.log(Level.INFO, "Chaos game simulation ran {0} steps successfully.", steps);
   }
 
@@ -170,6 +167,12 @@ public class MainPageController {
     }
   }
 
+  /**
+   * Load the game state from the serialized file to restore progress.
+   * If the file does not exist, a new game state is created.
+   *
+   * @return The loaded game state, or a new game state if the file does not exist.
+   */
   public ChaosGame loadGameState() {
     LOGGER.log(Level.INFO, "Loading game state.");
     File file = new File(SERIALIZED_GAME_PATH);
@@ -258,7 +261,7 @@ public class MainPageController {
     list.add(new JuliaTransform(complex, -1));
     ChaosGameDescription chaosGameDescription = new ChaosGameDescription(min, max, list);
     game.setDescription(chaosGameDescription);
-    game.runSteps(stepsCounter);
+    game.runStepsWithoutUpdatingTotal(game.getTotalSteps());
   }
 
 }

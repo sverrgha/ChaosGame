@@ -20,6 +20,7 @@ public class ChaosGame implements Serializable {
   private final int width;
   private final int height;
   private final List<ChaosGameObserver> observers;
+  private int totalSteps;
   Random randomGenerator;
 
   /**
@@ -36,6 +37,7 @@ public class ChaosGame implements Serializable {
     this.height = height;
     setDescription(description);
     randomGenerator = new Random();
+    this.totalSteps = 0;
   }
 
   /**
@@ -48,6 +50,15 @@ public class ChaosGame implements Serializable {
     return canvas;
   }
 
+  public int getTotalSteps() {
+    return totalSteps;
+  }
+  public void runStepsAndUpdateTotal(int steps) {
+    runSteps(steps, true);
+  }
+  public void runStepsWithoutUpdatingTotal(int steps) {
+    runSteps(steps, false);
+  }
   /**
    * Runs the chaos game simulation for the specified number of steps.
    * Generates points on the canvas based on random chosen transformation.
@@ -55,12 +66,16 @@ public class ChaosGame implements Serializable {
    *
    * @param steps The number of steps to run the simulation.
    */
-  public void runSteps(int steps) {
+  private void runSteps(int steps, boolean addSteps) {
     if (steps < 0) {
       this.canvas.clear();
+      totalSteps = 0;
     } else {
       for (int i = 0; i < steps; i++) {
         applyRandomTransformation();
+      }
+      if (addSteps) {
+        totalSteps += steps;
       }
     }
     notifyObservers();
