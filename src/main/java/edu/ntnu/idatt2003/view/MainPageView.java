@@ -271,7 +271,9 @@ public class MainPageView extends Scene implements ChaosGameObserver {
         transformationInputField,
         startVectorField,
         endVectorField,
-        createButton("Save", e -> saveTransformation(transformationName, transformationComboBox, transformationInputField, startVectorField, endVectorField)),
+        createButton("Save", e -> saveTransformation(
+            transformationName, transformationComboBox, transformationInputField, startVectorField,
+            endVectorField)),
         createButton("Cancel", e -> render()),
         createButton("Add File", e -> uploadFile()));
     StackPane.setAlignment(addPanel, Pos.BOTTOM_LEFT);
@@ -318,7 +320,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    */
   private HBox createTransformationInputField(ComboBox<TransformationType> transformationComboBox) {
     HBox inputField = new HBox(10);
-    transformationComboBox.setOnAction(e -> updateTransformationFields(transformationComboBox, inputField));
+    transformationComboBox.setOnAction(
+        e -> updateTransformationFields(transformationComboBox, inputField));
     updateTransformationFields(transformationComboBox, inputField);
     return inputField;
   }
@@ -332,7 +335,10 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   private void updateTransformationFields(ComboBox<TransformationType> comboBox, HBox inputField) {
     inputField.getChildren().clear();
     if (comboBox.getValue() != null) {
-      inputField.getChildren().add(createTransformationVbox(comboBox.getValue() == TransformationType.AFFINE, comboBox.getValue() == TransformationType.JULIA ? Arrays.asList("Real part", "Imaginary part") : null));
+      inputField.getChildren().add(createTransformationVbox(
+          comboBox.getValue() == TransformationType.AFFINE,
+          comboBox.getValue() == TransformationType.JULIA
+              ? Arrays.asList("Real part", "Imaginary part") : null));
     }
   }
 
@@ -372,7 +378,9 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   private VBox createTransformationVbox(boolean isAffine, List<String> promptTexts) {
     VBox vbox = new VBox(isAffine ? 5 : 10);
     if (isAffine) {
-      vbox.getChildren().add(createButton("Add Transformation", e -> vbox.getChildren().add(createVectorHbox(Arrays.asList("X0", "Y0", "X1", "Y1", "V0", "V1")))));
+      vbox.getChildren().add(createButton("Add Transformation",
+          e -> vbox.getChildren().add(createVectorHbox(
+              Arrays.asList("X0", "Y0", "X1", "Y1", "V0", "V1")))));
     } else if (promptTexts != null) {
       vbox.getChildren().add(createVectorHbox(promptTexts));
     }
@@ -402,11 +410,15 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * @param startVectorField the TextField for the start vector.
    * @param endVectorField the TextField for the end vector.
    */
-  private void saveTransformation(TextField transformationName, ComboBox<TransformationType> transformationComboBox, HBox transformationInputField, HBox startVectorField, HBox endVectorField) {
-    List<Transform2D> transformations = getInputInformation(transformationComboBox.getValue(), transformationInputField);
+  private void saveTransformation(TextField transformationName,
+      ComboBox<TransformationType> transformationComboBox, HBox transformationInputField,
+      HBox startVectorField, HBox endVectorField) {
+    List<Transform2D> transformations = getInputInformation(transformationComboBox.getValue(),
+        transformationInputField);
     Vector2d startVector = getInputVector(startVectorField);
     Vector2d endVector = getInputVector(endVectorField);
-    controller.addCustomTransformation(startVector, endVector, transformations, transformationName.getText());
+    controller.addCustomTransformation(
+        startVector, endVector, transformations, transformationName.getText());
   }
 
   /**
@@ -416,7 +428,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * @param transformationInputField the HBox containing the input fields for transformations.
    * @return a list of Transform2D objects.
    */
-  private List<Transform2D> getInputInformation(TransformationType selectedTransformation, HBox transformationInputField) {
+  private List<Transform2D> getInputInformation(TransformationType selectedTransformation,
+      HBox transformationInputField) {
     if (selectedTransformation == TransformationType.JULIA) {
       return getJuliaTransformation(transformationInputField);
     } else if (selectedTransformation == TransformationType.AFFINE) {
@@ -428,7 +441,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   /**
    * Retrieves input information for the Julia transformation.
    *
-   * @param transformationInputField the HBox containing the input fields for the Julia transformation.
+   * @param transformationInputField the HBox containing the input fields for the Julia
+   *                                 transformation.
    * @return a list of Transform2D objects for the Julia transformation.
    */
   private List<Transform2D> getJuliaTransformation(HBox transformationInputField) {
@@ -436,7 +450,9 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     if (!transformationInputField.getChildren().isEmpty()) {
       VBox juliaVbox = (VBox) transformationInputField.getChildren().get(0);
       HBox juliaFields = (HBox) juliaVbox.getChildren().get(0);
-      list.add(new JuliaTransform(new Complex(parseDoubleFromTextField(juliaFields, 0), parseDoubleFromTextField(juliaFields, 1)), 1));
+      list.add(new JuliaTransform(
+          new Complex(parseDoubleFromTextField(juliaFields, 0),
+              parseDoubleFromTextField(juliaFields, 1)), 1));
     }
     return list;
   }
@@ -444,7 +460,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   /**
    * Retrieves input information for the Affine transformation.
    *
-   * @param transformationInputField the HBox containing the input fields for the Affine transformation.
+   * @param transformationInputField the HBox containing the input fields for the Affine
+   *                                 transformation.
    * @return a list of Transform2D objects for the Affine transformation.
    */
   private List<Transform2D> getAffineTransformation(HBox transformationInputField) {
@@ -476,7 +493,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * @return a Vector2d object representing the input vector.
    */
   private Vector2d getInputVector(HBox vectorHbox) {
-    return new Vector2d(parseDoubleFromTextField(vectorHbox, 0), parseDoubleFromTextField(vectorHbox, 1));
+    return new Vector2d(parseDoubleFromTextField(vectorHbox, 0),
+        parseDoubleFromTextField(vectorHbox, 1));
   }
 
   /**
