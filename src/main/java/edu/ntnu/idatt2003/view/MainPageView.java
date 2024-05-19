@@ -550,7 +550,6 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    */
   private void updateValues(double x, double y) {
     controller.changeJuliaTransformationDynamic(x, y);
-    controller.runSteps(controller.getSteps());
     xField.setText(String.format("X: %.1f", x));
     yField.setText(String.format("Y: %.1f", y));
   }

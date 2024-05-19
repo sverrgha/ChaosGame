@@ -49,7 +49,7 @@ public class UI {
           runIterations();
           break;
         case SHOW_CANVAS:
-          ShowCanvas();
+          showCanvas();
           break;
         default:
           System.out.println("Invalid choice");
@@ -159,14 +159,14 @@ public class UI {
     }
     textRenderer.enterSteps();
     int steps = numberInput();
-    chaosGame.runSteps(steps);
+    chaosGame.runStepsAndUpdateTotal(steps);
   }
 
   /**
    * Shows the canvas, and ensures that chaosGame is not null.
    */
 
-  public void ShowCanvas() {
+  public void showCanvas() {
     if(chaosGame == null) {
       System.out.println("chaosGame is null");
       return;

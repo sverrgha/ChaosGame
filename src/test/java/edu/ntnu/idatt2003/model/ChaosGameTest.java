@@ -23,7 +23,7 @@ public class ChaosGameTest {
         List.of(transform));
 
     cg = new ChaosGame(description, 100, 100);
-    cg.runSteps(100);
+    cg.runStepsAndUpdateTotal(100);
   }
 
   @Nested
