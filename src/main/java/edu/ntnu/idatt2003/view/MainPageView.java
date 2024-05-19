@@ -96,10 +96,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     HBox contentContainer = new HBox(createAddTransformationPanel(),
         new ImageView(ChaosImage
             .createImageFromCanvas(controller.getGame().getCanvas())), mouseBox());
-    pageContainer.getChildren().add(contentContainer);
-
-    HBox buttonContainer = createButtonContainer();
-    pageContainer.getChildren().add(buttonContainer);
+    pageContainer.getChildren().addAll(contentContainer, createButtonContainer());
     pageContainer.getStyleClass().add("page-container");
     pageContainer.setMaxHeight(Sizes.SCREEN_HEIGHT - PAGE_CONTAINER_MARGIN);
     pageContainer.setMaxWidth(Sizes.SCREEN_WIDTH - PAGE_CONTAINER_MARGIN);
@@ -197,7 +194,6 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     inputField.setPromptText("Steps");
     inputField.getStyleClass().add("input-field");
     inputField.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-    inputField.setPromptText("Steps");
     inputField.setOnAction(e -> {
       try {
         controller.runSteps(Integer.parseInt(inputField.getText()));
@@ -269,9 +265,15 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     HBox startVectorField = createVectorHbox(Arrays.asList("x0", "y0"));
     HBox endVectorField = createVectorHbox(Arrays.asList("x0", "y0"));
 
-    addPanel.getChildren().addAll(transformationName, transformationComboBox, transformationInputField, startVectorField, endVectorField,
+    addPanel.getChildren().addAll(
+        transformationName,
+        transformationComboBox,
+        transformationInputField,
+        startVectorField,
+        endVectorField,
         createButton("Save", e -> saveTransformation(transformationName, transformationComboBox, transformationInputField, startVectorField, endVectorField)),
-        createButton("Cancel", e -> render()), createButton("Add File", e -> uploadFile()));
+        createButton("Cancel", e -> render()),
+        createButton("Add File", e -> uploadFile()));
     StackPane.setAlignment(addPanel, Pos.BOTTOM_LEFT);
 
     return addPanel;
