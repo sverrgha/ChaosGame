@@ -25,7 +25,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -92,10 +91,11 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * The button container contains 7 buttons.
    */
   private void createPageContainer() {
-
-    HBox contentContainer = new HBox(createAddTransformationPanel(),
-        new ImageView(ChaosImage
-            .createImageFromCanvas(controller.getGame().getCanvas())), mouseBox());
+    HBox contentContainer = new HBox(
+        createAddTransformationPanel(),
+        ChaosImage.createImageFromCanvas(controller.getGame().getCanvas()), 
+        mouseBox()
+        );
     pageContainer.getChildren().addAll(contentContainer, createButtonContainer());
     pageContainer.getStyleClass().add("page-container");
     pageContainer.setMaxHeight(Sizes.SCREEN_HEIGHT - PAGE_CONTAINER_MARGIN);
