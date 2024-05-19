@@ -52,7 +52,7 @@ public class ChaosCanvas implements Serializable {
     int x = (int) transformedPoint.getX0();
     int y = (int) transformedPoint.getX1();
     if (x >= 0 && x < width && y >= 0 && y < height) {
-      return canvas[y][x];
+      return canvas[x][y];
     } else {
       return 0; // Return 0 for out-of-bounds points
     }
@@ -69,7 +69,7 @@ public class ChaosCanvas implements Serializable {
     int x = (int) transformedPoint.getX0();
     int y = (int) transformedPoint.getX1();
     if (x >= 0 && x < width && y >= 0 && y < height) {
-      canvas[y][x] = 1;
+      canvas[x][y] = 1;
     }
   }
 
