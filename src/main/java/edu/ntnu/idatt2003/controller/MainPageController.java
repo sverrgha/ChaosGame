@@ -160,14 +160,15 @@ public class MainPageController {
   public void changeTransformation(ChaosGameDescriptionFactory
                                            .descriptionTypeEnum descriptionType) {
     game.changeTransformation(descriptionType);
-    LOGGER.log(Level.INFO, "Transformation was changed successfully to {0}"
-            , descriptionType);
+    LOGGER.log(Level.INFO, "Transformation was changed successfully to {0}",
+        descriptionType);
   }
 
   private void saveGameState() {
     LOGGER.log(Level.INFO, "Saving game state.");
     game.removeObserver(view);
-    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SERIALIZED_GAME_PATH))) {
+    try (ObjectOutputStream oos = new ObjectOutputStream(
+        new FileOutputStream(SERIALIZED_GAME_PATH))) {
       oos.writeObject(game);
       LOGGER.log(Level.INFO, "Game state saved successfully in {0}", SERIALIZED_GAME_PATH);
     } catch (IOException e) {
@@ -229,8 +230,10 @@ public class MainPageController {
   public void addCustomTransformation(Vector2d minCoords, Vector2d maxCoords,
       List<Transform2D> transform, String transformationName) {
     ChaosGameFileHandler chaosGameFileHandler = new ChaosGameFileHandler();
-    ChaosGameDescription newChaosGameDescription = new ChaosGameDescription(minCoords, maxCoords, transform);
-    chaosGameFileHandler.writeToFile(newChaosGameDescription, TRANSFORMATIONS_PATH + transformationName +".txt");
+    ChaosGameDescription newChaosGameDescription =
+        new ChaosGameDescription(minCoords, maxCoords, transform);
+    chaosGameFileHandler
+        .writeToFile(newChaosGameDescription, TRANSFORMATIONS_PATH + transformationName + ".txt");
     System.out.println(transformationName);
     customTransformations.add(transformationName);
     view.render();
@@ -258,10 +261,10 @@ public class MainPageController {
     Vector2d max = description.getMaxCoords();
     Vector2d min = description.getMinCoords();
     List<Transform2D> list = new ArrayList<>();
-    Complex complex = new Complex(x,y);
+    Complex complex = new Complex(x, y);
     list.add(new JuliaTransform(complex, 1));
     list.add(new JuliaTransform(complex, -1));
-    ChaosGameDescription chaosGameDescription = new ChaosGameDescription(min,max,list);
+    ChaosGameDescription chaosGameDescription = new ChaosGameDescription(min, max, list);
     game.setDescription(chaosGameDescription);
   }
 

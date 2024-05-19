@@ -2,41 +2,33 @@ package edu.ntnu.idatt2003.view;
 
 import edu.ntnu.idatt2003.controller.MainPageController;
 import edu.ntnu.idatt2003.model.AffineTransform2D;
-import edu.ntnu.idatt2003.model.ChaosCanvas;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
 import edu.ntnu.idatt2003.model.ChaosGameObserver;
 import edu.ntnu.idatt2003.model.Complex;
 import edu.ntnu.idatt2003.model.JuliaTransform;
-import edu.ntnu.idatt2003.model.AffineTransform2D;
 import edu.ntnu.idatt2003.model.Matrix2x2;
 import edu.ntnu.idatt2003.model.Transform2D;
 import edu.ntnu.idatt2003.model.Vector2d;
 import edu.ntnu.idatt2003.utils.Sizes;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import java.io.File;
 import java.util.Objects;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -98,7 +90,9 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    */
   private void createPageContainer() {
 
-    HBox contentContainer = new HBox(createAddTransformationPanel(), new ImageView(ChaosImage.createImageFromCanvas(controller.getGame().getCanvas())), MouseBox());
+    HBox contentContainer = new HBox(createAddTransformationPanel(),
+        new ImageView(ChaosImage
+            .createImageFromCanvas(controller.getGame().getCanvas())), mouseBox());
     pageContainer.getChildren().add(contentContainer);
 
     HBox buttonContainer = createButtonContainer();
@@ -159,8 +153,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
 
     List<String> customTransformations = controller.getCustomTransformation();
 
-    if (customTransformations != null && !customTransformations.isEmpty()){
-    customMenu.getItems().addAll(customTransformations);
+    if (customTransformations != null && !customTransformations.isEmpty()) {
+      customMenu.getItems().addAll(customTransformations);
     }
 
     customMenu.setOnAction(e -> controller.changeCustomTransformation(customMenu.getValue()));
@@ -270,16 +264,18 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     ComboBox<TransformationType> transformationComboBox = createTransformationComboBox();
     HBox transformationInputField = createTransformationInputField(transformationComboBox);
 
-    HBox startVectorField = createTransformationHBox(Arrays.asList("x0", "y0"));
-    HBox endVectorField = createTransformationHBox(Arrays.asList("x0", "y0"));
+    HBox startVectorField = createtransformationHbox(Arrays.asList("x0", "y0"));
+    HBox endVectorField = createtransformationHbox(Arrays.asList("x0", "y0"));
 
-    Button saveButton = createSaveButton(transformationName, transformationComboBox, transformationInputField,
+    Button saveButton =
+        createSaveButton(transformationName, transformationComboBox, transformationInputField,
         startVectorField, endVectorField);
     Button cancelButton = createCancelButton();
     Button addFileButton = createAddFileButton();
 
     addPanel.getChildren()
-        .addAll(transformationName, transformationComboBox, transformationInputField, startVectorField, endVectorField,
+        .addAll(transformationName, transformationComboBox,
+            transformationInputField, startVectorField, endVectorField,
             saveButton, cancelButton, addFileButton);
     StackPane.setAlignment(addPanel, Pos.BOTTOM_LEFT);
 
@@ -351,10 +347,10 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     if (comboBox.getValue() != null) {
       switch (comboBox.getValue()) {
         case JULIA:
-          inputField.getChildren().add(createJuliaTransformationVBox());
+          inputField.getChildren().add(createJuliaTransformationVbox());
           break;
         case AFFINE:
-          inputField.getChildren().add(createAffineTransformationVBox());
+          inputField.getChildren().add(createAffineTransformationVbox());
           break;
       }
     }
@@ -383,8 +379,9 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * @return a configured save Button.
    */
 
-  private Button createSaveButton(TextField transformationName, ComboBox<TransformationType> transformationComboBox,
-      HBox transformationInputField, HBox startVectorField, HBox endVectorField) {
+  private Button createSaveButton(TextField transformationName,
+      ComboBox<TransformationType> transformationComboBox, HBox transformationInputField,
+      HBox startVectorField, HBox endVectorField) {
     Button saveButton = new Button("Save");
     saveButton.getStyleClass().add("button");
     saveButton.setOnAction(e -> {
@@ -392,7 +389,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
           transformationInputField);
       Vector2d startVector = getInputVector(startVectorField);
       Vector2d endVector = getInputVector(endVectorField);
-      controller.addCustomTransformation(startVector, endVector, list, transformationName.getText());
+      controller
+          .addCustomTransformation(startVector, endVector, list, transformationName.getText());
     });
     return saveButton;
   }
@@ -426,8 +424,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    *
    * @return a VBox configured for Julia transformation input.
    */
-  private VBox createJuliaTransformationVBox() {
-    return createTransformationVBox(Arrays.asList("Real part", "Imaginary part"));
+  private VBox createJuliaTransformationVbox() {
+    return createTransformationVbox(Arrays.asList("Real part", "Imaginary part"));
   }
 
   /**
@@ -435,12 +433,12 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    *
    * @return a VBox configured for affine transformation inputs.
    */
-  private VBox createAffineTransformationVBox() {
+  private VBox createAffineTransformationVbox() {
     VBox transformationsBox = new VBox(5);
     Button addTransformationButton = new Button("Add Transformation");
     addTransformationButton.setOnAction(e -> {
-      HBox matrixHBox = createTransformationHBox(Arrays.asList("X0", "Y0", "X1", "Y1", "V0", "V1"));
-      transformationsBox.getChildren().add(matrixHBox);
+      HBox matrixHbox = createtransformationHbox(Arrays.asList("X0", "Y0", "X1", "Y1", "V0", "V1"));
+      transformationsBox.getChildren().add(matrixHbox);
     });
     transformationsBox.getChildren().add(addTransformationButton);
     return transformationsBox;
@@ -452,11 +450,11 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * @param promptTexts array of prompt texts for the TextFields.
    * @return a VBox configured with input TextFields.
    */
-  private VBox createTransformationVBox(List<String> promptTexts) {
-    VBox transformationVBox = new VBox(10);
-    HBox transformationHBox = createTransformationHBox(promptTexts);
-    transformationVBox.getChildren().add(transformationHBox);
-    return transformationVBox;
+  private VBox createTransformationVbox(List<String> promptTexts) {
+    VBox tranformationVbox = new VBox(10);
+    HBox transformationHbox = createtransformationHbox(promptTexts);
+    tranformationVbox.getChildren().add(transformationHbox);
+    return tranformationVbox;
   }
 
   /**
@@ -465,13 +463,13 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * @param promptTexts array of prompt texts for the TextFields.
    * @return an HBox configured with input TextFields.
    */
-  private HBox createTransformationHBox(List<String> promptTexts) {
-    HBox transformationHBox = new HBox(10);
+  private HBox createtransformationHbox(List<String> promptTexts) {
+    HBox transformationHbox = new HBox(10);
     for (String promptText : promptTexts) {
       TextField textField = createTextField(promptText);
-      transformationHBox.getChildren().add(textField);
+      transformationHbox.getChildren().add(textField);
     }
-    return transformationHBox;
+    return transformationHbox;
   }
 
   /**
@@ -499,14 +497,17 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   /**
    * Retrieves input information for the Julia transformation.
    *
-   * @param transformationInputField the HBox containing the input fields for the Julia transformation.
+   * @param transformationInputField the HBox containing the input fields for the Julia
+   *                                 transformation.
+   *
    * @return a list of Transform2D objects for the Julia transformation.
    */
+
   private List<Transform2D> getJuliaTransformation(HBox transformationInputField) {
     List<Transform2D> list = new ArrayList<>();
     if (!transformationInputField.getChildren().isEmpty()) {
-      VBox juliaVBox = (VBox) transformationInputField.getChildren().getFirst();
-      HBox juliaFields = (HBox) juliaVBox.getChildren().getFirst();
+      VBox juliaVbox = (VBox) transformationInputField.getChildren().getFirst();
+      HBox juliaFields = (HBox) juliaVbox.getChildren().getFirst();
 
       double realPart = parseDoubleFromTextField(juliaFields, 0);
       double imaginaryPart = parseDoubleFromTextField(juliaFields, 1);
@@ -520,15 +521,16 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   /**
    * Retrieves input information for the Affine transformation.
    *
-   * @param transformationInputField the HBox containing the input fields for the Affine transformation.
+   * @param transformationInputField the HBox containing the input fields for the
+   *                                 Affine transformation.
    * @return a list of Transform2D objects for the Affine transformation.
    */
   private List<Transform2D> getAffineTransformation(HBox transformationInputField) {
     List<Transform2D> list = new ArrayList<>();
     if (!transformationInputField.getChildren().isEmpty()) {
-      VBox affineVBox = (VBox) transformationInputField.getChildren().getFirst();
-      for (int i = 1; i < affineVBox.getChildren().size(); i++) {
-        HBox matrixFields = (HBox) affineVBox.getChildren().get(i);
+      VBox affineVbox = (VBox) transformationInputField.getChildren().getFirst();
+      for (int i = 1; i < affineVbox.getChildren().size(); i++) {
+        HBox matrixFields = (HBox) affineVbox.getChildren().get(i);
 
         double x0 = parseDoubleFromTextField(matrixFields, 0);
         double y0 = parseDoubleFromTextField(matrixFields, 1);
@@ -548,14 +550,14 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   /**
    * Retrieves the input vector from an HBox.
    *
-   * @param vectorHBox the HBox containing the input fields for the vector.
+   * @param vectorHbox the HBox containing the input fields for the vector.
+   *
    * @return a Vector2d object representing the input vector.
    */
-  private Vector2d getInputVector(HBox vectorHBox) {
-    double v0 = parseDoubleFromTextField(vectorHBox, 0);
-    double v1 = parseDoubleFromTextField(vectorHBox, 1);
-
-    return new Vector2d(v0,v1);
+  private Vector2d getInputVector(HBox vectorHbox) {
+    double v0 = parseDoubleFromTextField(vectorHbox, 0);
+    double v1 = parseDoubleFromTextField(vectorHbox, 1);
+    return new Vector2d(v0, v1);
   }
 
   /**
@@ -570,36 +572,34 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     return Double.parseDouble(textField.getText());
   }
 
-
   /**
    * Creates a VBox containing a Pane that tracks mouse movement and two TextFields
    * that display the normalized mouse coordinates within the Pane.
-   * <p>
    * The Pane is 400x400 in size. When the mouse is moved within the Pane, the
    * coordinates are normalized to the range [-1, 1] and the values are updated
    * in the TextFields.
    *
    * @return a VBox containing the Pane and the TextFields
    */
-  private VBox MouseBox() {
+  private VBox mouseBox() {
     Pane box = new Pane();
     box.setPrefSize(400, 400);
 
     xField = new TextField();
     yField = new TextField();
 
-    VBox vBox = new VBox(xField, yField);
-    vBox.setSpacing(10);
+    VBox vbox = new VBox(xField, yField);
+    vbox.setSpacing(10);
 
     box.setOnMouseMoved(e -> {
       double mouseX = e.getX();
       double mouseY = e.getY();
       double normalizedX = (mouseX / box.getWidth()) * 2 - 1;
       double normalizedY = (mouseY / box.getHeight()) * 2 - 1;
-      updateValues(normalizedX,normalizedY);
+      updateValues(normalizedX, normalizedY);
     });
 
-    VBox root = new VBox(box, vBox);
+    VBox root = new VBox(box, vbox);
     root.setSpacing(10);
 
     return root;
@@ -613,7 +613,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * @param y the normalized y-coordinate in the range [-1, 1]
    */
   private void updateValues(double x, double y) {
-    controller.changeJuliaTransformationDynamic(x,y);
+    controller.changeJuliaTransformationDynamic(x, y);
     controller.runSteps(controller.getSteps());
     xField.setText(String.format("X: %.1f", x));
     yField.setText(String.format("Y: %.1f", y));
