@@ -99,6 +99,11 @@ public class ChaosGame implements Serializable {
     this.canvas = new ChaosCanvas(width, height,
             description.getMinCoords(), description.getMaxCoords());
     this.currentPoint = new Vector2d(0, 0);
+    notifyObservers();
+  }
+
+  public ChaosGameDescription getDescription() {
+    return description;
   }
 
   /**

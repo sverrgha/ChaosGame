@@ -21,17 +21,22 @@ import java.util.Objects;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -50,6 +55,9 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   private static final int BUTTON_HEIGHT = 40;
   private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH - PAGE_CONTAINER_MARGIN)
           / BUTTON_COUNT;
+  private static TextField xField;
+  private static TextField yField;
+
 
 
   /**
@@ -90,7 +98,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    */
   private void createPageContainer() {
 
-    HBox contentContainer = new HBox(createAddTransformationPanel(), new ImageView(ChaosImage.createImageFromCanvas(controller.getGame().getCanvas())));
+    HBox contentContainer = new HBox(createAddTransformationPanel(), new ImageView(ChaosImage.createImageFromCanvas(controller.getGame().getCanvas())), MouseBox());
     pageContainer.getChildren().add(contentContainer);
 
     HBox buttonContainer = createButtonContainer();
@@ -384,7 +392,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
           transformationInputField);
       Vector2d startVector = getInputVector(startVectorField);
       Vector2d endVector = getInputVector(endVectorField);
-      controller.addCustomTransformation(startVector, endVector, list, transformationComboBox.getValue(), transformationName.getText());
+      controller.addCustomTransformation(startVector, endVector, list, transformationName.getText());
     });
     return saveButton;
   }
@@ -561,4 +569,63 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     TextField textField = (TextField) hbox.getChildren().get(index);
     return Double.parseDouble(textField.getText());
   }
+
+
+  /**
+   * Creates a VBox containing a Pane that tracks mouse movement and two TextFields
+   * that display the normalized mouse coordinates within the Pane.
+   * <p>
+   * The Pane is 400x400 in size. When the mouse is moved within the Pane, the
+   * coordinates are normalized to the range [-1, 1] and the values are updated
+   * in the TextFields.
+   *
+   * @return a VBox containing the Pane and the TextFields
+   */
+  private VBox MouseBox() {
+    Pane box = new Pane();
+    box.setPrefSize(400, 400);
+
+    xField = new TextField();
+    yField = new TextField();
+
+    VBox vBox = new VBox(xField, yField);
+    vBox.setSpacing(10);
+
+    box.setOnMouseMoved(e -> {
+      double mouseX = e.getX();
+      double mouseY = e.getY();
+      double normalizedX = (mouseX / box.getWidth()) * 2 - 1;
+      double normalizedY = (mouseY / box.getHeight()) * 2 - 1;
+      updateValues(normalizedX,normalizedY);
+    });
+
+    VBox root = new VBox(box, vBox);
+    root.setSpacing(10);
+
+    return root;
+  }
+
+  /**
+   * Updates the displayed values in the TextFields and triggers a change in the
+   * Julia transformation dynamically.
+   *
+   * @param x the normalized x-coordinate in the range [-1, 1]
+   * @param y the normalized y-coordinate in the range [-1, 1]
+   */
+  private void updateValues(double x, double y) {
+    controller.changeJuliaTransformationDynamic(x,y);
+    controller.runSteps(controller.getSteps());
+    xField.setText(String.format("X: %.1f", x));
+    yField.setText(String.format("Y: %.1f", y));
+  }
+
+
+
+
+
+
+
+
+
+
 }

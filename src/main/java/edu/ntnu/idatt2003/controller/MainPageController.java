@@ -6,6 +6,8 @@ import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory.descriptionTypeEnum;
 import edu.ntnu.idatt2003.model.ChaosGameFileHandler;
 import edu.ntnu.idatt2003.model.ChaosGameFileHandler;
+import edu.ntnu.idatt2003.model.Complex;
+import edu.ntnu.idatt2003.model.JuliaTransform;
 import edu.ntnu.idatt2003.model.Transform2D;
 import edu.ntnu.idatt2003.model.Vector2d;
 import edu.ntnu.idatt2003.view.MainPageView;
@@ -41,6 +43,7 @@ public class MainPageController {
   private static final String TRANSFORMATIONS_PATH = "src/main/resources/transformations/";
   private static final String SERIALIZED_GAME_PATH = "src/main/resources/savedTransformation.ser";
   private static final Logger LOGGER = Logger.getLogger(MainPageController.class.getName());
+  private static int stepsCounter;
 
   static {
     try {
@@ -97,7 +100,12 @@ public class MainPageController {
    */
   public void runSteps(int steps) {
     game.runSteps(steps);
+    stepsCounter += steps;
     LOGGER.log(Level.INFO, "Chaos game simulation ran {0} steps successfully.", steps);
+  }
+
+  public int getSteps() {
+    return stepsCounter;
   }
 
   /**
@@ -215,12 +223,11 @@ public class MainPageController {
    * @param minCoords the minimum coordinates for the transformation
    * @param maxCoords the maximum coordinates for the transformation
    * @param transform the list of 2D transformations to be applied
-   * @param transformationType the type of transformation
    * @param transformationName the name of the custom transformation
    */
 
   public void addCustomTransformation(Vector2d minCoords, Vector2d maxCoords,
-      List<Transform2D> transform, TransformationType transformationType, String transformationName) {
+      List<Transform2D> transform, String transformationName) {
     ChaosGameFileHandler chaosGameFileHandler = new ChaosGameFileHandler();
     ChaosGameDescription newChaosGameDescription = new ChaosGameDescription(minCoords, maxCoords, transform);
     chaosGameFileHandler.writeToFile(newChaosGameDescription, TRANSFORMATIONS_PATH + transformationName +".txt");
@@ -237,6 +244,25 @@ public class MainPageController {
 
   public List<String> getCustomTransformation() {
     return customTransformations;
+  }
+
+  /**
+   * Dynamically changes the Julia set transformation based on the provided
+   * normalized coordinates.
+   *
+   * @param x the normalized x-coordinate for the Julia transformation
+   * @param y the normalized y-coordinate for the Julia transformation
+   */
+  public void changeJuliaTransformationDynamic(double x, double y) {
+    ChaosGameDescription description = game.getDescription();
+    Vector2d max = description.getMaxCoords();
+    Vector2d min = description.getMinCoords();
+    List<Transform2D> list = new ArrayList<>();
+    Complex complex = new Complex(x,y);
+    list.add(new JuliaTransform(complex, 1));
+    list.add(new JuliaTransform(complex, -1));
+    ChaosGameDescription chaosGameDescription = new ChaosGameDescription(min,max,list);
+    game.setDescription(chaosGameDescription);
   }
 
 }
