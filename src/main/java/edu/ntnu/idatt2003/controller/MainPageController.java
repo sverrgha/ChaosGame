@@ -20,6 +20,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -29,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
 
 /**
  * The controller class for the main page of the ChaosGame application.
@@ -67,8 +69,8 @@ public class MainPageController {
     this.game = loadGameState();
     this.view = new MainPageView(this);
     this.game.registerObserver(view);
+    this.customTransformations = getAllCustomTransforms();
     this.view.render();
-    this.customTransformations = new ArrayList<>();
     Runtime.getRuntime().addShutdownHook(new Thread(this::saveGameState));
     LOGGER.log(Level.INFO, "MainPageController initialized successfully.");
   }
@@ -387,6 +389,36 @@ public class MainPageController {
                     Double.parseDouble(transformation[5])
             ));
 
+  }
+
+  /**
+   * Retrieves a list of all custom transformation files in the transformations directory
+   * and updates the customTransformations list.*
+   *
+   * @return the updated list of custom transformation file names.
+   */
+  public List<String> getAllCustomTransforms() {
+    List<String> transformations = new ArrayList<>();
+    Path transformationsPath = Paths.get(TRANSFORMATIONS_PATH);
+
+    if (Files.exists(transformationsPath) && Files.isDirectory(transformationsPath)) {
+      try (Stream<Path> paths = Files.list(transformationsPath)) {
+        transformations = paths
+                .filter(Files::isRegularFile)
+                .map(Path::getFileName)
+                .map(Path::toString)
+                .map(name -> name.replace(".txt", ""))
+                .toList();
+        LOGGER.log(Level.INFO, "All custom transformations retrieved successfully.");
+      } catch (IOException e) {
+        LOGGER.log(Level.WARNING, "Error retrieving custom transformation files.", e);
+      }
+    } else {
+      LOGGER.log(Level.WARNING, "Transformations directory does not exist or is not a " +
+              "directory.");
+    }
+
+    return transformations;
   }
 
   /**
