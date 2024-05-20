@@ -1,39 +1,110 @@
 package edu.ntnu.idatt2003.model;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Test class for ChaosGameDescriptionFactory, covering both positive and negative test cases.
+ */
 public class ChaosGameDescriptionFactoryTest {
 
-  private ChaosGameDescription sierpinskiDescription;
-  private ChaosGameDescription barnsleyFernDescription;
-  private ChaosGameDescription juliaDescription;
+  /**
+   * Positive test cases for ChaosGameDescriptionFactory.
+   */
+  @Nested
+  @DisplayName("Positive Tests")
+  class PositiveTests {
 
-  @BeforeEach
-  public void setup() {
-    sierpinskiDescription = ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.descriptionTypeEnum.SIERPINSKI_TRIANGLE);
-    barnsleyFernDescription = ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.descriptionTypeEnum.BARNSLEY_FERN);
-    juliaDescription = ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.descriptionTypeEnum.JULIA);
+    /**
+     * Tests getting the Sierpinski Triangle description.
+     */
+    @Test
+    @DisplayName("Get Sierpinski Triangle Test")
+    public void testGetSierpinskiTriangle() {
+      ChaosGameDescription description = ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.descriptionTypeEnum.SIERPINSKI_TRIANGLE);
+
+      assertNotNull(description);
+      assertEquals(new Vector2d(0, 0).toString(), description.getMinCoords().toString());
+      assertEquals(new Vector2d(1, 1).toString(), description.getMaxCoords().toString());
+
+      List<Transform2D> transforms = description.getTransform();
+      assertEquals(3, transforms.size());
+
+      assertInstanceOf(AffineTransform2D.class, transforms.get(0));
+      assertInstanceOf(AffineTransform2D.class, transforms.get(1));
+      assertInstanceOf(AffineTransform2D.class, transforms.get(2));
+    }
+
+    /**
+     * Tests getting the Barnsley Fern description.
+     */
+    @Test
+    @DisplayName("Get Barnsley Fern Test")
+    public void testGetBarnsleyFern() {
+      ChaosGameDescription description = ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.descriptionTypeEnum.BARNSLEY_FERN);
+
+      assertNotNull(description);
+      assertEquals(new Vector2d(-2.5, 0).toString(), description.getMinCoords().toString());
+      assertEquals(new Vector2d(2.5, 10).toString(), description.getMaxCoords().toString());
+
+      List<Transform2D> transforms = description.getTransform();
+      assertEquals(4, transforms.size());
+
+      assertInstanceOf(AffineTransform2D.class, transforms.get(0));
+      assertInstanceOf(AffineTransform2D.class, transforms.get(1));
+      assertInstanceOf(AffineTransform2D.class, transforms.get(2));
+      assertInstanceOf(AffineTransform2D.class, transforms.get(3));
+    }
+
+    /**
+     * Tests getting the Julia transformation description.
+     */
+    @Test
+    @DisplayName("Get Julia Transformation Test")
+    public void testGetJuliaTransformation() {
+      ChaosGameDescription description = ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.descriptionTypeEnum.JULIA);
+
+      assertNotNull(description);
+      assertEquals(new Vector2d(-1.6, -1).toString(), description.getMinCoords().toString());
+      assertEquals(new Vector2d(1.6, 1).toString(), description.getMaxCoords().toString());
+
+      List<Transform2D> transforms = description.getTransform();
+      assertEquals(2, transforms.size());
+
+      assertInstanceOf(JuliaTransform.class, transforms.get(0));
+      assertInstanceOf(JuliaTransform.class, transforms.get(1));
+    }
   }
 
-  @Test
-  public void testSierpinskiTriangleDescription() {
-    assertNotNull(sierpinskiDescription.toString());
-  }
+  /**
+   * Negative test cases for ChaosGameDescriptionFactory.
+   */
+  @Nested
+  @DisplayName("Negative Tests")
+  class NegativeTests {
 
-  @Test
-  public void testBarnsleyFernDescription() {
-    assertNotNull(barnsleyFernDescription);
-  }
+    /**
+     * Tests getting a custom transformation file that does not exist.
+     */
+    @Test
+    @DisplayName("Get Custom Transformation File Not Found Test")
+    public void testGetCustomTransformationFileNotFound() {
+      Exception exception = assertThrows(RuntimeException.class, () ->
+          ChaosGameDescriptionFactory.getCustom("non_existent_transformation")
+      );
 
-  @Test
-  public void testJuliaDescription() {
-    assertNotNull(juliaDescription);
+      String expectedMessage = "File src/main/resources/transformations/non_existent_transformation.txt not found.";
+      String actualMessage = exception.getMessage();
+
+      assertTrue(actualMessage.contains(expectedMessage));
+    }
   }
 }
-
 
 
 

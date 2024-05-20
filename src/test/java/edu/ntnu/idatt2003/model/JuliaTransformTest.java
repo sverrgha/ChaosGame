@@ -6,12 +6,21 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-
-
+/**
+ * Test class for JuliaTransform, covering positive test cases.
+ */
 class JuliaTransformTest {
+  /**
+   * Positive test cases for JuliaTransform.
+   */
   @Nested
   @DisplayName("Positive tests")
   class PositiveTests {
+
+    /**
+     * Tests the transform method of JuliaTransform with a positive sign.
+     * Verifies that the transformation is correctly applied.
+     */
     @Test
     @DisplayName("Test transform with positive sign")
     void testTransform() {
@@ -22,6 +31,10 @@ class JuliaTransformTest {
       assertEquals(0.644, v3.getX1(), 0.001);
     }
 
+    /**
+     * Tests the transform method of JuliaTransform with a negative sign.
+     * Verifies that the transformation is correctly applied.
+     */
     @Test
     @DisplayName("Test transform with negative sign")
     void testTransform2() {
