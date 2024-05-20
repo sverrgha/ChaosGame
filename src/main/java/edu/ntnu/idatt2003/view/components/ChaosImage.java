@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003.view;
+package edu.ntnu.idatt2003.view.components;
 
 import edu.ntnu.idatt2003.model.ChaosCanvas;
 import javafx.beans.property.ObjectProperty;
@@ -19,7 +19,7 @@ import javafx.scene.transform.Scale;
  * an image by a specified factor.
  */
 
-class ChaosImage {
+public class ChaosImage {
   private static final int MAX_SCALE = 5;
   private static final int MIN_SCALE = 1;
   private static final double ZOOM_FACTOR = 1.05;
@@ -51,13 +51,11 @@ class ChaosImage {
       }
     }
     ImageView imageView = new ImageView(image);
-    imageView.setFitWidth(600);
-    imageView.setFitHeight(600);
     Pane pane = new Pane(imageView);
     pane.setMaxHeight(height);
     pane.setMaxWidth(width);
     StackPane.setAlignment(imageView, javafx.geometry.Pos.CENTER);
-    pane.setClip(new Rectangle(600, 600));
+    pane.setClip(new Rectangle(width, height));
     enableZoom(imageView);
     enablePan(imageView);
     return pane;
