@@ -1,55 +1,34 @@
-.button {
-    -fx-background-color: #D9D9D9;
-    -fx-background-insets: 5px;
-    -fx-border-insets: 5px;
-    -fx-background-radius: 5px;
-    -fx-border-radius: 5px;
-    -fx-font-size: 16px;
-}
 
-.button:hover {
-    -fx-background-color: #C8C8C8;
-}
-
-.combo-box {
+.text-box {
     -fx-background-color: #D9D9D9;
-    -fx-background-insets: 5px;
-    -fx-border-insets: 5px;
-    -fx-background-radius: 5px;
-    -fx-border-radius: 5px;
-    -fx-font-size: 16px;
-}
-.combo-box:hover {
-    -fx-background-color: #C8C8C8;
-}
-
-.input-field {
-    -fx-background-color: #D9D9D9;
-    -fx-background-insets: 5px;
-    -fx-border-insets: 5px;
-    -fx-background-radius: 5px;
-    -fx-border-radius: 5px;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
     -fx-font-size: 16px;
 }
 
 .button-container {
     -fx-background-color: white;
-    -fx-background-radius: 10px;
     -fx-padding: 10px;
 }
 
-.page-container {
-    -fx-background-color: blue;
-    -fx-background-radius: 10px;
+.center-container {
     -fx-padding: 10px;
+}
+
+.canvas-and-dynamic-julia-container {
+    -fx-padding: 20px;
+    -fx-border-color: #848484;
+    -fx-border-width: 4px;
+}
+.mouse-box {
+    -fx-background-color: #D9D9D9;
 }
 
 .main-page {
     -fx-background-color: #AFAFAF;
     -fx-border-radius: 10px;
-    -fx-padding: 20px;
 }
-/* Editing Panel Styling */
+
 .editing-panel {
     -fx-background-color: white;
     -fx-background-radius: 10px;
