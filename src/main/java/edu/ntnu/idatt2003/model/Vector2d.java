@@ -51,6 +51,9 @@ public class Vector2d implements Serializable {
     return x1;
   }
 
+  public double[] getCoordsList() {
+    return new double[]{x0, x1};
+  }
   /**
    * Adds another vector to this vector.
    *
