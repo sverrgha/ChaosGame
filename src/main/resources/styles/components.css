@@ -1,3 +1,10 @@
+.text-field {
+    -fx-background-color: white;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-font-size: 16px;
+}
+
 .button {
     -fx-background-color: #D9D9D9;
     -fx-background-insets: 5px;
@@ -10,3 +17,4 @@
 .button:hover {
     -fx-background-color: #C8C8C8;
 }
+
