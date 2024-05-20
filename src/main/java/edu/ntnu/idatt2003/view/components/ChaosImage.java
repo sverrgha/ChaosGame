@@ -51,6 +51,8 @@ public class ChaosImage {
       }
     }
     ImageView imageView = new ImageView(image);
+    imageView.setFitWidth(width);
+    imageView.setFitHeight(height);
     Pane pane = new Pane(imageView);
     pane.setMaxHeight(height);
     pane.setMaxWidth(width);
@@ -104,8 +106,7 @@ public class ChaosImage {
     final double scaleBefore = imageView.getScaleX();
     double scale = imageView.getScaleX() * zoomFactor;
 
-    scale = clamp(scale, MIN_SCALE, MAX_SCALE);
-
+    scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
     imageView.setScaleX(scale);
     imageView.setScaleY(scale);
 
@@ -134,13 +135,13 @@ public class ChaosImage {
     if ((newX + imageWidthHalf) / imageView.getScaleX() <= imageWidthHalf
             && (newX - imageWidthHalf) / imageView.getScaleX() >= -imageWidthHalf) {
       imageView.setTranslateX(newX);
-    } else if (imageView.getScaleX() <= 1) {
+    } else {
       imageView.setTranslateX(0);
     }
     if ((newY + imageHeightHalf) / imageView.getScaleY() <= imageHeightHalf
             && (newY - imageHeightHalf) / imageView.getScaleY() >= -imageHeightHalf) {
       imageView.setTranslateY(newY);
-    } else if (imageView.getScaleY() <= 1) {
+    } else {
       imageView.setTranslateY(0);
     }
   }
@@ -193,17 +194,5 @@ public class ChaosImage {
   private static double calculateNewTranslate(double mousePosition, double scale,
                                               double scaleBefore, double translateBefore) {
     return -mousePosition * scale + mousePosition * scaleBefore + translateBefore;
-  }
-
-  /**
-   * Clamp a value between a minimum and maximum value. Makes sure the value is within the bounds.
-   *
-   * @param value The value to clamp.
-   * @param min   The minimum value.
-   * @param max   The maximum value.
-   * @return The clamped value.
-   */
-  private static double clamp(double value, double min, double max) {
-    return Math.max(min, Math.min(max, value));
   }
 }
