@@ -1,21 +1,24 @@
 package edu.ntnu.idatt2003.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import edu.ntnu.idatt2003.model.AffineTransform2D;
-import edu.ntnu.idatt2003.model.Matrix2x2;
-import edu.ntnu.idatt2003.model.Vector2d;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test class for AffineTransform2D, covering positive test cases.
+ */
 public class AffineTransform2dTest {
 
   private static Matrix2x2 a1;
   private static Vector2d v1;
   private static Vector2d b1;
 
+  /**
+   * Sets up the test environment before all tests.
+   * Initializes the Matrix2x2 and Vector2d objects.
+   */
   @BeforeAll
   static void setUp() {
     a1 = new Matrix2x2(2, 2, 4, 5);
@@ -23,9 +26,17 @@ public class AffineTransform2dTest {
     b1 = new Vector2d(3, 4);
   }
 
+  /**
+   * Positive test cases for AffineTransform2D.
+   */
   @Nested
   @DisplayName("Positive tests")
   public class PositiveTests {
+
+    /**
+     * Tests the transform method of AffineTransform2D.
+     * Verifies that the transformation is correctly applied.
+     */
     @Test
     @DisplayName("transformTestAffine")
     void testTransform() {
@@ -34,12 +45,6 @@ public class AffineTransform2dTest {
 
       assertEquals(9, v3.getX0());
       assertEquals(18, v3.getX1());
-
     }
   }
-
-
-
-
-
 }

@@ -9,6 +9,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class for ChaosGameFileHandler, covering both positive and negative test cases.
+ */
 class ChaosGameFileHandlerTest {
   private static ChaosGameFileHandler fileHandler;
   private static String affine2dTextFilePath;
@@ -16,38 +19,54 @@ class ChaosGameFileHandlerTest {
   private static ChaosGameDescription affine2DDescription;
   private static ChaosGameDescription juliaDescription;
 
+  /**
+   * Sets up the test environment before all tests.
+   * Initializes the ChaosGameFileHandler, file paths, and ChaosGameDescription objects.
+   */
   @BeforeAll
   static void setUp() {
     fileHandler = new ChaosGameFileHandler();
     affine2dTextFilePath = "src/test/resources/Affine2DExample.txt";
     List<Transform2D> affine2DTransform = List.of(
-            new AffineTransform2D(new Matrix2x2(0.5, 0, 0, 0.5), new Vector2d(0, 0)),
-            new AffineTransform2D(new Matrix2x2(0.5, 0, 0, 0.5), new Vector2d(0.25, 0.5)),
-            new AffineTransform2D(new Matrix2x2(0.5, 0, 0, 0.5), new Vector2d(0.5, 0))
+        new AffineTransform2D(new Matrix2x2(0.5, 0, 0, 0.5), new Vector2d(0, 0)),
+        new AffineTransform2D(new Matrix2x2(0.5, 0, 0, 0.5), new Vector2d(0.25, 0.5)),
+        new AffineTransform2D(new Matrix2x2(0.5, 0, 0, 0.5), new Vector2d(0.5, 0))
     );
     affine2DDescription = new ChaosGameDescription(
-            new Vector2d(0, 0), new Vector2d(1, 1), affine2DTransform);
+        new Vector2d(0, 0), new Vector2d(1, 1), affine2DTransform);
     juliaTextFilePath = "src/test/resources/JuliaExample.txt";
     juliaDescription = new ChaosGameDescription(
-            new Vector2d(-1.6, -1), new Vector2d(1.6, 1),
-            List.of(new JuliaTransform(new Complex(-0.74543, 0.11301), 1)
-                ,(new JuliaTransform(new Complex(-0.74543, 0.11301), 1))));
+        new Vector2d(-1.6, -1), new Vector2d(1.6, 1),
+        List.of(new JuliaTransform(new Complex(-0.74543, 0.11301), 1),
+            new JuliaTransform(new Complex(-0.74543, 0.11301), 1)));
   }
+
+  /**
+   * Cleans up the test environment after each test.
+   * Deletes any output files created during the tests.
+   */
   @AfterEach
   void cleanUp() {
     try {
-        Files.deleteIfExists(Paths.get(("src/test/resources/Affine2DExampleOutput.txt")));
-        Files.deleteIfExists(Paths.get(("src/test/resources/JuliaExampleOutput.txt")));
-        } catch (Exception e) {
-        fail(e.getMessage());
+      Files.deleteIfExists(Paths.get("src/test/resources/Affine2DExampleOutput.txt"));
+      Files.deleteIfExists(Paths.get("src/test/resources/JuliaExampleOutput.txt"));
+    } catch (Exception e) {
+      fail(e.getMessage());
     }
   }
 
+  /**
+   * Positive test cases for ChaosGameFileHandler.
+   */
   @Nested
   @DisplayName("Positive tests")
   class PositiveTests {
+
+    /**
+     * Tests reading from a file with Affine2D transformations.
+     */
     @Test
-    @DisplayName("Test readFromfile with Affine2DTransform")
+    @DisplayName("Test readFromFile with Affine2DTransform")
     void testReadFromFileWithAffine2D() {
       try {
         assertEquals(affine2DDescription.toString(), fileHandler.readFromFile(affine2dTextFilePath).toString());
@@ -56,8 +75,11 @@ class ChaosGameFileHandlerTest {
       }
     }
 
+    /**
+     * Tests reading from a file with Julia transformations.
+     */
     @Test
-    @DisplayName("Test readFromfile with JuliaTransform")
+    @DisplayName("Test readFromFile with JuliaTransform")
     void testReadFromFileWithJulia() {
       try {
         assertEquals(juliaDescription.toString(), fileHandler.readFromFile(juliaTextFilePath).toString());
@@ -65,6 +87,10 @@ class ChaosGameFileHandlerTest {
         fail(e.getMessage());
       }
     }
+
+    /**
+     * Tests writing to a file with Affine2D transformations and then reading from it.
+     */
     @Test
     @DisplayName("Test writeToFile with Affine2DTransform")
     void testWriteToFileWithAffine2D() {
@@ -75,6 +101,10 @@ class ChaosGameFileHandlerTest {
         fail(e.getMessage());
       }
     }
+
+    /**
+     * Tests writing to a file with Julia transformations and then reading from it.
+     */
     @Test
     @DisplayName("Test writeToFile with JuliaTransform")
     void testWriteToFileWithJulia() {
@@ -87,9 +117,17 @@ class ChaosGameFileHandlerTest {
     }
   }
 
+  /**
+   * Negative test cases for ChaosGameFileHandler.
+   */
   @Nested
   @DisplayName("Negative tests")
   class NegativeTests {
+
+    /**
+     * Tests reading from a non-existing file.
+     * Verifies that a FileNotFoundException is thrown.
+     */
     @Test
     @DisplayName("Test readChaosGameDescription with non-existing file")
     void testReadChaosGameDescriptionWithNonExistingFile() {

@@ -51,6 +51,6 @@ public class Matrix2x2 implements Serializable {
    */
   @Override
   public String toString() {
-    return String.format(Locale.ENGLISH, "%f, %f, %f, %f", a00, a01, a10, a11);
+    return String.format(Locale.ENGLISH, "%.2f, %.2f, %.2f, %.2f", a00, a01, a10, a11);
   }
 }
