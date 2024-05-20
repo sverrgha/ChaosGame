@@ -23,6 +23,8 @@ public class StyledComboBox<T> extends ComboBox<T> {
     this.setPromptText(promptText);
     this.setPrefSize(width, height);
     this.getStyleClass().add("combo-box");
-    this.getItems().addAll(values);
+    if (values != null) {
+      this.getItems().addAll(values);
+    }
   }
 }
