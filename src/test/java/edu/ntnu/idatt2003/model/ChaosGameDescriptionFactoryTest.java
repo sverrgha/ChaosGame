@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -94,7 +95,7 @@ public class ChaosGameDescriptionFactoryTest {
     @Test
     @DisplayName("Get Custom Transformation File Not Found Test")
     void testGetCustomTransformationFileNotFound() {
-      Exception exception = assertThrows(RuntimeException.class, () ->
+      Exception exception = assertThrows(FileNotFoundException.class, () ->
           ChaosGameDescriptionFactory.getCustom("non_existent_transformation")
       );
 
