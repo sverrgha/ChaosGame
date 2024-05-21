@@ -16,6 +16,7 @@ public class ChaosGame implements Serializable {
 
   private ChaosCanvas canvas;
   private ChaosGameDescription description;
+  private String descriptionName;
   private Vector2d currentPoint;
   private final int width;
   private final int height;
@@ -35,6 +36,7 @@ public class ChaosGame implements Serializable {
     this.observers = new ArrayList<>();
     this.width = width;
     this.height = height;
+    this.descriptionName = "";
     setDescription(description);
     randomGenerator = new Random();
     this.totalSteps = 0;
@@ -83,6 +85,14 @@ public class ChaosGame implements Serializable {
    */
   public int getTotalSteps() {
     return totalSteps;
+  }
+
+  public String getDescriptionName() {
+    return descriptionName;
+  }
+
+  public void setDescriptionName(String descriptionName) {
+    this.descriptionName = descriptionName;
   }
 
   /**
@@ -147,8 +157,10 @@ public class ChaosGame implements Serializable {
    *
    * @param chaosGameDescription The type of fractal description to retrieve.
    */
-  public void changeTransformation(ChaosGameDescription chaosGameDescription) {
+  public void changeTransformation(ChaosGameDescription chaosGameDescription,
+                                   String descriptionName) {
     setDescription(chaosGameDescription);
+    setDescriptionName(descriptionName);
     totalSteps = 0;
     notifyObservers();
   }

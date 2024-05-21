@@ -47,6 +47,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   private static final int DEFAULT_SPACING = 10;
   private TextField x0Field;
   private TextField x1Field;
+  private TransformationType selectedTransformation;
 
 
   /**
@@ -62,6 +63,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
             .getResource("/styles/components.css")).toExternalForm());
 
     root = (BorderPane) this.getRoot();
+    this.selectedTransformation = TransformationType.AFFINE;
     this.controller = mainPageController;
   }
 
@@ -181,9 +183,9 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * Creates a HBox containing a text box with the specified text and as many text fields
    * as specified is given prompt text to, which gets the size given as parameters.
    *
-   * @param text The text to display in the text box.
-   * @param width The width of the text field.
-   * @param height The height of the text field.
+   * @param text        The text to display in the text box.
+   * @param width       The width of the text field.
+   * @param height      The height of the text field.
    * @param promptTexts The prompt texts for the text fields.
    * @return The HBox containing the text box and text fields.
    */
@@ -201,8 +203,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * Creates a HBox containing a text box with the specified text and as many text fields
    * as the length of the doubles array, which gets the height and with given as parameters.
    *
-   * @param text The text to display in the text box.
-   * @param width The width of the text field.
+   * @param text   The text to display in the text box.
+   * @param width  The width of the text field.
    * @param height The height of the text field.
    * @param coords The text for the StyledTextField.
    * @return The HBox containing the text box and text fields.
@@ -277,6 +279,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   private ComboBox<String> createCustomComboBox() {
     StyledComboBox<String> customMenu = new StyledComboBox<>("Custom Transformations",
             BUTTON_WIDTH, COMPONENT_HEIGHT, controller.getCustomTransformation());
+    customMenu.getItems().add("Add new");
     customMenu.setOnAction(e -> controller.changeTransformation(customMenu.getValue()));
     return customMenu;
   }
@@ -336,17 +339,23 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   public VBox createAddTransformationPanel() {
     VBox addPanel = createMainPanel();
     TextField transformationName = new StyledTextField("Transformation name", 210, 20);
-    StyledComboBox<TransformationType> transformationComboBox = new StyledComboBox<>(
-            "Transformation Type", 210, 40, Arrays.asList(TransformationType.values())
-    );
-    transformationComboBox.setValue(controller.transformationIsJulia()
-            ? TransformationType.JULIA : TransformationType.AFFINE);
+    transformationName.setText(controller.getCurrentTransformationName());
+    ComboBox<TransformationType> transformationComboBox = createAddComboBox();
+    HBox startVectorField;
+    HBox endVectorField;
+    if (controller.isAddingCustomTransformation()) {
+      startVectorField = createTextBoxWithTextField("Start vector:", 100, 20,
+              "x0", "x1");
+      endVectorField = createTextBoxWithTextField("End vector:", 100, 20,
+              "x0", "x1");
+    } else {
+      startVectorField = createTextBoxWithTextField("Min vector:", 100, 20,
+              controller.getMinCoordsX());
+      endVectorField = createTextBoxWithTextField("Max vector:", 100, 20,
+              controller.getMaxCoordsX());
+    }
 
-    HBox startVectorField = createTextBoxWithTextField("Min vector:", 100, 20,
-            controller.getMinCoordsX());
-    HBox endVectorField = createTextBoxWithTextField("Max vector:", 100, 20,
-            controller.getMaxCoordsX());
-    VBox transformationVbox = createTransformationVbox();
+    VBox transformationVbox = createTransformationVbox(transformationComboBox);
 
     addPanel.getChildren().addAll(
             new HBox(DEFAULT_SPACING,
@@ -376,16 +385,33 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     return addPanel;
   }
 
+  private ComboBox<TransformationType> createAddComboBox() {
+    StyledComboBox<TransformationType> transformMenu = new StyledComboBox<>("Transformation",
+            210, COMPONENT_HEIGHT, Arrays.asList(TransformationType.values()));
+    transformMenu.setOnAction(e -> {
+      selectedTransformation = transformMenu.getValue();
+      controller.changeTransformation("add new");
+    });
+    if (controller.isAddingCustomTransformation()) {
+      transformMenu.setValue(this.selectedTransformation);
+    } else if (controller.transformationIsJulia()) {
+      transformMenu.setValue(TransformationType.JULIA);
+    } else {
+      transformMenu.setValue(TransformationType.AFFINE);
+    }
+    return transformMenu;
+  }
+
   /**
    * Creates a VBox containing input fields for transformations.
    *
    * @return a VBox configured with input TextFields.
    */
-  private VBox createTransformationVbox() {
+  private VBox createTransformationVbox(ComboBox<TransformationType> transformationComboBox) {
     VBox vbox = new VBox(10);
     vbox.setFillWidth(true);
     vbox.setAlignment(Pos.CENTER);
-    if (!controller.transformationIsJulia()) {
+    if (transformationComboBox.getValue() == TransformationType.AFFINE) {
       vbox.getChildren().add(
               new StyledButton("Add Transformation", 250, 20,
                       e -> vbox.getChildren().add(createTextBoxWithTextField("Transformation:",
@@ -393,10 +419,18 @@ public class MainPageView extends Scene implements ChaosGameObserver {
               )
       );
     }
-    for (double[] coords : controller.getTransformList()) {
+    if (!controller.isAddingCustomTransformation()) {
+      for (double[] coords : controller.getTransformList()) {
+        vbox.getChildren().add(createTextBoxWithTextField("Transformation:",
+                55, 20, coords));
+      }
+    } else if (controller.isAddingCustomTransformation()
+            && transformationComboBox.getValue() == TransformationType.JULIA) {
       vbox.getChildren().add(createTextBoxWithTextField("Transformation:",
-              55, 20, coords));
+              55, 20, "c0", "c1"));
+
     }
+
     return vbox;
   }
 
@@ -468,8 +502,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     List<String[]> list = new ArrayList<>();
     if (!transformationVbox.getChildren().isEmpty()) {
       HBox juliaFields = (HBox) transformationVbox.getChildren().get(0);
-      list.add(new String[]{((TextField) juliaFields.getChildren().get(0)).getText(),
-              ((TextField) juliaFields.getChildren().get(0)).getText()});
+      list.add(new String[]{((TextField) juliaFields.getChildren().get(1)).getText(),
+              ((TextField) juliaFields.getChildren().get(2)).getText()});
     }
     return list;
   }

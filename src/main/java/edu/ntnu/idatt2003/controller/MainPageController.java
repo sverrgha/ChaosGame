@@ -11,6 +11,7 @@ import edu.ntnu.idatt2003.model.Matrix2x2;
 import edu.ntnu.idatt2003.model.Transform2D;
 import edu.ntnu.idatt2003.model.Vector2d;
 import edu.ntnu.idatt2003.view.MainPageView;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -41,6 +42,7 @@ public class MainPageController {
   private final ChaosGame game;
   private final MainPageView view;
   private final List<String> customTransformations;
+  private boolean addingCustomTransformation;
   private static final String TRANSFORMATIONS_PATH = "src/main/resources/transformations/";
   private static final String SERIALIZED_GAME_PATH = "src/main/resources/savedTransformation.ser";
   private static final Logger LOGGER = Logger.getLogger(MainPageController.class.getName());
@@ -69,7 +71,8 @@ public class MainPageController {
     this.game = loadGameState();
     this.view = new MainPageView(this);
     this.game.registerObserver(view);
-    this.customTransformations = getAllCustomTransforms();
+    this.customTransformations = new ArrayList<>(getAllCustomTransforms());
+    this.addingCustomTransformation = false;
     this.view.render();
     Runtime.getRuntime().addShutdownHook(new Thread(this::saveGameState));
     LOGGER.log(Level.INFO, "MainPageController initialized successfully.");
@@ -101,6 +104,13 @@ public class MainPageController {
     return game.getMaxCoordsList();
   }
 
+  public String getCurrentTransformationName() {
+    return game.getDescriptionName();
+  }
+
+  public boolean isAddingCustomTransformation() {
+    return addingCustomTransformation;
+  }
   /**
    * Get the list of coordinate-arrays of the game.
    *
@@ -137,7 +147,11 @@ public class MainPageController {
    * @return true if the transformation is a Julia set, false otherwise.
    */
   public boolean transformationIsJulia() {
-    return game.getDescription().getTransform().get(0) instanceof JuliaTransform;
+    try {
+      return game.getTransformList().get(0) instanceof JuliaTransform;
+    } catch (IndexOutOfBoundsException e) {
+      return false;
+    }
   }
 
   /**
@@ -223,7 +237,10 @@ public class MainPageController {
    */
   public void changeTransformation(ChaosGameDescriptionFactory
                                            .descriptionTypeEnum descriptionType) {
-    game.changeTransformation(ChaosGameDescriptionFactory.get(descriptionType));
+    addingCustomTransformation = false;
+    game.changeTransformation(ChaosGameDescriptionFactory.get(descriptionType),
+            descriptionType.toString());
+
     LOGGER.log(Level.INFO, "Transformation was changed successfully to {0}",
             descriptionType);
   }
@@ -234,9 +251,15 @@ public class MainPageController {
    * @param customName the name of the custom transformation to be applied
    */
   public void changeTransformation(String customName) {
-    game.changeTransformation(ChaosGameDescriptionFactory.getCustom(customName));
-    LOGGER.log(Level.INFO, "Transformation was changed successfully to {0}",
-            customName);
+    if (customName.equalsIgnoreCase("add new")) {
+      addingCustomTransformation = true;
+      this.view.render();
+    } else {
+      addingCustomTransformation = false;
+      game.changeTransformation(ChaosGameDescriptionFactory.getCustom(customName), customName);
+      LOGGER.log(Level.INFO, "Transformation was changed successfully to {0}",
+              customName);
+    }
   }
 
   private void saveGameState() {
@@ -272,9 +295,12 @@ public class MainPageController {
     } else {
       LOGGER.log(Level.WARNING, "No saved game state found. Creating new game.");
     }
-    return new ChaosGame(ChaosGameDescriptionFactory
+    ChaosGame newGame = new ChaosGame(ChaosGameDescriptionFactory
             .get(ChaosGameDescriptionFactory.descriptionTypeEnum.SIERPINSKI_TRIANGLE),
             650, 650);
+    newGame.setDescriptionName(ChaosGameDescriptionFactory.descriptionTypeEnum
+            .SIERPINSKI_TRIANGLE.toString());
+    return newGame;
   }
 
   /**
@@ -296,11 +322,18 @@ public class MainPageController {
                       getVector2dFromStringList(maxCoords),
                       getTransformListFromStringList(transform)
               );
-      chaosGameFileHandler
-              .writeToFile(newChaosGameDescription,
-                      TRANSFORMATIONS_PATH + transformationName + ".txt");
-      customTransformations.add(transformationName);
-      view.render();
+      if (!Files.exists(Path.of(TRANSFORMATIONS_PATH + transformationName + ".txt"))) {
+        chaosGameFileHandler
+                .writeToFile(newChaosGameDescription,
+                        TRANSFORMATIONS_PATH + transformationName + ".txt");
+        customTransformations.add(transformationName);
+        view.render();
+        view.showAlert("Custom transformation " + transformationName + " added successfully.");
+      } else {
+        throw new IllegalArgumentException("Custom transformation with the same name " +
+                "already exists please change it.");
+      }
+
     } catch (IllegalArgumentException e) {
       view.showAlert(e.getMessage());
     }
