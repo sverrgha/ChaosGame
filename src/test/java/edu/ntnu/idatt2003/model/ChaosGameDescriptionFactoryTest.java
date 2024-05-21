@@ -25,8 +25,8 @@ public class ChaosGameDescriptionFactoryTest {
      */
     @Test
     @DisplayName("Get Sierpinski Triangle Test")
-    public void testGetSierpinskiTriangle() {
-      ChaosGameDescription description = ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.descriptionTypeEnum.SIERPINSKI_TRIANGLE);
+    void testGetSierpinskiTriangle() {
+      ChaosGameDescription description = ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.DescriptionTypeEnum.SIERPINSKI_TRIANGLE);
 
       assertNotNull(description);
       assertEquals(new Vector2d(0, 0).toString(), description.getMinCoords().toString());
@@ -45,8 +45,8 @@ public class ChaosGameDescriptionFactoryTest {
      */
     @Test
     @DisplayName("Get Barnsley Fern Test")
-    public void testGetBarnsleyFern() {
-      ChaosGameDescription description = ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.descriptionTypeEnum.BARNSLEY_FERN);
+    void testGetBarnsleyFern() {
+      ChaosGameDescription description = ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.DescriptionTypeEnum.BARNSLEY_FERN);
 
       assertNotNull(description);
       assertEquals(new Vector2d(-2.5, 0).toString(), description.getMinCoords().toString());
@@ -66,8 +66,8 @@ public class ChaosGameDescriptionFactoryTest {
      */
     @Test
     @DisplayName("Get Julia Transformation Test")
-    public void testGetJuliaTransformation() {
-      ChaosGameDescription description = ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.descriptionTypeEnum.JULIA);
+    void testGetJuliaTransformation() {
+      ChaosGameDescription description = ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.DescriptionTypeEnum.JULIA);
 
       assertNotNull(description);
       assertEquals(new Vector2d(-1.6, -1).toString(), description.getMinCoords().toString());
@@ -93,7 +93,7 @@ public class ChaosGameDescriptionFactoryTest {
      */
     @Test
     @DisplayName("Get Custom Transformation File Not Found Test")
-    public void testGetCustomTransformationFileNotFound() {
+    void testGetCustomTransformationFileNotFound() {
       Exception exception = assertThrows(RuntimeException.class, () ->
           ChaosGameDescriptionFactory.getCustom("non_existent_transformation")
       );

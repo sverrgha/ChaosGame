@@ -1,8 +1,8 @@
 package edu.ntnu.idatt2003.model;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.FileNotFoundException;
 
 
 /**
@@ -23,7 +23,7 @@ public class ChaosGameDescriptionFactory {
    * @return a ChaosGameDescription object corresponding to the specified fractal type.
    */
 
-  public static ChaosGameDescription get(descriptionTypeEnum descriptionType) {
+  public static ChaosGameDescription get(DescriptionTypeEnum descriptionType) {
     return switch (descriptionType) {
       case SIERPINSKI_TRIANGLE -> sierpinskiTriangle();
       case BARNSLEY_FERN -> barnsleyFern();
@@ -39,7 +39,7 @@ public class ChaosGameDescriptionFactory {
    * corresponds to a specific fractal pattern, which the factory can produce.
    */
 
-  public enum descriptionTypeEnum {
+  public enum DescriptionTypeEnum {
     SIERPINSKI_TRIANGLE,
     BARNSLEY_FERN,
     JULIA,
@@ -87,7 +87,7 @@ public class ChaosGameDescriptionFactory {
   private static ChaosGameDescription barnsleyFern() {
     List<Transform2D> transformations = new ArrayList<>();
     transformations.add(new AffineTransform2D(
-            new Matrix2x2(0,0,0,0.16),
+            new Matrix2x2(0, 0, 0, 0.16),
             new Vector2d(0, 0))
     );
     transformations.add(new AffineTransform2D(
@@ -107,7 +107,8 @@ public class ChaosGameDescriptionFactory {
             new Vector2d(-2.5, 0),
             new Vector2d(2.5, 10),
             transformations
-    );  }
+    );
+  }
 
   /**
    * A static method that generates a ChaosGameDescription for a pre-defined
@@ -161,14 +162,17 @@ public class ChaosGameDescriptionFactory {
     );
   }
 
-
-
-
-  private static ChaosGameDescription transformations(String pathToFile) {
+    /**
+     * A static method that reads a fractal from a file and returns a ChaosGameDescription.
+     *
+     * @param pathToFile the path to the file containing the fractal description
+     * @return a ChaosGameDescription based on the fractal description in the file
+     */
+  private static ChaosGameDescription readFractal(String pathToFile) {
     try {
       return new ChaosGameFileHandler().readFromFile(pathToFile);
     } catch (FileNotFoundException e) {
-      throw new RuntimeException("File " + pathToFile + " not found." + e.getMessage());
+      throw new FileNotFoundException("File " + pathToFile + " not found." + e.getMessage());
     }
   }
 
@@ -179,9 +183,15 @@ public class ChaosGameDescriptionFactory {
    * @return the ChaosGameDescription corresponding to the given transformation name
    */
 
-  public static ChaosGameDescription getCustom(String transformationName) {
-    String filePath = "src/main/resources/transformations/" + transformationName + ".txt";
-    return transformations(filePath);
+  public static ChaosGameDescription getCustom(String transformationName)
+          throws FileNotFoundException{
+    try {
+      String filePath = "src/main/resources/transformations/" + transformationName + ".txt";
+      return readFractal(filePath);
+    } catch (FileNotFoundException e) {
+      throw new FileNotFoundException("File " + e.getMessage());
+    }
+
   }
 
 

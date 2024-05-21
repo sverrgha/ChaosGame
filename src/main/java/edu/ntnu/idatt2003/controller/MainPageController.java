@@ -11,7 +11,6 @@ import edu.ntnu.idatt2003.model.Matrix2x2;
 import edu.ntnu.idatt2003.model.Transform2D;
 import edu.ntnu.idatt2003.model.Vector2d;
 import edu.ntnu.idatt2003.view.MainPageView;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -41,10 +40,10 @@ import java.util.stream.Stream;
 public class MainPageController {
   private final ChaosGame game;
   private final MainPageView view;
-  private final List<String> customTransformations;
-  private boolean addingCustomTransformation;
-  private static final String TRANSFORMATIONS_PATH = "src/main/resources/transformations/";
-  private static final String SERIALIZED_GAME_PATH = "src/main/resources/savedTransformation.ser";
+  private final List<String> customFractalNames;
+  private boolean addingCustomFractal;
+  private static final String FRACTAL_PATH = "src/main/resources/fractals/";
+  private static final String SERIALIZED_GAME_PATH = "src/main/resources/savedGameState.ser";
   private static final Logger LOGGER = Logger.getLogger(MainPageController.class.getName());
 
   static {
@@ -71,8 +70,8 @@ public class MainPageController {
     this.game = loadGameState();
     this.view = new MainPageView(this);
     this.game.registerObserver(view);
-    this.customTransformations = new ArrayList<>(getAllCustomTransforms());
-    this.addingCustomTransformation = false;
+    this.customFractalNames = new ArrayList<>(getAllCustomFractalsNames());
+    this.addingCustomFractal = false;
     this.view.render();
     Runtime.getRuntime().addShutdownHook(new Thread(this::saveGameState));
     LOGGER.log(Level.INFO, "MainPageController initialized successfully.");
@@ -88,28 +87,48 @@ public class MainPageController {
   }
 
   /**
-   * Get the game of the main page.
+   * Get the ChaosGame of the main page.
    *
-   * @return the game of the main page.
+   * @return the ChaosGame of the main page.
    */
   public ChaosGame getGame() {
     return game;
   }
 
+  /**
+   * Get the minimum coordinates of the game.
+   *
+   * @return the minimum coordinates of the game.
+   */
   public double[] getMinCoordsX() {
     return game.getMinCoordsList();
   }
 
+  /**
+   * Get the maximum coordinates of the game.
+   *
+   * @return the maximum coordinates of the game.
+   */
   public double[] getMaxCoordsX() {
     return game.getMaxCoordsList();
   }
 
-  public String getCurrentTransformationName() {
+  /**
+   * Get the name of the current fractal.
+   *
+   * @return the name of the current fractal
+   */
+  public String getCurrentFractalName() {
     return game.getDescriptionName();
   }
 
-  public boolean isAddingCustomTransformation() {
-    return addingCustomTransformation;
+  /**
+   * Check if the user is adding a custom fractal.
+   *
+   * @return true if the user is adding a custom fractal, false otherwise.
+   */
+  public boolean isAddingCustomFractal() {
+    return addingCustomFractal;
   }
 
   /**
@@ -118,7 +137,7 @@ public class MainPageController {
    * @return the list of coordinate-arrays of the game.
    */
   public List<double[]> getTransformList() {
-    if (transformationIsJulia()) {
+    if (fractalIsJulia()) {
       return getTransformListJulia();
     } else {
       return getTransformListAffine();
@@ -142,12 +161,12 @@ public class MainPageController {
   }
 
   /**
-   * Check if the current transformation is a Julia set. If it is,
+   * Check if the current fractal is a Julia fractal. If it is,
    * return true and false otherwise.
    *
-   * @return true if the transformation is a Julia set, false otherwise.
+   * @return true if the fractal is a Julia fractal, false otherwise.
    */
-  public boolean transformationIsJulia() {
+  public boolean fractalIsJulia() {
     try {
       return game.getTransformList().get(0) instanceof JuliaTransform;
     } catch (IndexOutOfBoundsException e) {
@@ -194,7 +213,7 @@ public class MainPageController {
   public void uploadFile(File file) {
     LOGGER.log(Level.INFO, "Uploading file: {0}", file.getName());
     if (validateFile(file)
-            && (!Files.exists(Path.of(TRANSFORMATIONS_PATH + file.getName()))
+            && (!Files.exists(Path.of(FRACTAL_PATH + file.getName()))
             || view.askConfirmation("File already exists. Do you want to overwrite it?"))) {
       storeFile(file);
       LOGGER.log(Level.INFO, "File {0} uploaded successfully.", file.getName());
@@ -222,7 +241,7 @@ public class MainPageController {
     try {
       String projectPath = System.getProperty("user.dir");
       String destinationPath = projectPath + File.separator
-              + TRANSFORMATIONS_PATH + file.getName();
+              + FRACTAL_PATH + file.getName();
       Files.copy(file.toPath(), Path.of(destinationPath), StandardCopyOption.REPLACE_EXISTING);
       LOGGER.log(Level.INFO, "File stored successfully in {0}", destinationPath);
     } catch (IOException e) {
@@ -232,34 +251,38 @@ public class MainPageController {
   }
 
   /**
-   * Change the transformation-type of the chaos game.
+   * Change the fractal-type of the chaos game.
    *
    * @param descriptionType The type of fractal description to retrieve.
    */
-  public void changeTransformation(ChaosGameDescriptionFactory
-                                           .descriptionTypeEnum descriptionType) {
-    addingCustomTransformation = false;
-    game.changeTransformation(ChaosGameDescriptionFactory.get(descriptionType),
+  public void changeFractal(ChaosGameDescriptionFactory.DescriptionTypeEnum descriptionType) {
+    addingCustomFractal = false;
+    game.changeFractal(ChaosGameDescriptionFactory.get(descriptionType),
             descriptionType.toString());
 
-    LOGGER.log(Level.INFO, "Transformation was changed successfully to {0}",
+    LOGGER.log(Level.INFO, "Fractal was changed successfully to {0}",
             descriptionType);
   }
 
   /**
-   * Changes the current transformation based on the given custom name.
+   * Changes the current fractal based on the given custom name.
    *
-   * @param customName the name of the custom transformation to be applied
+   * @param customName the name of the custom fractal to be applied
    */
-  public void changeTransformation(String customName) {
+  public void changeFractal(String customName) {
     if (customName.equalsIgnoreCase("add new")) {
-      addingCustomTransformation = true;
+      addingCustomFractal = true;
       this.view.render();
     } else {
-      addingCustomTransformation = false;
-      game.changeTransformation(ChaosGameDescriptionFactory.getCustom(customName), customName);
-      LOGGER.log(Level.INFO, "Transformation was changed successfully to {0}",
-              customName);
+      addingCustomFractal = false;
+      try {
+        game.changeFractal(ChaosGameDescriptionFactory.getCustom(customName), customName);
+        LOGGER.log(Level.INFO, "Fractal was changed successfully to {0}",
+                customName);
+      } catch (FileNotFoundException e) {
+        view.showAlert("File not found. Please try again.");
+        LOGGER.log(Level.WARNING, "Error changing fractal. File not found.");
+      }
     }
   }
 
@@ -297,41 +320,43 @@ public class MainPageController {
       LOGGER.log(Level.WARNING, "No saved game state found. Creating new game.");
     }
     ChaosGame newGame = new ChaosGame(ChaosGameDescriptionFactory
-            .get(ChaosGameDescriptionFactory.descriptionTypeEnum.SIERPINSKI_TRIANGLE),
+            .get(ChaosGameDescriptionFactory.DescriptionTypeEnum.SIERPINSKI_TRIANGLE),
             650, 650);
-    newGame.setDescriptionName(ChaosGameDescriptionFactory.descriptionTypeEnum
+    newGame.setDescriptionName(ChaosGameDescriptionFactory.DescriptionTypeEnum
             .SIERPINSKI_TRIANGLE.toString());
     return newGame;
   }
 
   /**
-   * Adds a new custom transformation with the specified parameters and writes it to a file.
+   * Adds a new custom fractal by creating a ChaosGameDescription based on the
+   * parameters which is written to a file in the fractals' directory.
    *
-   * @param minCoords          the minimum coordinates for the transformation
-   * @param maxCoords          the maximum coordinates for the transformation
-   * @param transform          the list of 2D transformations to be applied
-   * @param transformationName the name of the custom transformation
+   * @param minCoords       the minimum coordinates for the transformation
+   * @param maxCoords       the maximum coordinates for the transformation
+   * @param transformations the list of 2D transformations to be applied
+   * @param fractalName     the name of the custom fractal
    */
 
-  public void addCustomTransformation(String[] minCoords, String[] maxCoords,
-                                      List<String[]> transform, String transformationName) {
+  public void addCustomFractal(String[] minCoords, String[] maxCoords,
+                               List<String[]> transformations, String fractalName) {
     ChaosGameFileHandler chaosGameFileHandler = new ChaosGameFileHandler();
     try {
       ChaosGameDescription newChaosGameDescription =
               new ChaosGameDescription(
                       getVector2dFromStringList(minCoords),
                       getVector2dFromStringList(maxCoords),
-                      getTransformListFromStringList(transform)
+                      getTransformListFromStringList(transformations)
               );
-      if (!Files.exists(Path.of(TRANSFORMATIONS_PATH + transformationName + ".txt"))
-              || view.askConfirmation("Custom transformation with the same name already exists. "
+      if (!Files.exists(Path.of(FRACTAL_PATH + fractalName + ".txt"))
+              || view.askConfirmation("A custom fractal with the same name already exists. "
               + "Do you want to overwrite it?")) {
         chaosGameFileHandler
                 .writeToFile(newChaosGameDescription,
-                        TRANSFORMATIONS_PATH + transformationName + ".txt");
-        customTransformations.add(transformationName);
+                        FRACTAL_PATH + fractalName + ".txt");
+        customFractalNames.add(fractalName);
+        changeFractal(fractalName);
         view.render();
-        view.showAlert("Custom transformation " + transformationName + " added successfully.");
+        view.showAlert("Custom fractal " + fractalName + " added successfully.");
       }
 
     } catch (IllegalArgumentException e) {
@@ -434,14 +459,13 @@ public class MainPageController {
   }
 
   /**
-   * Retrieves a list of all custom transformation files in the transformations directory
-   * and updates the customTransformations list.*
+   * Retrieves a list of all custom fractal files in the fractals directory.
    *
-   * @return the updated list of custom transformation file names.
+   * @return the list of custom fractal file names.
    */
-  public List<String> getAllCustomTransforms() {
+  public List<String> getAllCustomFractalsNames() {
     List<String> transformations = new ArrayList<>();
-    Path transformationsPath = Paths.get(TRANSFORMATIONS_PATH);
+    Path transformationsPath = Paths.get(FRACTAL_PATH);
 
     if (Files.exists(transformationsPath) && Files.isDirectory(transformationsPath)) {
       try (Stream<Path> paths = Files.list(transformationsPath)) {
@@ -456,21 +480,20 @@ public class MainPageController {
         LOGGER.log(Level.WARNING, "Error retrieving custom transformation files.", e);
       }
     } else {
-      LOGGER.log(Level.WARNING, "Transformations directory does not exist or is not a " +
-              "directory.");
+      LOGGER.log(Level.WARNING, "Fractal directory is not a directory.");
     }
 
     return transformations;
   }
 
   /**
-   * Retrieves the list of custom transformation names.
+   * Retrieves the list of custom fractal names.
    *
    * @return the list of custom transformation names
    */
 
-  public List<String> getCustomTransformation() {
-    return customTransformations;
+  public List<String> getCustomFractalNames() {
+    return customFractalNames;
   }
 
   /**
