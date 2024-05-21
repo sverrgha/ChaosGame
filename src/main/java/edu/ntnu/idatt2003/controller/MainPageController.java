@@ -48,7 +48,6 @@ public class MainPageController {
 
   static {
     try {
-      // Ensure the logs directory exists
       new File("logs").mkdirs();
 
       FileHandler fileHandler = new FileHandler("logs/application.log", false);
@@ -223,7 +222,7 @@ public class MainPageController {
 
   private boolean validateFile(File file) {
     try {
-      new ChaosGameFileHandler().readFromFile(file);
+      ChaosGameFileHandler.readFromFile(file);
       return true;
     } catch (InputMismatchException | FileNotFoundException e) {
       view.showAlert(e.getMessage());
@@ -339,7 +338,6 @@ public class MainPageController {
 
   public void addCustomFractal(String[] minCoords, String[] maxCoords,
                                List<String[]> transformations, String fractalName) {
-    ChaosGameFileHandler chaosGameFileHandler = new ChaosGameFileHandler();
     try {
       ChaosGameDescription newChaosGameDescription =
               new ChaosGameDescription(
@@ -350,8 +348,7 @@ public class MainPageController {
       if (!Files.exists(Path.of(FRACTAL_PATH + fractalName + ".txt"))
               || view.askConfirmation("A custom fractal with the same name already exists. "
               + "Do you want to overwrite it?")) {
-        chaosGameFileHandler
-                .writeToFile(newChaosGameDescription,
+        ChaosGameFileHandler.writeToFile(newChaosGameDescription,
                         FRACTAL_PATH + fractalName + ".txt");
         customFractalNames.add(fractalName);
         changeFractal(fractalName);
@@ -370,7 +367,7 @@ public class MainPageController {
    * @param file the location to save the file.
    */
   public void saveToLocalDirectory(File file) {
-    new ChaosGameFileHandler().writeToFile(game.getDescription(), file.getAbsolutePath());
+    ChaosGameFileHandler.writeToFile(game.getDescription(), file.getAbsolutePath());
     view.showAlert("File saved successfully in " + file.getAbsolutePath());
     LOGGER.log(Level.INFO, "File saved successfully in {0}", file.getAbsolutePath());
   }

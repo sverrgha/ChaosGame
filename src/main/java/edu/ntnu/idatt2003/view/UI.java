@@ -22,7 +22,6 @@ import java.util.Scanner;
 
 public class UI {
   TextRenderer textRenderer = new TextRenderer();
-  ChaosGameFileHandler chaosGameFileHandler = new ChaosGameFileHandler();
   ChaosGameDescription description;
   ChaosGame chaosGame;
   private final Scanner scanner = new Scanner(System.in);
@@ -124,7 +123,7 @@ public class UI {
     String pathToFile = textInput();
     ChaosGameDescription newDescription;
     try {
-      newDescription = chaosGameFileHandler.readFromFile(pathToFile);
+      newDescription = ChaosGameFileHandler.readFromFile(pathToFile);
       System.out.println("file read successfully");
     } catch (FileNotFoundException e) {
       throw new RuntimeException("File '" + pathToFile + "' not found." + e.getMessage());
@@ -143,7 +142,7 @@ public class UI {
   public void writeDescriptionToFile() {
     textRenderer.enterPath();
     String pathToFile = textInput();
-    chaosGameFileHandler.writeToFile(description, pathToFile);
+    ChaosGameFileHandler.writeToFile(description, pathToFile);
   }
 
   /**

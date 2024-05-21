@@ -171,7 +171,7 @@ public class ChaosGameDescriptionFactory {
   private static ChaosGameDescription readFractal(String pathToFile)
           throws FileNotFoundException{
     try {
-      return new ChaosGameFileHandler().readFromFile(pathToFile);
+      return ChaosGameFileHandler.readFromFile(pathToFile);
     } catch (FileNotFoundException e) {
       throw new FileNotFoundException("File " + pathToFile + " not found." + e.getMessage());
     }
