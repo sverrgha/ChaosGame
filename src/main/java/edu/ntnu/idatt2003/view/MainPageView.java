@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2003.view;
 
+import static edu.ntnu.idatt2003.view.components.TextBoxFactory.createTextBox;
+
 import edu.ntnu.idatt2003.controller.MainPageController;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
 import edu.ntnu.idatt2003.model.ChaosGameObserver;
@@ -159,22 +161,6 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     Region spacing = new Region();
     VBox.setVgrow(spacing, Priority.ALWAYS);
     return spacing;
-  }
-
-  /**
-   * Creates a text box with the specified text. The text box is styled with the
-   * "text-box" style class. The text box is a StackPane with a Label as a child.
-   * The text box is configured to grow horizontally.
-   *
-   * @param text The text to display in the text box.
-   * @return The text box.
-   */
-  private StackPane createTextBox(String text) {
-    StackPane textBox = new StackPane();
-    textBox.getStyleClass().add("text-box");
-    HBox.setHgrow(textBox, Priority.ALWAYS);
-    textBox.getChildren().add(new Label(text));
-    return textBox;
   }
 
   /**
