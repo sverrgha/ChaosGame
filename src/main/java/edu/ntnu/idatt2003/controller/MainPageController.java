@@ -111,6 +111,7 @@ public class MainPageController {
   public boolean isAddingCustomTransformation() {
     return addingCustomTransformation;
   }
+
   /**
    * Get the list of coordinate-arrays of the game.
    *
@@ -323,7 +324,7 @@ public class MainPageController {
                       getTransformListFromStringList(transform)
               );
       if (!Files.exists(Path.of(TRANSFORMATIONS_PATH + transformationName + ".txt"))
-      || view.askConfirmation("Custom transformation with the same name already exists. "
+              || view.askConfirmation("Custom transformation with the same name already exists. "
               + "Do you want to overwrite it?")) {
         chaosGameFileHandler
                 .writeToFile(newChaosGameDescription,
@@ -336,8 +337,17 @@ public class MainPageController {
     } catch (IllegalArgumentException e) {
       view.showAlert(e.getMessage());
     }
+  }
 
-
+  /**
+   * Saves the current transformation to a file in local directory.
+   *
+   * @param file the location to save the file.
+   */
+  public void saveToLocalDirectory(File file) {
+    new ChaosGameFileHandler().writeToFile(game.getDescription(), file.getAbsolutePath());
+    view.showAlert("File saved successfully in " + file.getAbsolutePath());
+    LOGGER.log(Level.INFO, "File saved successfully in {0}", file.getAbsolutePath());
   }
 
   /**

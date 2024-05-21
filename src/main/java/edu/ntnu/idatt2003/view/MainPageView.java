@@ -375,6 +375,13 @@ public class MainPageView extends Scene implements ChaosGameObserver {
                             e -> saveTransformation(transformationName, transformationComboBox,
                                     transformationVbox, startVectorField, endVectorField)),
                     new StyledButton("Cancel", 20, e -> render()),
+                    new StyledButton("Save current locally", 20,
+                            e -> {
+                              FileChooser fileChooser = new FileChooser();
+                              fileChooser.getExtensionFilters().add(
+                                      new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+                              controller.saveToLocalDirectory(fileChooser.showSaveDialog(null));
+                            }),
                     new StyledButton("Add File", 100, 20, e -> uploadFile())
             )
 
@@ -411,22 +418,23 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     VBox vbox = new VBox(10);
     vbox.setFillWidth(true);
     vbox.setAlignment(Pos.CENTER);
+    String textBoxText = "Transformation:";
     if (transformationComboBox.getValue() == TransformationType.AFFINE) {
       vbox.getChildren().add(
               new StyledButton("Add Transformation", 250, 20,
-                      e -> vbox.getChildren().add(createTextBoxWithTextField("Transformation:",
+                      e -> vbox.getChildren().add(createTextBoxWithTextField(textBoxText,
                               55, 20, "a00", "a01", "a10", "a11", "v0", "v1"))
               )
       );
     }
     if (!controller.isAddingCustomTransformation()) {
       for (double[] coords : controller.getTransformList()) {
-        vbox.getChildren().add(createTextBoxWithTextField("Transformation:",
+        vbox.getChildren().add(createTextBoxWithTextField(textBoxText,
                 55, 20, coords));
       }
     } else if (controller.isAddingCustomTransformation()
             && transformationComboBox.getValue() == TransformationType.JULIA) {
-      vbox.getChildren().add(createTextBoxWithTextField("Transformation:",
+      vbox.getChildren().add(createTextBoxWithTextField(textBoxText,
               55, 20, "c0", "c1"));
 
     }
