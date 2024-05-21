@@ -168,7 +168,8 @@ public class ChaosGameDescriptionFactory {
      * @param pathToFile the path to the file containing the fractal description
      * @return a ChaosGameDescription based on the fractal description in the file
      */
-  private static ChaosGameDescription readFractal(String pathToFile) {
+  private static ChaosGameDescription readFractal(String pathToFile)
+          throws FileNotFoundException{
     try {
       return new ChaosGameFileHandler().readFromFile(pathToFile);
     } catch (FileNotFoundException e) {
