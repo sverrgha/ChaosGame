@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test class for ChaosGameFileHandler, covering both positive and negative test cases.
  */
 class ChaosGameFileHandlerTest {
-  private static ChaosGameFileHandler fileHandler;
   private static String affine2dTextFilePath;
   private static String juliaTextFilePath;
   private static ChaosGameDescription affine2DDescription;
@@ -26,7 +25,6 @@ class ChaosGameFileHandlerTest {
    */
   @BeforeAll
   static void setUp() {
-    fileHandler = new ChaosGameFileHandler();
     affine2dTextFilePath = "src/test/resources/Affine2DExample.txt";
     List<Transform2D> affine2DTransform = List.of(
         new AffineTransform2D(new Matrix2x2(0.5, 0, 0, 0.5), new Vector2d(0, 0)),
@@ -70,7 +68,7 @@ class ChaosGameFileHandlerTest {
     @DisplayName("Test readFromFile with Affine2DTransform")
     void testReadFromFileWithAffine2D() {
       try {
-        assertEquals(affine2DDescription.toString(), fileHandler.readFromFile(affine2dTextFilePath).toString());
+        assertEquals(affine2DDescription.toString(), ChaosGameFileHandler.readFromFile(affine2dTextFilePath).toString());
       } catch (FileNotFoundException e) {
         fail(e.getMessage());
       }
@@ -83,7 +81,7 @@ class ChaosGameFileHandlerTest {
     @DisplayName("Test readFromFile with JuliaTransform")
     void testReadFromFileWithJulia() {
       try {
-        assertEquals(juliaDescription.toString(), fileHandler.readFromFile(juliaTextFilePath).toString());
+        assertEquals(juliaDescription.toString(), ChaosGameFileHandler.readFromFile(juliaTextFilePath).toString());
       } catch (FileNotFoundException e) {
         fail(e.getMessage());
       }
@@ -96,8 +94,8 @@ class ChaosGameFileHandlerTest {
     @DisplayName("Test writeToFile with Affine2DTransform")
     void testWriteToFileWithAffine2D() {
       try {
-        fileHandler.writeToFile(affine2DDescription, "src/test/resources/Affine2DExampleOutput.txt");
-        assertEquals(affine2DDescription.toString(), fileHandler.readFromFile("src/test/resources/Affine2DExampleOutput.txt").toString());
+        ChaosGameFileHandler.writeToFile(affine2DDescription, "src/test/resources/Affine2DExampleOutput.txt");
+        assertEquals(affine2DDescription.toString(), ChaosGameFileHandler.readFromFile("src/test/resources/Affine2DExampleOutput.txt").toString());
       } catch (FileNotFoundException e) {
         fail(e.getMessage());
       }
@@ -110,8 +108,10 @@ class ChaosGameFileHandlerTest {
     @DisplayName("Test writeToFile with JuliaTransform")
     void testWriteToFileWithJulia() {
       try {
-        fileHandler.writeToFile(juliaDescription, "src/test/resources/JuliaExampleOutput.txt");
-        assertEquals(juliaDescription.toString(), fileHandler.readFromFile("src/test/resources/JuliaExampleOutput.txt").toString());
+        ChaosGameFileHandler.writeToFile(juliaDescription,
+                "src/test/resources/JuliaExampleOutput.txt");
+        assertEquals(juliaDescription.toString(), ChaosGameFileHandler
+                .readFromFile("src/test/resources/JuliaExampleOutput.txt").toString());
       } catch (FileNotFoundException e) {
         fail(e.getMessage());
       }
@@ -132,7 +132,8 @@ class ChaosGameFileHandlerTest {
     @Test
     @DisplayName("Test readChaosGameDescription with non-existing file")
     void testReadChaosGameDescriptionWithNonExistingFile() {
-      assertThrows(FileNotFoundException.class, () -> fileHandler.readFromFile("non-existing-file.txt"));
+      assertThrows(FileNotFoundException.class, () -> ChaosGameFileHandler
+              .readFromFile("non-existing-file.txt"));
     }
 
     /**
@@ -142,7 +143,8 @@ class ChaosGameFileHandlerTest {
     @Test
     @DisplayName("Test readChaosGameDescription with unknown transformation type")
     void testReadChaosGameDescriptionWithUnknownTransformationType() {
-      assertThrows(IllegalArgumentException.class, () -> fileHandler.readFromFile("src/test/resources/invalidNameExample.txt"));
+      assertThrows(IllegalArgumentException.class, () -> ChaosGameFileHandler
+              .readFromFile("src/test/resources/invalidNameExample.txt"));
     }
 
     /**
@@ -152,7 +154,8 @@ class ChaosGameFileHandlerTest {
     @Test
     @DisplayName("Test readChaosGameDescription with invalid number of arguments")
     void testReadChaosGameDescriptionWithInvalidNumberOfArguments() {
-      assertThrows(InputMismatchException.class, () -> fileHandler.readFromFile("src/test/resources/invalidFormatExample.txt"));
+      assertThrows(InputMismatchException.class, () -> ChaosGameFileHandler
+              .readFromFile("src/test/resources/invalidFormatExample.txt"));
     }
   }
 }

@@ -152,13 +152,13 @@ public class ChaosGame implements Serializable {
   }
 
   /**
-   * Changes the transformation of the chaos game. Calls the setDescription-method
+   * Changes the fractal of the chaos game. Calls the setDescription-method
    * and notifies the observers that it has changed.
    *
    * @param chaosGameDescription The type of fractal description to retrieve.
    */
-  public void changeTransformation(ChaosGameDescription chaosGameDescription,
-                                   String descriptionName) {
+  public void changeFractal(ChaosGameDescription chaosGameDescription,
+                            String descriptionName) {
     setDescription(chaosGameDescription);
     setDescriptionName(descriptionName);
     totalSteps = 0;

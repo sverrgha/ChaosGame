@@ -30,6 +30,7 @@ public class Main extends Application {
    */
   @Override
   public void start(Stage primaryStage) {
+    primaryStage.setTitle("Chaos Game");
     primaryStage.setScene(new MainPageController().getView());
     primaryStage.show();
   }

@@ -23,6 +23,12 @@ import java.util.Scanner;
 public class ChaosGameFileHandler {
 
   /**
+   * Private constructor to prevent instantiation.
+   */
+  private ChaosGameFileHandler() {
+  }
+
+  /**
    * Checks if the file exists and reads a ChaosGameDescription using the other
    * readFromFile, if the path is valid.
    *
@@ -30,7 +36,7 @@ public class ChaosGameFileHandler {
    * @return The ChaosGameDescription read from the file.
    * @throws FileNotFoundException If the file is not found.
    */
-  public ChaosGameDescription readFromFile(String path)
+  public static ChaosGameDescription readFromFile(String path)
           throws FileNotFoundException {
     try {
       Files.exists(Paths.get(path));
@@ -49,7 +55,7 @@ public class ChaosGameFileHandler {
    * @throws FileNotFoundException If the file is not found.
    * @throws InputMismatchException If the file has invalid input.
    */
-  public ChaosGameDescription readFromFile(File file)
+  public static ChaosGameDescription readFromFile(File file)
           throws InputMismatchException, FileNotFoundException {
     try (Scanner scanner = new Scanner(file)) {
       scanner.useDelimiter("\\s|,\\s*");
@@ -78,7 +84,7 @@ public class ChaosGameFileHandler {
    * @param scanner The scanner to read from.
    * @return The double read from the scanner.
    */
-  private double readDouble(Scanner scanner) {
+  private static double readDouble(Scanner scanner) {
     double value = scanner.nextDouble();
     while (scanner.hasNextLine() && !scanner.hasNextDouble()) {
       scanner.nextLine();
@@ -96,7 +102,7 @@ public class ChaosGameFileHandler {
    * @return The list of transformations.
    * @throws IllegalArgumentException If the transformation type is unknown.
    */
-  private List<Transform2D> parseTransformations(Scanner scanner, String transformType) {
+  private static List<Transform2D> parseTransformations(Scanner scanner, String transformType) {
     return switch (transformType) {
       case "affine2d" -> parseAffine2dTransformation(scanner);
       case "julia" -> parseJuliaTransformations(scanner);
@@ -111,9 +117,9 @@ public class ChaosGameFileHandler {
    * It adds the AffineTransform2D object to the list of transformations.
    *
    * @param scanner The scanner to read from.
-   * @return The list of affine2d transformations.
+   * @return The list of transformations.
    */
-  private List<Transform2D> parseAffine2dTransformation(Scanner scanner) {
+  private static List<Transform2D> parseAffine2dTransformation(Scanner scanner) {
     List<Transform2D> transform = new ArrayList<>();
     Matrix2x2 matrix;
     Vector2d vector;
@@ -134,7 +140,7 @@ public class ChaosGameFileHandler {
    * @param scanner The scanner to read from.
    * @return The list of julia transformations.
    */
-  private List<Transform2D> parseJuliaTransformations(Scanner scanner) {
+  private static List<Transform2D> parseJuliaTransformations(Scanner scanner) {
     List<Transform2D> transform = new ArrayList<>();
     Complex complex = new Complex(readDouble(scanner), readDouble(scanner));
     transform.add(new JuliaTransform(complex, -1));
@@ -149,7 +155,7 @@ public class ChaosGameFileHandler {
    * @param path                 The path to write the file.
    * @throws IllegalArgumentException If the file could not be written to.
    */
-  public void writeToFile(ChaosGameDescription chaosGameDescription, String path) {
+  public static void writeToFile(ChaosGameDescription chaosGameDescription, String path) {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
       writer.write(chaosGameDescription.toString());
     } catch (IOException e) {

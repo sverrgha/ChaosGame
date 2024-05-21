@@ -79,9 +79,14 @@ public class ChaosGameDescription implements Serializable {
     }
     output.append(minCoords.toString()).append("\n");
     output.append(maxCoords.toString()).append("\n");
-    for (Transform2D t : transform) {
-      output.append(t.toString()).append("\n");
+    if (transform.get(0) instanceof AffineTransform2D) {
+      for (Transform2D t : transform) {
+        output.append(t.toString()).append("\n");
+      }
+    } else {
+      output.append(transform.get(0).toString()).append("\n");
     }
+
     return output.toString();
   }
 

@@ -186,7 +186,7 @@ public class ChaosGameTest {
               Arrays.asList(newTransform1, newTransform2)
       );
 
-      chaosGame.changeTransformation(newDescription, "affine");
+      chaosGame.changeFractal(newDescription, "affine");
 
       assertEquals(newDescription, chaosGame.getDescription());
       assertEquals("affine", chaosGame.getDescriptionName());
@@ -213,7 +213,7 @@ public class ChaosGameTest {
               Arrays.asList(customTransform1, customTransform2)
       );
 
-      chaosGame.changeTransformation(customDescription, "affine");
+      chaosGame.changeFractal(customDescription, "affine");
 
       assertEquals(customDescription, chaosGame.getDescription());
       assertEquals("affine", chaosGame.getDescriptionName());
