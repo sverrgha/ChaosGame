@@ -28,6 +28,9 @@ public class ChaosGameDescriptionFactory {
       case SIERPINSKI_TRIANGLE -> sierpinskiTriangle();
       case BARNSLEY_FERN -> barnsleyFern();
       case JULIA -> juliaTransformation();
+      case LEVY_C_CURVE -> levyCurve();
+      case DRAGON_CURVE -> dragonCurve();
+
     };
   }
 
@@ -39,7 +42,9 @@ public class ChaosGameDescriptionFactory {
   public enum descriptionTypeEnum {
     SIERPINSKI_TRIANGLE,
     BARNSLEY_FERN,
-    JULIA
+    JULIA,
+    LEVY_C_CURVE,
+    DRAGON_CURVE
   }
 
   /**
@@ -119,6 +124,43 @@ public class ChaosGameDescriptionFactory {
                     new JuliaTransform(new Complex(-0.74543, 0.11301), -1)
             ));
   }
+
+  private static ChaosGameDescription levyCurve() {
+    List<Transform2D> transformations = new ArrayList<>();
+    transformations.add(new AffineTransform2D(
+        new Matrix2x2(0.5, -0.5, 0.5, 0.5),
+        new Vector2d(0, 0))
+    );
+    transformations.add(new AffineTransform2D(
+        new Matrix2x2(0.5, 0.5, -0.5, 0.5),
+        new Vector2d(0.5, 0.5))
+    );
+
+    return new ChaosGameDescription(
+        new Vector2d(-1, -0.5),
+        new Vector2d(2, 1.5),
+        transformations
+    );
+  }
+
+  private static ChaosGameDescription dragonCurve() {
+    List<Transform2D> transformations = new ArrayList<>();
+    transformations.add(new AffineTransform2D(
+        new Matrix2x2(0.824074, 0.281482, -0.212346, 0.864198),
+        new Vector2d(-1.882290, -0.110607))
+    );
+    transformations.add(new AffineTransform2D(
+        new Matrix2x2(0.088272, 0.520988, -0.463889, -0.377778),
+        new Vector2d(0.785360, 8.095795))
+    );
+
+    return new ChaosGameDescription(
+        new Vector2d(-7, 0),
+        new Vector2d(6, 11),
+        transformations
+    );
+  }
+
 
 
 
