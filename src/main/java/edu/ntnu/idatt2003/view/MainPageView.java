@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.view;
 
 import static edu.ntnu.idatt2003.view.components.TextBoxFactory.createTextBox;
+import static edu.ntnu.idatt2003.view.components.TextBoxAndTextFieldContainerFactory.createTextBoxWithTextFieldsContainer;
 
 import edu.ntnu.idatt2003.controller.MainPageController;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
@@ -164,45 +165,6 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   }
 
   /**
-   * Creates a HBox containing a text box with the specified text and as many text fields
-   * as specified is given prompt text to, which gets the size given as parameters.
-   *
-   * @param text        The text to display in the text box.
-   * @param width       The width of the text field.
-   * @param height      The height of the text field.
-   * @param promptTexts The prompt texts for the text fields.
-   * @return The HBox containing the text box and text fields.
-   */
-  public HBox createTextBoxWithTextField(String text, int width,
-                                  int height, String... promptTexts) {
-    HBox container = new HBox(DEFAULT_SPACING);
-    container.getChildren().add(createTextBox(text));
-    for (String promptText : promptTexts) {
-      container.getChildren().add(new StyledTextField(promptText, width, height));
-    }
-    return container;
-  }
-
-  /**
-   * Creates a HBox containing a text box with the specified text and as many text fields
-   * as the length of the doubles array, which gets the height and with given as parameters.
-   *
-   * @param text   The text to display in the text box.
-   * @param width  The width of the text field.
-   * @param height The height of the text field.
-   * @param coords The text for the StyledTextField.
-   * @return The HBox containing the text box and text fields.
-   */
-  private HBox createTextBoxWithTextField(String text, int width, int height, double[] coords) {
-    HBox container = new HBox(DEFAULT_SPACING);
-    container.getChildren().add(createTextBox(text));
-    for (double coordinate : coords) {
-      container.getChildren().add(new StyledTextField(coordinate, width, height));
-    }
-    return container;
-  }
-
-  /**
    * Creates a button container with a ComboBox to change the type
    * of transformation, buttons for running steps/resetting, the
    * transformation and input field to type custom amount of steps.
@@ -308,14 +270,15 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     HBox startVectorField;
     HBox endVectorField;
     if (controller.isAddingCustomFractal()) {
-      startVectorField = createTextBoxWithTextField("Start vector:", 100, 20,
+      startVectorField = createTextBoxWithTextFieldsContainer(
+              DEFAULT_SPACING, "Start vector:", 100, 20,
               "x0", "x1");
-      endVectorField = createTextBoxWithTextField("End vector:", 100, 20,
+      endVectorField = createTextBoxWithTextFieldsContainer(DEFAULT_SPACING, "End vector:", 100, 20,
               "x0", "x1");
     } else {
-      startVectorField = createTextBoxWithTextField("Min vector:", 100, 20,
+      startVectorField = createTextBoxWithTextFieldsContainer(DEFAULT_SPACING, "Min vector:", 100, 20,
               controller.getMinCoordsX());
-      endVectorField = createTextBoxWithTextField("Max vector:", 100, 20,
+      endVectorField = createTextBoxWithTextFieldsContainer(DEFAULT_SPACING, "Max vector:", 100, 20,
               controller.getMaxCoordsX());
     }
 
@@ -451,19 +414,20 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     if (transformationComboBox.getValue() == TransformationType.AFFINE) {
       vbox.getChildren().add(
               new StyledButton("Add Transformation", 250, 20,
-                      e -> buttonEventHandler.handleAddTransformation(vbox, "Transformation:")
+                      e -> buttonEventHandler.handleAddTransformation(vbox,
+                              "Transformation:", DEFAULT_SPACING)
               )
       );
     }
     if (!controller.isAddingCustomFractal()) {
       for (double[] coords : controller.getTransformList()) {
-        vbox.getChildren().add(createTextBoxWithTextField(textBoxText,
-                55, 20, coords));
+        vbox.getChildren().add(createTextBoxWithTextFieldsContainer(DEFAULT_SPACING,
+                textBoxText, 55, 20, coords));
       }
     } else if (controller.isAddingCustomFractal()
             && transformationComboBox.getValue() == TransformationType.JULIA) {
-      vbox.getChildren().add(createTextBoxWithTextField(textBoxText,
-              55, 20, "c0", "c1"));
+      vbox.getChildren().add(createTextBoxWithTextFieldsContainer(DEFAULT_SPACING,
+              textBoxText, 55, 20, "c0", "c1"));
     }
     return vbox;
   }
