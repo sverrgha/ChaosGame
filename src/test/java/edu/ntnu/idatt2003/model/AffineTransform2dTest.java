@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +32,7 @@ public class AffineTransform2dTest {
    */
   @Nested
   @DisplayName("Positive tests")
-  public class PositiveTests {
+  class PositiveTests {
 
     /**
      * Tests the transform method of AffineTransform2D.
@@ -45,6 +46,36 @@ public class AffineTransform2dTest {
 
       assertEquals(9, v3.getX0());
       assertEquals(18, v3.getX1());
+    }
+
+    /**
+     * Tests the getMatrixCoordsList method of AffineTransform2D.
+     * Verifies that the matrix coordinates are correctly retrieved.
+     */
+    @Test
+    @DisplayName("getMatrixCoordsListTestAffine")
+    void testGetMatrixCoordsList() {
+      AffineTransform2D transform = new AffineTransform2D(a1, b1);
+      double[] matrixCoords = transform.getMatrixCoordsList();
+
+      assertEquals(2, matrixCoords[0]);
+      assertEquals(2, matrixCoords[1]);
+      assertEquals(4, matrixCoords[2]);
+      assertEquals(5, matrixCoords[3]);
+    }
+
+    /**
+     * Tests the getVectorCoordsList method of AffineTransform2D.
+     * Verifies that the vector coordinates are correctly retrieved.
+     */
+    @Test
+    @DisplayName("getVectorCoordsListTestAffine")
+    void testGetVectorCoordsList() {
+      AffineTransform2D transform = new AffineTransform2D(a1, b1);
+      double[] vectorCoords = transform.getVectorCoordsList();
+
+      assertEquals(3, vectorCoords[0]);
+      assertEquals(4, vectorCoords[1]);
     }
   }
 }
