@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.InputMismatchException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -132,6 +133,26 @@ class ChaosGameFileHandlerTest {
     @DisplayName("Test readChaosGameDescription with non-existing file")
     void testReadChaosGameDescriptionWithNonExistingFile() {
       assertThrows(FileNotFoundException.class, () -> fileHandler.readFromFile("non-existing-file.txt"));
+    }
+
+    /**
+     * Test reading from a file with an unknown transformation type.
+     * Verifies that an IllegalArgumentException is thrown.
+     */
+    @Test
+    @DisplayName("Test readChaosGameDescription with unknown transformation type")
+    void testReadChaosGameDescriptionWithUnknownTransformationType() {
+      assertThrows(IllegalArgumentException.class, () -> fileHandler.readFromFile("src/test/resources/invalidNameExample.txt"));
+    }
+
+    /**
+     * Tests reading from a file with an invalid number of arguments.
+     * Verifies that an IllegalArgumentException is thrown.
+     */
+    @Test
+    @DisplayName("Test readChaosGameDescription with invalid number of arguments")
+    void testReadChaosGameDescriptionWithInvalidNumberOfArguments() {
+      assertThrows(InputMismatchException.class, () -> fileHandler.readFromFile("src/test/resources/invalidFormatExample.txt"));
     }
   }
 }
