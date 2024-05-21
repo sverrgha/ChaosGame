@@ -322,16 +322,15 @@ public class MainPageController {
                       getVector2dFromStringList(maxCoords),
                       getTransformListFromStringList(transform)
               );
-      if (!Files.exists(Path.of(TRANSFORMATIONS_PATH + transformationName + ".txt"))) {
+      if (!Files.exists(Path.of(TRANSFORMATIONS_PATH + transformationName + ".txt"))
+      || view.askConfirmation("Custom transformation with the same name already exists. "
+              + "Do you want to overwrite it?")) {
         chaosGameFileHandler
                 .writeToFile(newChaosGameDescription,
                         TRANSFORMATIONS_PATH + transformationName + ".txt");
         customTransformations.add(transformationName);
         view.render();
         view.showAlert("Custom transformation " + transformationName + " added successfully.");
-      } else {
-        throw new IllegalArgumentException("Custom transformation with the same name " +
-                "already exists please change it.");
       }
 
     } catch (IllegalArgumentException e) {
