@@ -46,6 +46,12 @@ public class AffineTransform2D implements Transform2D, Serializable {
     return matrix.multiply(point).add(vector);
   }
 
+  public double[] getMatrixCoordsList() {
+    return matrix.getCoordsList();
+  }
+  public double[] getVectorCoordsList() {
+    return vector.getCoordsList();
+  }
   /**
    * Returns a string representation of the AffineTransform2D, by combining the strings
    * of the matrix and vector separated by a ','.

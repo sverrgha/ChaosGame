@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003.view;
+package edu.ntnu.idatt2003.view.components;
 
 import edu.ntnu.idatt2003.model.ChaosCanvas;
 import javafx.beans.property.ObjectProperty;
@@ -19,7 +19,7 @@ import javafx.scene.transform.Scale;
  * an image by a specified factor.
  */
 
-class ChaosImage {
+public class ChaosImage {
   private static final int MAX_SCALE = 5;
   private static final int MIN_SCALE = 1;
   private static final double ZOOM_FACTOR = 1.05;
@@ -51,13 +51,13 @@ class ChaosImage {
       }
     }
     ImageView imageView = new ImageView(image);
-    imageView.setFitWidth(600);
-    imageView.setFitHeight(600);
+    imageView.setFitWidth(width);
+    imageView.setFitHeight(height);
     Pane pane = new Pane(imageView);
     pane.setMaxHeight(height);
     pane.setMaxWidth(width);
     StackPane.setAlignment(imageView, javafx.geometry.Pos.CENTER);
-    pane.setClip(new Rectangle(600, 600));
+    pane.setClip(new Rectangle(width, height));
     enableZoom(imageView);
     enablePan(imageView);
     return pane;
@@ -106,8 +106,7 @@ class ChaosImage {
     final double scaleBefore = imageView.getScaleX();
     double scale = imageView.getScaleX() * zoomFactor;
 
-    scale = clamp(scale, MIN_SCALE, MAX_SCALE);
-
+    scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
     imageView.setScaleX(scale);
     imageView.setScaleY(scale);
 
@@ -136,13 +135,13 @@ class ChaosImage {
     if ((newX + imageWidthHalf) / imageView.getScaleX() <= imageWidthHalf
             && (newX - imageWidthHalf) / imageView.getScaleX() >= -imageWidthHalf) {
       imageView.setTranslateX(newX);
-    } else if (imageView.getScaleX() <= 1) {
+    } else {
       imageView.setTranslateX(0);
     }
     if ((newY + imageHeightHalf) / imageView.getScaleY() <= imageHeightHalf
             && (newY - imageHeightHalf) / imageView.getScaleY() >= -imageHeightHalf) {
       imageView.setTranslateY(newY);
-    } else if (imageView.getScaleY() <= 1) {
+    } else {
       imageView.setTranslateY(0);
     }
   }
@@ -195,17 +194,5 @@ class ChaosImage {
   private static double calculateNewTranslate(double mousePosition, double scale,
                                               double scaleBefore, double translateBefore) {
     return -mousePosition * scale + mousePosition * scaleBefore + translateBefore;
-  }
-
-  /**
-   * Clamp a value between a minimum and maximum value. Makes sure the value is within the bounds.
-   *
-   * @param value The value to clamp.
-   * @param min   The minimum value.
-   * @param max   The maximum value.
-   * @return The clamped value.
-   */
-  private static double clamp(double value, double min, double max) {
-    return Math.max(min, Math.min(max, value));
   }
 }

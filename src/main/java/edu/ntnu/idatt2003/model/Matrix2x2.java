@@ -42,6 +42,9 @@ public class Matrix2x2 implements Serializable {
     double x1 = a10 * vector.getX0() + a11 * vector.getX1();
     return new Vector2d(x0, x1);
   }
+  public double[] getCoordsList() {
+    return new double[]{a00, a01, a10, a11};
+  }
 
   /**
    * Returns a string representation of the Matrix2x2, that separates the

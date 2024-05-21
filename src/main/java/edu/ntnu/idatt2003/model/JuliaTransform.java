@@ -32,6 +32,9 @@ public class JuliaTransform implements Transform2D, Serializable {
     this.sign = sign;
   }
 
+  public double[] getPointAsList() {
+    return new double[]{point.getX0(), point.getX1()};
+  }
   /**
    * Transforms a 2D vector by taking adding/subtracting based on the sign
    * and taking the square root.

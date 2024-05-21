@@ -54,6 +54,12 @@ public class ChaosGameDescription implements Serializable {
     return maxCoords;
   }
 
+  public double[] getMinCoordsList() {
+    return minCoords.getCoordsList();
+  }
+  public double[] getMaxCoordsList() {
+    return maxCoords.getCoordsList();
+  }
   /**
    * Get the list of transformations to be used.
    *
