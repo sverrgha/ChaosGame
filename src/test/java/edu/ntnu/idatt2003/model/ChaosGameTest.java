@@ -1,10 +1,16 @@
 package edu.ntnu.idatt2003.model;
 
-import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for ChaosGame, covering both positive and negative test cases.
@@ -22,10 +28,20 @@ public class ChaosGameTest {
   @BeforeEach
   public void setUp() {
 
-    AffineTransform2D transform1 = new AffineTransform2D(new Matrix2x2(1, 0, 0, 1), new Vector2d(1, 1));
-    AffineTransform2D transform2 = new AffineTransform2D(new Matrix2x2(1, 0, 0, 1), new Vector2d(-1, -1));
+    AffineTransform2D transform1 = new AffineTransform2D(
+            new Matrix2x2(1, 0, 0, 1),
+            new Vector2d(1, 1)
+    );
+    AffineTransform2D transform2 = new AffineTransform2D(
+            new Matrix2x2(1, 0, 0, 1),
+            new Vector2d(-1, -1)
+    );
 
-    description = new ChaosGameDescription(new Vector2d(0, 0), new Vector2d(10, 10), Arrays.asList(transform1, transform2));
+    description = new ChaosGameDescription(
+            new Vector2d(0, 0),
+            new Vector2d(10, 10),
+            Arrays.asList(transform1, transform2)
+    );
 
     chaosGame = new ChaosGame(description, 10, 10);
 
@@ -46,7 +62,7 @@ public class ChaosGameTest {
      */
     @Test
     @DisplayName("Constructor Test")
-    public void testConstructor() {
+    void testConstructor() {
       assertNotNull(chaosGame);
       assertEquals(10, chaosGame.getCanvas().getWidth());
       assertEquals(10, chaosGame.getCanvas().getHeight());
@@ -58,8 +74,52 @@ public class ChaosGameTest {
      */
     @Test
     @DisplayName("Get Canvas Test")
-    public void testGetCanvas() {
+    void testGetCanvas() {
       assertNotNull(chaosGame.getCanvas());
+    }
+
+    /**
+     * Tests the getMinCoordsList() method of ChaosGame.
+     * Verifies that the list of MinCoords is correct.
+     */
+    @Test
+    @DisplayName("Get Min Coords List Test")
+    void testGetMinCoordsList() {
+      double[] minCoords = chaosGame.getMinCoordsList();
+      assertEquals(0, minCoords[0]);
+      assertEquals(0, minCoords[1]);
+    }
+
+    /**
+     * Tests the getMaxCoordsList() method of ChaosGame.
+     * Verifies that the list of MaxCoords is correct.
+     */
+    @Test
+    @DisplayName("Get Max Coords List Test")
+    void testGetMaxCoordsList() {
+      double[] maxCoords = chaosGame.getMaxCoordsList();
+      assertEquals(10, maxCoords[0]);
+      assertEquals(10, maxCoords[1]);
+    }
+
+    /**
+     * Tests the getTransformList() method of ChaosGame.
+     * Verifies that the list of transformations is correct.
+     */
+    @Test
+    @DisplayName("Get Transform List Test")
+    void testGetTransformList() {
+      assertEquals(description.getTransform(), chaosGame.getTransformList());
+    }
+
+    /**
+     * Tests the getDescriptionName() method of ChaosGame.
+     * Verifies that the description name is correct.
+     */
+    @Test
+    @DisplayName("Get Description Name Test")
+    void testGetDescriptionName() {
+      assertEquals("", chaosGame.getDescriptionName());
     }
 
     /**
@@ -68,7 +128,17 @@ public class ChaosGameTest {
      */
     @Test
     @DisplayName("Get Total Steps Test")
-    public void testGetTotalSteps() {
+    void testGetTotalSteps() {
+      assertEquals(0, chaosGame.getTotalSteps());
+    }
+
+    /**
+     * Test the runSteps() method of ChaosGame, sets totalSteps to 0.
+     */
+    @Test
+    @DisplayName("Run Steps negative number Test")
+    void testRunStepsNegative() {
+      chaosGame.runStepsAndUpdateTotal(-1);
       assertEquals(0, chaosGame.getTotalSteps());
     }
 
@@ -78,10 +148,11 @@ public class ChaosGameTest {
      */
     @Test
     @DisplayName("Run Steps and Update Total Test")
-    public void testRunStepsAndUpdateTotal() {
+    void testRunStepsAndUpdateTotal() {
       chaosGame.runStepsAndUpdateTotal(5);
       assertEquals(5, chaosGame.getTotalSteps());
     }
+
 
     /**
      * Tests running steps without updating the total steps.
@@ -89,7 +160,7 @@ public class ChaosGameTest {
      */
     @Test
     @DisplayName("Run Steps without Updating Total Test")
-    public void testRunStepsWithoutUpdatingTotal() {
+    void testRunStepsWithoutUpdatingTotal() {
       chaosGame.runStepsWithoutUpdatingTotal(5);
       assertEquals(0, chaosGame.getTotalSteps());
     }
@@ -100,14 +171,25 @@ public class ChaosGameTest {
      */
     @Test
     @DisplayName("Change Transformation Test")
-    public void testChangeTransformation() {
-      AffineTransform2D newTransform1 = new AffineTransform2D(new Matrix2x2(1, 0, 0, 1), new Vector2d(2, 2));
-      AffineTransform2D newTransform2 = new AffineTransform2D(new Matrix2x2(1, 0, 0, 1), new Vector2d(-2, -2));
-      ChaosGameDescription newDescription = new ChaosGameDescription(new Vector2d(0, 0), new Vector2d(10, 10), Arrays.asList(newTransform1, newTransform2));
+    void testChangeTransformation() {
+      AffineTransform2D newTransform1 = new AffineTransform2D(
+              new Matrix2x2(1, 0, 0, 1),
+              new Vector2d(2, 2)
+      );
+      AffineTransform2D newTransform2 = new AffineTransform2D(
+              new Matrix2x2(1, 0, 0, 1),
+              new Vector2d(-2, -2)
+      );
+      ChaosGameDescription newDescription = new ChaosGameDescription(
+              new Vector2d(0, 0),
+              new Vector2d(10, 10),
+              Arrays.asList(newTransform1, newTransform2)
+      );
 
-      chaosGame.changeCustomTransformation(newDescription);
+      chaosGame.changeTransformation(newDescription, "affine");
 
       assertEquals(newDescription, chaosGame.getDescription());
+      assertEquals("affine", chaosGame.getDescriptionName());
     }
 
     /**
@@ -116,14 +198,25 @@ public class ChaosGameTest {
      */
     @Test
     @DisplayName("Change Custom Transformation Test")
-    public void testChangeCustomTransformation() {
-      AffineTransform2D customTransform1 = new AffineTransform2D(new Matrix2x2(1, 0, 0, 1), new Vector2d(3, 3));
-      AffineTransform2D customTransform2 = new AffineTransform2D(new Matrix2x2(1, 0, 0, 1), new Vector2d(-3, -3));
-      ChaosGameDescription customDescription = new ChaosGameDescription(new Vector2d(0, 0), new Vector2d(10, 10), Arrays.asList(customTransform1, customTransform2));
+    void testChangeCustomTransformation() {
+      AffineTransform2D customTransform1 = new AffineTransform2D(
+              new Matrix2x2(1, 0, 0, 1),
+              new Vector2d(3, 3)
+      );
+      AffineTransform2D customTransform2 = new AffineTransform2D(
+              new Matrix2x2(1, 0, 0, 1),
+              new Vector2d(-3, -3)
+      );
+      ChaosGameDescription customDescription = new ChaosGameDescription(
+              new Vector2d(0, 0),
+              new Vector2d(10, 10),
+              Arrays.asList(customTransform1, customTransform2)
+      );
 
-      chaosGame.changeCustomTransformation(customDescription);
+      chaosGame.changeTransformation(customDescription, "affine");
 
       assertEquals(customDescription, chaosGame.getDescription());
+      assertEquals("affine", chaosGame.getDescriptionName());
     }
 
     /**
@@ -132,10 +225,20 @@ public class ChaosGameTest {
      */
     @Test
     @DisplayName("Set Description Test")
-    public void testSetDescription() {
-      AffineTransform2D newTransform1 = new AffineTransform2D(new Matrix2x2(1, 0, 0, 1), new Vector2d(4, 4));
-      AffineTransform2D newTransform2 = new AffineTransform2D(new Matrix2x2(1, 0, 0, 1), new Vector2d(-4, -4));
-      ChaosGameDescription newDescription = new ChaosGameDescription(new Vector2d(0, 0), new Vector2d(10, 10), Arrays.asList(newTransform1, newTransform2));
+    void testSetDescription() {
+      AffineTransform2D newTransform1 = new AffineTransform2D(
+              new Matrix2x2(1, 0, 0, 1),
+              new Vector2d(4, 4)
+      );
+      AffineTransform2D newTransform2 = new AffineTransform2D(
+              new Matrix2x2(1, 0, 0, 1),
+              new Vector2d(-4, -4)
+      );
+      ChaosGameDescription newDescription = new ChaosGameDescription(
+              new Vector2d(0, 0),
+              new Vector2d(10, 10),
+              Arrays.asList(newTransform1, newTransform2)
+      );
 
       chaosGame.setDescription(newDescription);
 
@@ -148,7 +251,7 @@ public class ChaosGameTest {
      */
     @Test
     @DisplayName("Get Description Test")
-    public void testGetDescription() {
+    void testGetDescription() {
       assertEquals(description, chaosGame.getDescription());
     }
 
@@ -158,7 +261,7 @@ public class ChaosGameTest {
      */
     @Test
     @DisplayName("Register Observer Test")
-    public void testRegisterObserver() {
+    void testRegisterObserver() {
       TestObserver newObserver = new TestObserver();
       chaosGame.registerObserver(newObserver);
       chaosGame.notifyObservers();
@@ -171,7 +274,7 @@ public class ChaosGameTest {
      */
     @Test
     @DisplayName("Notify Observers Test")
-    public void testNotifyObservers() {
+    void testNotifyObservers() {
       chaosGame.notifyObservers();
       assertTrue(observer.isUpdated());
     }
@@ -190,7 +293,7 @@ public class ChaosGameTest {
      */
     @Test
     @DisplayName("Remove Observer Test")
-    public void testRemoveObserver() {
+    void testRemoveObserver() {
       chaosGame.removeObserver(observer);
       chaosGame.notifyObservers();
       assertFalse(observer.isUpdated());
