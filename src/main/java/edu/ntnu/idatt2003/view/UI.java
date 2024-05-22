@@ -5,11 +5,20 @@ import static edu.ntnu.idatt2003.view.TextRenderer.EXIT;
 import static edu.ntnu.idatt2003.view.TextRenderer.RUN_ITERATIONS;
 import static edu.ntnu.idatt2003.view.TextRenderer.SHOW_CANVAS;
 import static edu.ntnu.idatt2003.view.TextRenderer.WRITE_FILE;
+import static edu.ntnu.idatt2003.view.TextRenderer.WRITE_NEW_DESCRIPTION;
 
+import edu.ntnu.idatt2003.model.AffineTransform2D;
 import edu.ntnu.idatt2003.model.ChaosGame;
 import edu.ntnu.idatt2003.model.ChaosGameDescription;
 import edu.ntnu.idatt2003.model.ChaosGameFileHandler;
+import edu.ntnu.idatt2003.model.Complex;
+import edu.ntnu.idatt2003.model.JuliaTransform;
+import edu.ntnu.idatt2003.model.Matrix2x2;
+import edu.ntnu.idatt2003.model.Transform2D;
+import edu.ntnu.idatt2003.model.Vector2d;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -49,6 +58,9 @@ public class UI {
           break;
         case SHOW_CANVAS:
           showCanvas();
+          break;
+        case WRITE_NEW_DESCRIPTION:
+          createNewDescription();
           break;
         default:
           System.out.println("Invalid choice");
@@ -173,4 +185,39 @@ public class UI {
     chaosGame.getCanvas().showCanvas();
   }
 
+  public void createNewDescription() {
+    System.out.println("Enter minimum coordinates (x y):");
+    Vector2d minCoords = new Vector2d(numberInput(), numberInput());
+
+    System.out.println("Enter maximum coordinates (x y):");
+    Vector2d maxCoords = new Vector2d(numberInput(), numberInput());
+
+    List<Transform2D> transformations = new ArrayList<>();
+    System.out.println("Enter the number of transformations:");
+    int numTransformations = numberInput();
+
+    for (int i = 0; i < numTransformations; i++) {
+      System.out.println("Enter transformation type (affine/julia):");
+      String type = textInput();
+      if (type.equalsIgnoreCase("affine")) {
+        System.out.println("Enter matrix elements (a b c d) and vector elements (e f):");
+        Matrix2x2 matrix = new Matrix2x2(numberInput(), numberInput(), numberInput(), numberInput());
+        Vector2d vector = new Vector2d(numberInput(), numberInput());
+        transformations.add(new AffineTransform2D(matrix, vector));
+      } else if (type.equalsIgnoreCase("julia")) {
+        System.out.println("Enter real and imaginary parts of the complex number:");
+        Complex complex = new Complex(numberInput(), numberInput());
+        transformations.add(new JuliaTransform(complex, 1));
+        transformations.add(new JuliaTransform(complex, -1));
+      } else {
+        System.out.println("Invalid transformation type. Please enter 'affine' or 'julia'.");
+        i--;
+      }
+    }
+
+    ChaosGameDescription newDescription = new ChaosGameDescription(minCoords, maxCoords, transformations);
+    this.description = newDescription;
+    this.chaosGame = new ChaosGame(description, 30, 30);
+    System.out.println("New description created successfully");
+  }
 }
