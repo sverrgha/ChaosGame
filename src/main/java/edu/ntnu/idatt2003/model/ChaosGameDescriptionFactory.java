@@ -187,7 +187,7 @@ public class ChaosGameDescriptionFactory {
   public static ChaosGameDescription getCustom(String transformationName)
           throws FileNotFoundException{
     try {
-      String filePath = "src/main/resources/transformations/" + transformationName + ".txt";
+      String filePath = "src/main/resources/fractals/" + transformationName + ".txt";
       return readFractal(filePath);
     } catch (FileNotFoundException e) {
       throw new FileNotFoundException("File " + e.getMessage());
