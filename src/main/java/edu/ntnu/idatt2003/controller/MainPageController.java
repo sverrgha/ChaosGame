@@ -50,7 +50,10 @@ public class MainPageController {
     this.customFractalNames = new ArrayList<>(getAllCustomFractalsNames());
     this.addingCustomFractal = false;
     this.view.render();
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> GameStateManager.saveGameState(game)));
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      game.removeObserver(view);
+      GameStateManager.saveGameState(game);
+    }));
     LOGGER.log(Level.INFO, "MainPageController initialized successfully.");
   }
 

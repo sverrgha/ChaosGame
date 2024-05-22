@@ -31,7 +31,8 @@ public class GameStateManager {
       oos.writeObject(game);
       LOGGER.log(Level.INFO, "Game state saved successfully in {0}", SERIALIZED_GAME_PATH);
     } catch (IOException e) {
-      LOGGER.log(Level.WARNING, "Failed to save game state.", e);
+      LOGGER.log(Level.WARNING, "Failed to save game state. Next time the application is"
+          + " started, the game will be launched in same game state as this time.");
     }
   }
 
@@ -50,7 +51,7 @@ public class GameStateManager {
         LOGGER.log(Level.INFO, "Game state loaded successfully.");
         return loadedGame;
       } catch (IOException | ClassNotFoundException e) {
-        LOGGER.log(Level.WARNING, "Failed to load game state. Creating new game.", e);
+        LOGGER.log(Level.WARNING, "Failed to load game state. Creating new game.");
       }
     } else {
       LOGGER.log(Level.WARNING, "No saved game state found. Creating new game.");

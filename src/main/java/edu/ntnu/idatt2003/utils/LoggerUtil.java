@@ -1,7 +1,9 @@
 package edu.ntnu.idatt2003.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +25,7 @@ public class LoggerUtil {
     try {
       File logDirectory = new File("logs");
       if (!logDirectory.exists() && !logDirectory.mkdirs()) {
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(logDirectory));
         System.err.println("Failed to create log directory.");
       }
       FileHandler fileHandler = new FileHandler("logs/application.log", false);
