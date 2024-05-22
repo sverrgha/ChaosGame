@@ -1,7 +1,8 @@
 package edu.ntnu.idatt2003.view;
 
-import static edu.ntnu.idatt2003.view.components.TextBoxFactory.createTextBox;
+import static edu.ntnu.idatt2003.view.components.ComboBoxFactory.createComboBox;
 import static edu.ntnu.idatt2003.view.components.TextBoxAndTextFieldContainerFactory.createTextBoxWithTextFieldsContainer;
+import static edu.ntnu.idatt2003.view.components.TextBoxFactory.createTextBox;
 
 import edu.ntnu.idatt2003.controller.MainPageController;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
@@ -9,14 +10,12 @@ import edu.ntnu.idatt2003.model.ChaosGameObserver;
 import edu.ntnu.idatt2003.utils.Sizes;
 import edu.ntnu.idatt2003.view.components.ChaosImage;
 import edu.ntnu.idatt2003.view.components.StyledButton;
-import edu.ntnu.idatt2003.view.components.StyledComboBox;
 import edu.ntnu.idatt2003.view.components.StyledTextField;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -46,7 +45,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   private static final int COMPONENT_HEIGHT = 40;
   private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH) / BUTTON_COUNT;
   private static final int DEFAULT_SPACING = 10;
-  private final ButtonEventHandler buttonEventHandler;
+  private final EventHandler eventHandler;
   private TextField x0Field;
   private TextField x1Field;
   private TransformationType selectedTransformation;
@@ -62,7 +61,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
             .getResource("/styles/mainPage.css")).toExternalForm());
     this.getStylesheets().add(Objects.requireNonNull(getClass()
             .getResource("/styles/components.css")).toExternalForm());
-    this.buttonEventHandler = new ButtonEventHandler(mainPageController, this);
+    this.eventHandler = new EventHandler(mainPageController, this);
     root = (BorderPane) this.getRoot();
     this.selectedTransformation = TransformationType.AFFINE;
     this.controller = mainPageController;
@@ -179,28 +178,23 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     StackPane.setAlignment(buttonContainer, Pos.TOP_CENTER);
 
     buttonContainer.getChildren().addAll(
-            createComboBox(),
-            createCustomComboBox(),
+            createComboBox("Fractals", BUTTON_WIDTH, COMPONENT_HEIGHT,
+                    Arrays.asList(ChaosGameDescriptionFactory.DescriptionTypeEnum.values()),
+                    (box, e) -> eventHandler.handleChangeFractal(box)),
+            createComboBox("Custom fractals", BUTTON_WIDTH, COMPONENT_HEIGHT,
+                    controller.getCustomFractalNames(),
+                    (box, e) -> eventHandler.handleChangeFractal(box)),
             new StyledButton("10 Steps", BUTTON_WIDTH, COMPONENT_HEIGHT,
-                    e -> buttonEventHandler.handleRunSteps(10)),
+                    e -> eventHandler.handleRunSteps(10)),
             new StyledButton("100 Steps", BUTTON_WIDTH, COMPONENT_HEIGHT,
-                    e -> buttonEventHandler.handleRunSteps(100)),
+                    e -> eventHandler.handleRunSteps(100)),
             new StyledButton("1000 Steps", BUTTON_WIDTH, COMPONENT_HEIGHT,
-                    e -> buttonEventHandler.handleRunSteps(1000)),
+                    e -> eventHandler.handleRunSteps(1000)),
             createStepsTextField(),
             new StyledButton("Reset", BUTTON_WIDTH, COMPONENT_HEIGHT,
-                    e -> buttonEventHandler.handleReset())
+                    e -> eventHandler.handleReset())
     );
     return buttonContainer;
-  }
-
-  private ComboBox<ChaosGameDescriptionFactory.DescriptionTypeEnum> createComboBox() {
-    StyledComboBox<ChaosGameDescriptionFactory.DescriptionTypeEnum> transformMenu =
-            new StyledComboBox<>("Fractals", BUTTON_WIDTH, COMPONENT_HEIGHT,
-                    Arrays.asList(ChaosGameDescriptionFactory.DescriptionTypeEnum.values())
-            );
-    transformMenu.setOnAction(e -> controller.changeFractal(transformMenu.getValue()));
-    return transformMenu;
   }
 
   private StyledTextField createStepsTextField() {
@@ -211,20 +205,6 @@ public class MainPageView extends Scene implements ChaosGameObserver {
       stepsField.clear();
     });
     return stepsField;
-  }
-
-  /**
-   * Creates a StyledComboBox with setOnAction to change the fractal based on
-   * the selected value.
-   *
-   * @return The ComboBox with custom fractals.
-   */
-  private ComboBox<String> createCustomComboBox() {
-    StyledComboBox<String> customMenu = new StyledComboBox<>("Custom fractals",
-            BUTTON_WIDTH, COMPONENT_HEIGHT, controller.getCustomFractalNames());
-    customMenu.getItems().add("Add new");
-    customMenu.setOnAction(e -> controller.changeFractal(customMenu.getValue()));
-    return customMenu;
   }
 
   /**
@@ -266,20 +246,27 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     VBox addPanel = createMainPanel();
     TextField fractalName = new StyledTextField("Fractal name", 210, 20);
     fractalName.setText(controller.getCurrentFractalName());
-    ComboBox<TransformationType> transformationComboBox = createAddComboBox();
+    ComboBox<TransformationType> transformationComboBox = createComboBox("Transformation",
+            210, COMPONENT_HEIGHT,
+            Arrays.asList(TransformationType.values()),
+            (box, e) -> eventHandler.handleEditTransformationChoice(box),
+            getTransformationComboBoxValue());
     HBox startVectorField;
     HBox endVectorField;
     if (controller.isAddingCustomFractal()) {
       startVectorField = createTextBoxWithTextFieldsContainer(
               DEFAULT_SPACING, "Start vector:", 100, 20,
               "x0", "x1");
-      endVectorField = createTextBoxWithTextFieldsContainer(DEFAULT_SPACING, "End vector:", 100, 20,
-              "x0", "x1");
+      endVectorField = createTextBoxWithTextFieldsContainer(
+              DEFAULT_SPACING, "End vector:", 100,
+              20, "x0", "x1");
     } else {
-      startVectorField = createTextBoxWithTextFieldsContainer(DEFAULT_SPACING, "Min vector:", 100, 20,
-              controller.getMinCoordsX());
-      endVectorField = createTextBoxWithTextFieldsContainer(DEFAULT_SPACING, "Max vector:", 100, 20,
-              controller.getMaxCoordsX());
+      startVectorField = createTextBoxWithTextFieldsContainer(
+              DEFAULT_SPACING, "Min vector:", 100,
+              20, controller.getMinCoordsX());
+      endVectorField = createTextBoxWithTextFieldsContainer(
+              DEFAULT_SPACING, "Max vector:", 100,
+              20, controller.getMaxCoordsX());
     }
 
     VBox transformationVbox = createTransformationVbox(transformationComboBox);
@@ -299,23 +286,36 @@ public class MainPageView extends Scene implements ChaosGameObserver {
             new HBox(
                     DEFAULT_SPACING,
                     new StyledButton("Save", 20,
-                            e -> buttonEventHandler.handleSave(
+                            e -> eventHandler.handleSave(
                                     fractalName.getText(),
-                                    getTransformationList(transformationComboBox.getValue(), transformationVbox),
+                                    getTransformationList(
+                                            transformationComboBox.getValue(),
+                                            transformationVbox),
                                     getInputVector(startVectorField),
                                     getInputVector(endVectorField)
                             )
                     ),
-                    new StyledButton("Cancel", 20, e -> buttonEventHandler.handleCancel()),
+                    new StyledButton("Cancel", 20, e -> eventHandler.handleCancel()),
                     new StyledButton("Save current locally", 20,
-                            e -> buttonEventHandler.handleSaveLocally()),
-                    new StyledButton("Add File", 100, 20, e -> buttonEventHandler.handleUploadFile())
+                            e -> eventHandler.handleSaveLocally()),
+                    new StyledButton("Add File", 100, 20, e -> eventHandler.handleUploadFile())
             )
 
     );
     StackPane.setAlignment(addPanel, Pos.BOTTOM_LEFT);
     return addPanel;
   }
+
+  private TransformationType getTransformationComboBoxValue() {
+    if (controller.isAddingCustomFractal()) {
+      return selectedTransformation;
+    } else if (controller.fractalIsJulia()) {
+      return TransformationType.JULIA;
+    } else {
+      return TransformationType.AFFINE;
+    }
+  }
+
   /**
    * Retrieves input information based on the selected transformation type.
    *
@@ -323,8 +323,9 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    * @param transformationVbox     the HBox containing the input fields for transformations.
    * @return a list of Transform2D objects.
    */
-  private List<String[]> getTransformationList(MainPageView.TransformationType selectedTransformation,
-                                             VBox transformationVbox) {
+  private List<String[]> getTransformationList(MainPageView.TransformationType
+                                                       selectedTransformation,
+                                               VBox transformationVbox) {
     if (selectedTransformation == MainPageView.TransformationType.JULIA) {
       return getJuliaTransformation(transformationVbox);
     } else if (selectedTransformation == MainPageView.TransformationType.AFFINE) {
@@ -384,23 +385,6 @@ public class MainPageView extends Scene implements ChaosGameObserver {
             ((TextField) vectorBox.getChildren().get(2)).getText()};
   }
 
-  private ComboBox<TransformationType> createAddComboBox() {
-    StyledComboBox<TransformationType> transformMenu = new StyledComboBox<>("Transformation",
-            210, COMPONENT_HEIGHT, Arrays.asList(TransformationType.values()));
-    transformMenu.setOnAction(e -> {
-      selectedTransformation = transformMenu.getValue();
-      controller.changeFractal("add new");
-    });
-    if (controller.isAddingCustomFractal()) {
-      transformMenu.setValue(this.selectedTransformation);
-    } else if (controller.fractalIsJulia()) {
-      transformMenu.setValue(TransformationType.JULIA);
-    } else {
-      transformMenu.setValue(TransformationType.AFFINE);
-    }
-    return transformMenu;
-  }
-
   /**
    * Creates a VBox containing input fields for transformations.
    *
@@ -414,7 +398,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     if (transformationComboBox.getValue() == TransformationType.AFFINE) {
       vbox.getChildren().add(
               new StyledButton("Add Transformation", 250, 20,
-                      e -> buttonEventHandler.handleAddTransformation(vbox,
+                      e -> eventHandler.handleAddTransformation(vbox,
                               "Transformation:", DEFAULT_SPACING)
               )
       );
@@ -489,5 +473,9 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     controller.changeJuliaTransformationDynamic(x, y);
     x0Field.setText(String.format(Locale.ENGLISH, "%.5f", x));
     x1Field.setText(String.format(Locale.ENGLISH, "%.5f", y));
+  }
+
+  public void setSelectedTransformation(TransformationType transformationType) {
+    selectedTransformation = transformationType;
   }
 }
