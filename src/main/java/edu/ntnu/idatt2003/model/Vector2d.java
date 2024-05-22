@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2003.model;
 
+import java.io.Serializable;
+
 /**
  * Represents a 2-dimensional vector.
  * Contains a constructor and getters for the x0 and x1 attributes.
@@ -8,17 +10,17 @@ package edu.ntnu.idatt2003.model;
  *
  * @author sverrgha
  */
-public class Vector2d {
+public class Vector2d implements Serializable {
 
   /**
    * The first coordinate of the vector.
    */
-  double x0;
+  private final double x0;
 
   /**
    * The second coordinate of the vector.
    */
-  double x1;
+  private final double x1;
 
   /**
    * Constructs a Vector2d object.
@@ -49,6 +51,9 @@ public class Vector2d {
     return x1;
   }
 
+  public double[] getCoordsList() {
+    return new double[]{x0, x1};
+  }
   /**
    * Adds another vector to this vector.
    *
@@ -67,5 +72,16 @@ public class Vector2d {
    */
   public Vector2d subtract(Vector2d other) {
     return new Vector2d(x0 - other.x0, x1 - other.x1);
+  }
+
+  /**
+   * Returns a string representation of the vector, that separates the coordinates
+   * with ', '.
+   *
+   * @return A string representation of the vector.
+   */
+  @Override
+  public String toString() {
+    return x0 + ", " + x1;
   }
 }

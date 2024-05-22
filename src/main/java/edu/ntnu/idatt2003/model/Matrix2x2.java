@@ -1,12 +1,14 @@
 package edu.ntnu.idatt2003.model;
 
+import java.io.Serializable;
+import java.util.Locale;
+
 /**
  * A 2x2 matrix representation with basic operations.
  *
  * @author nicklapt
- *
  */
-public class Matrix2x2 {
+public class Matrix2x2 implements Serializable {
 
   private final double a00;
   private final double a01;
@@ -40,5 +42,18 @@ public class Matrix2x2 {
     double x1 = a10 * vector.getX0() + a11 * vector.getX1();
     return new Vector2d(x0, x1);
   }
+  public double[] getCoordsList() {
+    return new double[]{a00, a01, a10, a11};
+  }
 
+  /**
+   * Returns a string representation of the Matrix2x2, that separates the
+   * coordinates by ', '.
+   *
+   * @return A string representation of the Matrix2x2.
+   */
+  @Override
+  public String toString() {
+    return String.format(Locale.ENGLISH, "%.2f, %.2f, %.2f, %.2f", a00, a01, a10, a11);
+  }
 }

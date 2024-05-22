@@ -1,0 +1,44 @@
+
+.text-box {
+    -fx-background-color: #D9D9D9;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-font-size: 16px;
+}
+
+.button-container {
+    -fx-background-color: white;
+    -fx-padding: 10px;
+}
+
+.center-container {
+    -fx-padding: 10px;
+}
+
+.canvas-and-dynamic-julia-container {
+    -fx-padding: 20px;
+    -fx-border-color: #848484;
+    -fx-border-width: 4px;
+}
+.mouse-box {
+    -fx-background-color: #D9D9D9;
+}
+
+.main-page {
+    -fx-background-color: #AFAFAF;
+    -fx-border-radius: 10px;
+}
+
+.editing-panel {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 20px;
+    -fx-spacing: 10px;
+    -fx-alignment: top-center;
+}
+
+.editing-panel .label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px;
+}
