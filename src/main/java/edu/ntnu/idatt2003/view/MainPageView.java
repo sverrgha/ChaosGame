@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.view;
 
 import edu.ntnu.idatt2003.controller.MainPageController;
+import edu.ntnu.idatt2003.controller.TransformationUtil;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
 import edu.ntnu.idatt2003.model.ChaosGameObserver;
 import edu.ntnu.idatt2003.utils.Sizes;
@@ -135,7 +136,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     dynamicJuliaContainer.setAlignment(Pos.BOTTOM_CENTER);
     x0Field = new StyledTextField("x: ", 100, 20);
     x1Field = new StyledTextField("y: ", 100, 20);
-    if (controller.fractalIsJulia()) {
+    if (TransformationUtil.fractalIsJulia(controller.getGame())) {
       VBox juliaInformationContainer = new VBox(DEFAULT_SPACING);
       HBox.setHgrow(juliaInformationContainer, Priority.ALWAYS);
       juliaInformationContainer.getChildren().addAll(
@@ -395,7 +396,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     });
     if (controller.isAddingCustomFractal()) {
       transformMenu.setValue(this.selectedTransformation);
-    } else if (controller.fractalIsJulia()) {
+    } else if (TransformationUtil.fractalIsJulia(controller.getGame())) {
       transformMenu.setValue(TransformationType.JULIA);
     } else {
       transformMenu.setValue(TransformationType.AFFINE);
@@ -422,7 +423,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
       );
     }
     if (!controller.isAddingCustomFractal()) {
-      for (double[] coords : controller.getTransformList()) {
+      for (double[] coords : TransformationUtil.getTransformList(controller.getGame())) {
         vbox.getChildren().add(createTextBoxWithTextField(textBoxText,
                 55, 20, coords));
       }
