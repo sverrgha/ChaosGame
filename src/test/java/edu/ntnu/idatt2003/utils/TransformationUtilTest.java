@@ -57,7 +57,7 @@ public class TransformationUtilTest {
     public void testGetTransformListJulia() {
       List<double[]> transformList = TransformationUtil.getTransformList(juliaGame);
       assertEquals(1, transformList.size());
-      assertArrayEquals(new double[]{0.355, 0.355}, transformList.get(0));
+      assertArrayEquals(new double[]{0.355, 0.355}, transformList.getFirst());
     }
 
     /**
@@ -68,7 +68,7 @@ public class TransformationUtilTest {
     public void testGetTransformListAffine() {
       List<double[]> transformList = TransformationUtil.getTransformList(affineGame);
       assertEquals(1, transformList.size());
-      assertArrayEquals(new double[]{0.5, 0, 0, 0.5, 1, 1}, transformList.get(0));
+      assertArrayEquals(new double[]{0.5, 0, 0, 0.5, 1, 1}, transformList.getFirst());
     }
 
     /**
@@ -121,7 +121,7 @@ public class TransformationUtilTest {
     public void testGetTransformListFromStringListAffine() {
       List<Transform2D> transforms = TransformationUtil.getTransformListFromStringList(affineTransformStrings);
       assertEquals(1, transforms.size());
-      assertTrue(transforms.get(0) instanceof AffineTransform2D);
+      assertTrue(transforms.getFirst() instanceof AffineTransform2D);
     }
   }
 

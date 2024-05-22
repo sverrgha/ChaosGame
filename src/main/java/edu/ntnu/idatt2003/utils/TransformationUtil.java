@@ -38,7 +38,7 @@ public class TransformationUtil {
    */
   private static List<double[]> getTransformListJulia(ChaosGame game) {
     List<double[]> transformList = new ArrayList<>();
-    transformList.add(((JuliaTransform) game.getTransformList().get(0)).getPointAsList());
+    transformList.add(((JuliaTransform) game.getTransformList().getFirst()).getPointAsList());
     return transformList;
   }
 
@@ -66,7 +66,7 @@ public class TransformationUtil {
    */
   public static boolean fractalIsJulia(ChaosGame game) {
     try {
-      return game.getTransformList().get(0) instanceof JuliaTransform;
+      return game.getTransformList().getFirst() instanceof JuliaTransform;
     } catch (IndexOutOfBoundsException e) {
       return false;
     }

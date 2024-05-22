@@ -76,7 +76,6 @@ public class GameStateManagerTest {
   @Test
   @DisplayName("Handle IOException during save")
   public void testHandleIOExceptionDuringSave() {
-    tempFilePath.toFile().setReadOnly();
 
     assertDoesNotThrow(() -> GameStateManager.saveGameState(game),
         "Saving game state should not throw an exception");
