@@ -55,7 +55,7 @@ public class TransformationUtilTest {
     @Test
     @DisplayName("Get transformation list for Julia fractal")
     public void testGetTransformListJulia() {
-      List<double[]> transformList = TransformationUtil.getTransformList(juliaGame);
+      List<double[]> transformList = TransformationParser.getTransformList(juliaGame);
       assertEquals(1, transformList.size());
       assertArrayEquals(new double[]{0.355, 0.355}, transformList.getFirst());
     }
@@ -66,7 +66,7 @@ public class TransformationUtilTest {
     @Test
     @DisplayName("Get transformation list for affine fractal")
     public void testGetTransformListAffine() {
-      List<double[]> transformList = TransformationUtil.getTransformList(affineGame);
+      List<double[]> transformList = TransformationParser.getTransformList(affineGame);
       assertEquals(1, transformList.size());
       assertArrayEquals(new double[]{0.5, 0, 0, 0.5, 1, 1}, transformList.getFirst());
     }
@@ -77,7 +77,7 @@ public class TransformationUtilTest {
     @Test
     @DisplayName("Check if fractal is Julia")
     public void testFractalIsJulia() {
-      assertTrue(TransformationUtil.fractalIsJulia(juliaGame));
+      assertTrue(TransformationParser.fractalIsJulia(juliaGame));
     }
 
     /**
@@ -86,7 +86,7 @@ public class TransformationUtilTest {
     @Test
     @DisplayName("Check if fractal is not Julia")
     public void testFractalIsNotJulia() {
-      assertFalse(TransformationUtil.fractalIsJulia(affineGame));
+      assertFalse(TransformationParser.fractalIsJulia(affineGame));
     }
 
     /**
@@ -96,7 +96,7 @@ public class TransformationUtilTest {
     @DisplayName("Convert string array to Vector2d")
     public void testGetVector2dFromStringList() {
       String[] vector = {"1.0", "2.0"};
-      Vector2d vec = TransformationUtil.getVector2dFromStringList(vector);
+      Vector2d vec = TransformationParser.getVector2dFromStringList(vector);
       assertEquals(1.0, vec.getX0());
       assertEquals(2.0, vec.getX1());
     }
@@ -107,7 +107,7 @@ public class TransformationUtilTest {
     @Test
     @DisplayName("Create JuliaTransform list from string arrays")
     public void testGetTransformListFromStringListJulia() {
-      List<Transform2D> transforms = TransformationUtil.getTransformListFromStringList(juliaTransformStrings);
+      List<Transform2D> transforms = TransformationParser.getTransformListFromStringList(juliaTransformStrings);
       assertEquals(2, transforms.size());
       assertTrue(transforms.get(0) instanceof JuliaTransform);
       assertTrue(transforms.get(1) instanceof JuliaTransform);
@@ -119,7 +119,7 @@ public class TransformationUtilTest {
     @Test
     @DisplayName("Create AffineTransform2D list from string arrays")
     public void testGetTransformListFromStringListAffine() {
-      List<Transform2D> transforms = TransformationUtil.getTransformListFromStringList(affineTransformStrings);
+      List<Transform2D> transforms = TransformationParser.getTransformListFromStringList(affineTransformStrings);
       assertEquals(1, transforms.size());
       assertTrue(transforms.getFirst() instanceof AffineTransform2D);
     }
@@ -136,7 +136,7 @@ public class TransformationUtilTest {
     @DisplayName("Invalid input for converting string array to Vector2d")
     public void testGetVector2dFromStringListInvalid() {
       String[] vector = {"abc", "2.0"};
-      assertThrows(IllegalArgumentException.class, () -> TransformationUtil.getVector2dFromStringList(vector));
+      assertThrows(IllegalArgumentException.class, () -> TransformationParser.getVector2dFromStringList(vector));
     }
 
     /**
@@ -147,7 +147,7 @@ public class TransformationUtilTest {
     public void testGetTransformListFromStringListInvalid() {
       List<String[]> transformStrings = new ArrayList<>();
       transformStrings.add(new String[]{"abc", "0", "0", "0.5", "1", "1"});
-      assertThrows(IllegalArgumentException.class, () -> TransformationUtil.getTransformListFromStringList(transformStrings));
+      assertThrows(IllegalArgumentException.class, () -> TransformationParser.getTransformListFromStringList(transformStrings));
     }
   }
 }

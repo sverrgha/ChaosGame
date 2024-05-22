@@ -9,7 +9,7 @@ import edu.ntnu.idatt2003.model.JuliaTransform;
 import edu.ntnu.idatt2003.model.Transform2D;
 import edu.ntnu.idatt2003.model.Vector2d;
 import edu.ntnu.idatt2003.utils.LoggerUtil;
-import edu.ntnu.idatt2003.utils.TransformationUtil;
+import edu.ntnu.idatt2003.utils.TransformationParser;
 import edu.ntnu.idatt2003.view.MainPageView;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -212,9 +212,9 @@ public class MainPageController {
     try {
       ChaosGameDescription newChaosGameDescription =
               new ChaosGameDescription(
-                      TransformationUtil.getVector2dFromStringList(minCoords),
-                      TransformationUtil.getVector2dFromStringList(maxCoords),
-                      TransformationUtil.getTransformListFromStringList(transformations)
+                      TransformationParser.getVector2dFromStringList(minCoords),
+                      TransformationParser.getVector2dFromStringList(maxCoords),
+                      TransformationParser.getTransformListFromStringList(transformations)
               );
       if (!Files.exists(Path.of(FRACTAL_PATH + fractalName + ".txt"))
               || view.askConfirmation("A custom fractal with the same name already exists. "

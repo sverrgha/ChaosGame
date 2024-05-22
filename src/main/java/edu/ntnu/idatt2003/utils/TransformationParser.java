@@ -14,7 +14,13 @@ import java.util.stream.DoubleStream;
 /**
  * Utility class for handling transformations in the ChaosGame.
  */
-public class TransformationUtil {
+public class TransformationParser {
+
+  /**
+   * private constructor to stop initialization
+   */
+  private TransformationParser() {
+  }
 
   /**
    * Returns the list of coordinate arrays of the game.

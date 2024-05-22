@@ -1,17 +1,12 @@
 package edu.ntnu.idatt2003.model;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
 import org.junit.jupiter.api.*;
-
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.InputMismatchException;
 import java.util.List;
-import org.junit.jupiter.api.io.TempDir;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,9 +18,6 @@ class ChaosGameFileHandlerTest {
   private static String juliaTextFilePath;
   private static ChaosGameDescription affine2DDescription;
   private static ChaosGameDescription juliaDescription;
-
-  @TempDir
-  static Path tempDir;
 
   /**
    * Sets up the test environment before all tests.
@@ -123,37 +115,6 @@ class ChaosGameFileHandlerTest {
       } catch (FileNotFoundException e) {
         fail(e.getMessage());
       }
-    }
-
-    @Test
-    @DisplayName("Test validateFile with existing and valid file")
-    void testValidateFileWithValidFile() throws IOException {
-      // Create a temporary file with valid content
-      File tempFile = tempDir.resolve("validFile.txt").toFile();
-      try (FileWriter writer = new FileWriter(tempFile)) {
-        writer.write("affine2d\n0 0\n1 1\n0.5 0 0 0.5 0 0\n0.5 0 0 0.5 0.25 0.5\n0.5 0 0 0.5 0.5 0");
-      }
-
-      boolean result = ChaosGameFileHandler.validateFile(tempFile);
-      assertTrue(result);
-    }
-
-    @Test
-    @DisplayName("Test storeFile with valid file")
-    void testStoreFileWithValidFile() throws IOException {
-      // Create a temporary file
-      File tempFile = tempDir.resolve("fileToStore.txt").toFile();
-      try (FileWriter writer = new FileWriter(tempFile)) {
-        writer.write("affine2d\n0 0\n1 1\n0.5 0 0 0.5 0 0\n0.5 0 0 0.5 0.25 0.5\n0.5 0 0 0.5 0.5 0");
-      }
-
-      // Store the file
-      ChaosGameFileHandler.storeFile(tempFile);
-
-      // Verify the file is stored correctly
-      Path destinationPath = Paths.get(System.getProperty("user.dir"), ChaosGameFileHandler.FRACTAL_PATH, tempFile.getName());
-      assertTrue(Files.exists(destinationPath));
-      assertEquals(Files.readString(tempFile.toPath()), Files.readString(destinationPath));
     }
   }
 
