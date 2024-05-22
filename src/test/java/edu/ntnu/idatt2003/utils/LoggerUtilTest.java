@@ -24,10 +24,6 @@ public class LoggerUtilTest {
    */
   @BeforeEach
   public void setUp() {
-    File logFile = new File(LOG_FILE_PATH);
-    if (logFile.exists()) {
-      logFile.delete();
-    }
     logger = LoggerUtil.setupLogger(LoggerUtilTest.class.getName());
   }
 
@@ -54,17 +50,5 @@ public class LoggerUtilTest {
     assertTrue(hasFileHandler, "Logger should have a FileHandler");
 
     assertEquals(Level.ALL, logger.getLevel(), "Logger level should be ALL");
-  }
-
-  /**
-   * Cleans up the test environment after each test.
-   * Deletes the log file to ensure a clean state for the next test.
-   */
-  @AfterEach
-  public void tearDown() {
-    File logFile = new File(LOG_FILE_PATH);
-    if (logFile.exists()) {
-      logFile.delete();
-    }
   }
 }

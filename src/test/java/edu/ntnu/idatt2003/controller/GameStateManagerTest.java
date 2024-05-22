@@ -7,7 +7,6 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +20,6 @@ public class GameStateManagerTest {
   Path tempDir;
 
   private Path tempFilePath;
-  private static final Logger LOGGER = Logger.getLogger(GameStateManager.class.getName());
   private ChaosGame game;
 
   @BeforeEach

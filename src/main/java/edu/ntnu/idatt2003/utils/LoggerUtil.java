@@ -21,7 +21,10 @@ public class LoggerUtil {
   public static Logger setupLogger(String className) {
     Logger logger = Logger.getLogger(className);
     try {
-      new File("logs").mkdirs();
+      File logDirectory = new File("logs");
+      if (!logDirectory.exists() && !logDirectory.mkdirs()) {
+        System.err.println("Failed to create log directory.");
+      }
       FileHandler fileHandler = new FileHandler("logs/application.log", false);
       fileHandler.setFormatter(new SimpleFormatter());
       fileHandler.setLevel(Level.WARNING);
