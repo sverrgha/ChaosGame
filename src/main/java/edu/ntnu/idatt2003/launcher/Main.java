@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003;
+package edu.ntnu.idatt2003.launcher;
 
 import edu.ntnu.idatt2003.controller.MainPageController;
 import javafx.application.Application;
