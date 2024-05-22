@@ -1,12 +1,12 @@
 package edu.ntnu.idatt2003.model;
 
 import org.junit.jupiter.api.*;
-
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.InputMismatchException;
 import java.util.List;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -126,36 +126,35 @@ class ChaosGameFileHandlerTest {
   class NegativeTests {
 
     /**
-     * Tests reading from a non-existing file.
-     * Verifies that a FileNotFoundException is thrown.
+     * Tests reading from a non-existing file. Verifies that a FileNotFoundException is thrown.
      */
     @Test
     @DisplayName("Test readChaosGameDescription with non-existing file")
     void testReadChaosGameDescriptionWithNonExistingFile() {
       assertThrows(FileNotFoundException.class, () -> ChaosGameFileHandler
-              .readFromFile("non-existing-file.txt"));
+          .readFromFile("non-existing-file.txt"));
     }
 
     /**
-     * Test reading from a file with an unknown transformation type.
-     * Verifies that an IllegalArgumentException is thrown.
+     * Test reading from a file with an unknown transformation type. Verifies that an
+     * IllegalArgumentException is thrown.
      */
     @Test
     @DisplayName("Test readChaosGameDescription with unknown transformation type")
     void testReadChaosGameDescriptionWithUnknownTransformationType() {
       assertThrows(IllegalArgumentException.class, () -> ChaosGameFileHandler
-              .readFromFile("src/test/resources/invalidNameExample.txt"));
+          .readFromFile("src/test/resources/invalidNameExample.txt"));
     }
 
     /**
-     * Tests reading from a file with an invalid number of arguments.
-     * Verifies that an IllegalArgumentException is thrown.
+     * Tests reading from a file with an invalid number of arguments. Verifies that an
+     * IllegalArgumentException is thrown.
      */
     @Test
     @DisplayName("Test readChaosGameDescription with invalid number of arguments")
     void testReadChaosGameDescriptionWithInvalidNumberOfArguments() {
       assertThrows(InputMismatchException.class, () -> ChaosGameFileHandler
-              .readFromFile("src/test/resources/invalidFormatExample.txt"));
+          .readFromFile("src/test/resources/invalidFormatExample.txt"));
     }
   }
 }

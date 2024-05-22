@@ -7,6 +7,7 @@ import static edu.ntnu.idatt2003.view.components.TextBoxFactory.createTextBox;
 import static edu.ntnu.idatt2003.view.components.TextFieldFactory.createTextField;
 
 import edu.ntnu.idatt2003.controller.MainPageController;
+import edu.ntnu.idatt2003.utils.TransformationParser;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
 import edu.ntnu.idatt2003.model.ChaosGameObserver;
 import edu.ntnu.idatt2003.utils.Sizes;
@@ -132,7 +133,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
     dynamicJuliaContainer.setAlignment(Pos.BOTTOM_CENTER);
     TextField x0Field = createTextField("x: ", 100, 20);
     TextField x1Field = createTextField("y: ", 100, 20);
-    if (controller.fractalIsJulia()) {
+    if (TransformationParser.fractalIsJulia(controller.getGame())) {
       VBox juliaInformationContainer = new VBox(DEFAULT_SPACING);
       HBox.setHgrow(juliaInformationContainer, Priority.ALWAYS);
       juliaInformationContainer.getChildren().addAll(
@@ -297,7 +298,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   private TransformationType getTransformationComboBoxValue() {
     if (controller.isAddingCustomFractal()) {
       return selectedTransformation;
-    } else if (controller.fractalIsJulia()) {
+    } else if (TransformationParser.fractalIsJulia(controller.getGame())) {
       return TransformationType.JULIA;
     } else {
       return TransformationType.AFFINE;
@@ -332,7 +333,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   private List<String[]> getJuliaTransformation(VBox transformationVbox) {
     List<String[]> list = new ArrayList<>();
     if (!transformationVbox.getChildren().isEmpty()) {
-      HBox juliaFields = (HBox) transformationVbox.getChildren().get(0);
+      HBox juliaFields = (HBox) transformationVbox.getChildren().getFirst();
       list.add(new String[]{((TextField) juliaFields.getChildren().get(1)).getText(),
               ((TextField) juliaFields.getChildren().get(2)).getText()});
     }
@@ -392,7 +393,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
       );
     }
     if (!controller.isAddingCustomFractal()) {
-      for (double[] coords : controller.getTransformList()) {
+      for (double[] coords : TransformationParser.getTransformList(controller.getGame())) {
         vbox.getChildren().add(createTextBoxWithTextFieldsContainer(DEFAULT_SPACING,
                 textBoxText, 55, 20, coords));
       }
