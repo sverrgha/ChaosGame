@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.view;
 
 import static edu.ntnu.idatt2003.view.components.ComboBoxFactory.createComboBox;
+import static edu.ntnu.idatt2003.view.components.MouseHoverBoxFactory.createMouseHoverBox;
 import static edu.ntnu.idatt2003.view.components.TextBoxAndTextFieldContainerFactory.createTextBoxWithTextFieldsContainer;
 import static edu.ntnu.idatt2003.view.components.TextBoxFactory.createTextBox;
 import static edu.ntnu.idatt2003.view.components.TextFieldFactory.createTextField;
@@ -14,7 +15,6 @@ import edu.ntnu.idatt2003.view.components.StyledButton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -22,11 +22,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -46,8 +44,6 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   private static final int BUTTON_WIDTH = (int) (Sizes.SCREEN_WIDTH) / BUTTON_COUNT;
   private static final int DEFAULT_SPACING = 10;
   private final EventHandler eventHandler;
-  private TextField x0Field;
-  private TextField x1Field;
   private TransformationType selectedTransformation;
 
   /**
@@ -134,8 +130,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   private HBox createDynamicJuliaContainer() {
     HBox dynamicJuliaContainer = new HBox(DEFAULT_SPACING);
     dynamicJuliaContainer.setAlignment(Pos.BOTTOM_CENTER);
-    x0Field = createTextField("x: ", 100, 20);
-    x1Field = createTextField("y: ", 100, 20);
+    TextField x0Field = createTextField("x: ", 100, 20);
+    TextField x1Field = createTextField("y: ", 100, 20);
     if (controller.fractalIsJulia()) {
       VBox juliaInformationContainer = new VBox(DEFAULT_SPACING);
       HBox.setHgrow(juliaInformationContainer, Priority.ALWAYS);
@@ -146,7 +142,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
       );
       dynamicJuliaContainer.getChildren().addAll(
               juliaInformationContainer,
-              mouseBox()
+              createMouseHoverBox("Hover over me!", 125,
+                      (box, e) -> eventHandler.handleMouseHoverOnMouseBox(x0Field, x1Field, box, e))
       );
     }
     return dynamicJuliaContainer;
@@ -424,46 +421,6 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    */
   public enum TransformationType {
     JULIA, AFFINE
-  }
-
-  /**
-   * Creates a VBox containing a Pane that tracks mouse movement and two TextFields
-   * that display the normalized mouse coordinates within the Pane.
-   * The Pane is 400x400 in size. When the mouse is moved within the Pane, the
-   * coordinates are normalized to the range [-1, 1] and the values are updated
-   * in the TextFields.
-   *
-   * @return a VBox containing the Pane and the TextFields
-   */
-  private Pane mouseBox() {
-    StackPane box = new StackPane();
-    box.setPrefWidth(125);
-    box.getStyleClass().add("mouse-box");
-
-    box.getChildren().add(new Label("Hover over me!"));
-
-    box.setOnMouseMoved(e -> {
-      double mouseX = e.getX();
-      double mouseY = e.getY();
-      double normalizedX = (mouseX / box.getWidth()) * 2 - 1;
-      double normalizedY = (mouseY / box.getHeight()) * 2 - 1;
-      updateValues(normalizedX, normalizedY);
-    });
-
-    return box;
-  }
-
-  /**
-   * Updates the displayed values in the TextFields and triggers a change in the
-   * Julia transformation dynamically.
-   *
-   * @param x the normalized x-coordinate in the range [-1, 1]
-   * @param y the normalized y-coordinate in the range [-1, 1]
-   */
-  private void updateValues(double x, double y) {
-    controller.changeJuliaTransformationDynamic(x, y);
-    x0Field.setText(String.format(Locale.ENGLISH, "%.5f", x));
-    x1Field.setText(String.format(Locale.ENGLISH, "%.5f", y));
   }
 
   public void setSelectedTransformation(TransformationType transformationType) {

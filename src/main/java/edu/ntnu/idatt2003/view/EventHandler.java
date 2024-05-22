@@ -6,8 +6,11 @@ import edu.ntnu.idatt2003.controller.MainPageController;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -155,5 +158,25 @@ public class EventHandler {
   protected <T> void handleEditTransformationChoice(ComboBox<T> box) {
     view.setSelectedTransformation((MainPageView.TransformationType) box.getValue());
     controller.changeFractal("add new");
+  }
+
+  /**
+   * Handles the mouse event on hovering over the mouse box. The event handler
+   * calls the controller's changeJuliaTransformationDynamic method with the
+   * x and y coordinates of the mouse, and sets the text of the x0Field and x1Field
+   * to the new coordinates.
+   *
+   * @param x0Field TextField to display the x coordinate.
+   * @param x1Field TextField to display the y coordinate.
+   * @param box     The mouse-hover-box
+   * @param e       The mouse event.
+   */
+  protected void handleMouseHoverOnMouseBox(TextField x0Field, TextField x1Field,
+                                            Pane box, MouseEvent e) {
+    double x = (e.getX() / box.getWidth()) * 2 - 1;
+    double y = (e.getY() / box.getHeight()) * 2 - 1;
+    controller.changeJuliaTransformationDynamic(x, y);
+    x0Field.setText(String.format(Locale.ENGLISH, "%.5f", x));
+    x1Field.setText(String.format(Locale.ENGLISH, "%.5f", y));
   }
 }

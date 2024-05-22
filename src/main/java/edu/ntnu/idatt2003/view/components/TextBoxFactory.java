@@ -17,6 +17,7 @@ public class TextBoxFactory {
    */
   private TextBoxFactory() {
   }
+
   /**
    * Creates a text box with the specified text. The text box is styled with the
    * "text-box" style class. The text box is a StackPane with a Label as a child.
