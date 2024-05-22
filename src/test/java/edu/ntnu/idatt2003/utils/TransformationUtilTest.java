@@ -136,9 +136,7 @@ public class TransformationUtilTest {
     @DisplayName("Invalid input for converting string array to Vector2d")
     public void testGetVector2dFromStringListInvalid() {
       String[] vector = {"abc", "2.0"};
-      assertThrows(IllegalArgumentException.class, () -> {
-        TransformationUtil.getVector2dFromStringList(vector);
-      });
+      assertThrows(IllegalArgumentException.class, () -> TransformationUtil.getVector2dFromStringList(vector));
     }
 
     /**
@@ -149,9 +147,7 @@ public class TransformationUtilTest {
     public void testGetTransformListFromStringListInvalid() {
       List<String[]> transformStrings = new ArrayList<>();
       transformStrings.add(new String[]{"abc", "0", "0", "0.5", "1", "1"});
-      assertThrows(IllegalArgumentException.class, () -> {
-        TransformationUtil.getTransformListFromStringList(transformStrings);
-      });
+      assertThrows(IllegalArgumentException.class, () -> TransformationUtil.getTransformListFromStringList(transformStrings));
     }
   }
 }
