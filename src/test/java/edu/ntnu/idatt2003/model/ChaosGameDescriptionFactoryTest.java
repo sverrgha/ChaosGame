@@ -23,6 +23,8 @@ public class ChaosGameDescriptionFactoryTest {
 
     /**
      * Tests getting the Sierpinski Triangle description.
+     * This test checks if the Sierpinski Triangle description is correctly created with the expected minimum and maximum coordinates
+     * and the correct number and types of transformations.
      */
     @Test
     @DisplayName("Get Sierpinski Triangle Test")
@@ -43,6 +45,8 @@ public class ChaosGameDescriptionFactoryTest {
 
     /**
      * Tests getting the Barnsley Fern description.
+     * This test checks if the Barnsley Fern description is correctly created with the expected minimum and maximum coordinates
+     * and the correct number and types of transformations.
      */
     @Test
     @DisplayName("Get Barnsley Fern Test")
@@ -64,6 +68,8 @@ public class ChaosGameDescriptionFactoryTest {
 
     /**
      * Tests getting the Julia transformation description.
+     * This test checks if the Julia transformation description is correctly created with the expected minimum and maximum coordinates
+     * and the correct number and types of transformations.
      */
     @Test
     @DisplayName("Get Julia Transformation Test")
@@ -80,6 +86,48 @@ public class ChaosGameDescriptionFactoryTest {
       assertInstanceOf(JuliaTransform.class, transforms.get(0));
       assertInstanceOf(JuliaTransform.class, transforms.get(1));
     }
+
+    /**
+     * Tests getting the Levy C Curve description.
+     * This test checks if the Levy C Curve description is correctly created with the expected minimum and maximum coordinates
+     * and the correct number and types of transformations.
+     */
+    @Test
+    @DisplayName("Get Levy C Curve Test")
+    void testGetLevyCCurve() {
+      ChaosGameDescription description = ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.DescriptionTypeEnum.LEVY_C_CURVE);
+
+      assertNotNull(description);
+      assertEquals(new Vector2d(-1, -0.5).toString(), description.getMinCoords().toString());
+      assertEquals(new Vector2d(2, 1.5).toString(), description.getMaxCoords().toString());
+
+      List<Transform2D> transforms = description.getTransform();
+      assertEquals(2, transforms.size());
+
+      assertInstanceOf(AffineTransform2D.class, transforms.get(0));
+      assertInstanceOf(AffineTransform2D.class, transforms.get(1));
+    }
+
+    /**
+     * Tests getting the Dragon Curve description.
+     * This test checks if the Dragon Curve description is correctly created with the expected minimum and maximum coordinates
+     * and the correct number and types of transformations.
+     */
+    @Test
+    @DisplayName("Get Dragon Curve Test")
+    void testGetDragonCurve() {
+      ChaosGameDescription description = ChaosGameDescriptionFactory.get(ChaosGameDescriptionFactory.DescriptionTypeEnum.DRAGON_CURVE);
+
+      assertNotNull(description);
+      assertEquals(new Vector2d(-7, 0).toString(), description.getMinCoords().toString());
+      assertEquals(new Vector2d(6, 11).toString(), description.getMaxCoords().toString());
+
+      List<Transform2D> transforms = description.getTransform();
+      assertEquals(2, transforms.size());
+
+      assertInstanceOf(AffineTransform2D.class, transforms.get(0));
+      assertInstanceOf(AffineTransform2D.class, transforms.get(1));
+    }
   }
 
   /**
@@ -91,6 +139,8 @@ public class ChaosGameDescriptionFactoryTest {
 
     /**
      * Tests getting a custom transformation file that does not exist.
+     * This test checks if a FileNotFoundException is thrown when trying to get a custom transformation
+     * that does not exist.
      */
     @Test
     @DisplayName("Get Custom Transformation File Not Found Test")
@@ -99,14 +149,13 @@ public class ChaosGameDescriptionFactoryTest {
           ChaosGameDescriptionFactory.getCustom("non_existent_transformation")
       );
 
-      String expectedMessage = "File src/main/resources/transformations/non_existent_transformation.txt not found.";
+      String expectedMessage = "File src/main/resources/fractals/non_existent_transformation.txt not found.";
       String actualMessage = exception.getMessage();
 
       assertTrue(actualMessage.contains(expectedMessage));
     }
   }
 }
-
 
 
 

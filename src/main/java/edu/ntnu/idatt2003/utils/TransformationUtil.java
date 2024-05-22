@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003.controller;
+package edu.ntnu.idatt2003.utils;
 
 import edu.ntnu.idatt2003.model.AffineTransform2D;
 import edu.ntnu.idatt2003.model.ChaosGame;

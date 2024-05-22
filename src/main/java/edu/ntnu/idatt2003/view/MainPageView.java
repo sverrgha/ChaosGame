@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2003.view;
 
 import edu.ntnu.idatt2003.controller.MainPageController;
-import edu.ntnu.idatt2003.controller.TransformationUtil;
+import edu.ntnu.idatt2003.utils.TransformationUtil;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
 import edu.ntnu.idatt2003.model.ChaosGameObserver;
 import edu.ntnu.idatt2003.utils.Sizes;

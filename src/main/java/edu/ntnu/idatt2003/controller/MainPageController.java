@@ -8,6 +8,8 @@ import edu.ntnu.idatt2003.model.Complex;
 import edu.ntnu.idatt2003.model.JuliaTransform;
 import edu.ntnu.idatt2003.model.Transform2D;
 import edu.ntnu.idatt2003.model.Vector2d;
+import edu.ntnu.idatt2003.utils.LoggerUtil;
+import edu.ntnu.idatt2003.utils.TransformationUtil;
 import edu.ntnu.idatt2003.view.MainPageView;
 import java.io.File;
 import java.io.FileNotFoundException;

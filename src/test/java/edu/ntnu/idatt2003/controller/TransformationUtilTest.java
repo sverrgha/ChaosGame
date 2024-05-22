@@ -9,6 +9,7 @@ import edu.ntnu.idatt2003.model.Matrix2x2;
 import edu.ntnu.idatt2003.model.Transform2D;
 import edu.ntnu.idatt2003.model.Vector2d;
 
+import edu.ntnu.idatt2003.utils.TransformationUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

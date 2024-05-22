@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2003.controller;
+package edu.ntnu.idatt2003.utils;
 
 import java.io.File;
 import java.io.IOException;

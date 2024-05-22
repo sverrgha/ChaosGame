@@ -1,13 +1,11 @@
 package edu.ntnu.idatt2003.controller;
 
+import edu.ntnu.idatt2003.utils.LoggerUtil;
 import org.junit.jupiter.api.*;
 
-import static javafx.beans.binding.Bindings.when;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;

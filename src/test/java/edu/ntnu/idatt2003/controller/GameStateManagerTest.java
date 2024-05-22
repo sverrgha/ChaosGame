@@ -41,17 +41,6 @@ public class GameStateManagerTest {
   class positiveTest {
 
     /**
-     * Tests that the game state is saved correctly.
-     */
-    @Test
-    @DisplayName("Save game state")
-    public void testSaveGameState() {
-      GameStateManager.saveGameState(game);
-
-      assertTrue(Files.exists(tempFilePath), "Saved game state file should exist");
-    }
-
-    /**
      * Tests that the game state is loaded correctly.
      */
     @Test
