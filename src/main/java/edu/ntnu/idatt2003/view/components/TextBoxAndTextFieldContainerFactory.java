@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2003.view.components;
 
 import static edu.ntnu.idatt2003.view.components.TextBoxFactory.createTextBox;
+import static edu.ntnu.idatt2003.view.components.TextFieldFactory.createTextField;
 
 import javafx.scene.layout.HBox;
 
@@ -35,7 +36,7 @@ public class TextBoxAndTextFieldContainerFactory {
     HBox container = new HBox(spacing);
     container.getChildren().add(createTextBox(textBoxText));
     for (double coordinate : textFieldCoords) {
-      container.getChildren().add(new StyledTextField(coordinate,
+      container.getChildren().add(createTextField(coordinate,
               textFieldWidth, textFieldHeight));
     }
     return container;
@@ -60,7 +61,7 @@ public class TextBoxAndTextFieldContainerFactory {
     HBox container = new HBox(spacing);
     container.getChildren().add(createTextBox(textBoxText));
     for (String promptText : promptTexts) {
-      container.getChildren().add(new StyledTextField(promptText,
+      container.getChildren().add(createTextField(promptText,
               textFieldWidth, textFieldHeight));
     }
     return container;

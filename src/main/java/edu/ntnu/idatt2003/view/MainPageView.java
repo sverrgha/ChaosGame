@@ -3,6 +3,7 @@ package edu.ntnu.idatt2003.view;
 import static edu.ntnu.idatt2003.view.components.ComboBoxFactory.createComboBox;
 import static edu.ntnu.idatt2003.view.components.TextBoxAndTextFieldContainerFactory.createTextBoxWithTextFieldsContainer;
 import static edu.ntnu.idatt2003.view.components.TextBoxFactory.createTextBox;
+import static edu.ntnu.idatt2003.view.components.TextFieldFactory.createTextField;
 
 import edu.ntnu.idatt2003.controller.MainPageController;
 import edu.ntnu.idatt2003.model.ChaosGameDescriptionFactory;
@@ -10,7 +11,6 @@ import edu.ntnu.idatt2003.model.ChaosGameObserver;
 import edu.ntnu.idatt2003.utils.Sizes;
 import edu.ntnu.idatt2003.view.components.ChaosImage;
 import edu.ntnu.idatt2003.view.components.StyledButton;
-import edu.ntnu.idatt2003.view.components.StyledTextField;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -134,8 +134,8 @@ public class MainPageView extends Scene implements ChaosGameObserver {
   private HBox createDynamicJuliaContainer() {
     HBox dynamicJuliaContainer = new HBox(DEFAULT_SPACING);
     dynamicJuliaContainer.setAlignment(Pos.BOTTOM_CENTER);
-    x0Field = new StyledTextField("x: ", 100, 20);
-    x1Field = new StyledTextField("y: ", 100, 20);
+    x0Field = createTextField("x: ", 100, 20);
+    x1Field = createTextField("y: ", 100, 20);
     if (controller.fractalIsJulia()) {
       VBox juliaInformationContainer = new VBox(DEFAULT_SPACING);
       HBox.setHgrow(juliaInformationContainer, Priority.ALWAYS);
@@ -190,21 +190,12 @@ public class MainPageView extends Scene implements ChaosGameObserver {
                     e -> eventHandler.handleRunSteps(100)),
             new StyledButton("1000 Steps", BUTTON_WIDTH, COMPONENT_HEIGHT,
                     e -> eventHandler.handleRunSteps(1000)),
-            createStepsTextField(),
+            createTextField("Steps", BUTTON_WIDTH, COMPONENT_HEIGHT,
+                    (box, e) -> eventHandler.handleRunCustomSteps(box)),
             new StyledButton("Reset", BUTTON_WIDTH, COMPONENT_HEIGHT,
                     e -> eventHandler.handleReset())
     );
     return buttonContainer;
-  }
-
-  private StyledTextField createStepsTextField() {
-    StyledTextField stepsField = new StyledTextField("Steps", BUTTON_WIDTH, COMPONENT_HEIGHT);
-    stepsField.getStyleClass().set(0, "button");
-    stepsField.setOnAction(e -> {
-      controller.runCustomSteps(stepsField.getText());
-      stepsField.clear();
-    });
-    return stepsField;
   }
 
   /**
@@ -244,7 +235,7 @@ public class MainPageView extends Scene implements ChaosGameObserver {
    */
   public VBox createAddFractalPanel() {
     VBox addPanel = createMainPanel();
-    TextField fractalName = new StyledTextField("Fractal name", 210, 20);
+    TextField fractalName = createTextField("Fractal name", 210, 20);
     fractalName.setText(controller.getCurrentFractalName());
     ComboBox<TransformationType> transformationComboBox = createComboBox("Transformation",
             210, COMPONENT_HEIGHT,
