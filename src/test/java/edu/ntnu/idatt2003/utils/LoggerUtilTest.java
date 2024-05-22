@@ -1,6 +1,5 @@
-package edu.ntnu.idatt2003.controller;
+package edu.ntnu.idatt2003.utils;
 
-import edu.ntnu.idatt2003.utils.LoggerUtil;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;

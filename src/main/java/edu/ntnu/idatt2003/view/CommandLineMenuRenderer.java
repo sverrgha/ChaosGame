@@ -7,14 +7,18 @@ package edu.ntnu.idatt2003.view;
  *
  */
 
-public class TextRenderer {
+public class CommandLineMenuRenderer {
 
   public static final String READ_FILE = "1";
   public static final String WRITE_FILE = "2";
   public static final String RUN_ITERATIONS = "3";
   public static final String SHOW_CANVAS = "4";
   public static final String WRITE_NEW_DESCRIPTION = "5";
-  public static final String EXIT = "5";
+  public static final String EXIT = "6";
+
+  /**
+   * shows the menu
+   */
 
   public void showMenu() {
     System.out.println("Menu:");
@@ -26,14 +30,21 @@ public class TextRenderer {
     System.out.println("6. Exit");
   }
 
+  /**
+   * shows the enter path message
+   */
+
   public void enterPath() {
     System.out.println("Enter path to file:");
   }
 
+  /**
+   * shows the enter steps message
+   */
+
   public void enterSteps() {
     System.out.println("Enter number of steps:");
   }
-
 
 
 }
