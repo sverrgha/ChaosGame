@@ -6,7 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.Scanner;
  * The class uses a delimiter filter to read the file.
  */
 public class ChaosGameFileHandler {
+
+  public static final String FRACTAL_PATH = "src/main/resources/fractals/";
 
   /**
    * Private constructor to prevent instantiation.
@@ -161,6 +165,34 @@ public class ChaosGameFileHandler {
     } catch (IOException e) {
       throw new IllegalArgumentException("Could not write to file '" + path + "'.");
     }
+  }
+
+  /**
+   * Validates if the file exists.
+   *
+   * @param file the file to validate
+   *
+   * @return a boolean value
+   */
+
+  public static boolean validateFile(File file) {
+    try {
+      ChaosGameFileHandler.readFromFile(file);
+      return true;
+    } catch (InputMismatchException | FileNotFoundException e) {
+      return false;
+    }
+  }
+
+  /**
+   * Stores the file in the resources/transformations folder of the project.
+   *
+   * @param file The file to store.
+   */
+  public static void storeFile(File file) throws IOException {
+    String projectPath = System.getProperty("user.dir");
+    String destinationPath = projectPath + File.separator + FRACTAL_PATH + file.getName();
+    Files.copy(file.toPath(), Path.of(destinationPath), StandardCopyOption.REPLACE_EXISTING);
   }
 
 }
